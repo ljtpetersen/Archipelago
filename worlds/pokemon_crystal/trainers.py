@@ -25,7 +25,7 @@ def randomize_trainers(world: "PokemonCrystalWorld"):
             new_item = pkmn_data.item
             new_moves = pkmn_data.moves
             if not is_rival_starter_pokemon(trainer_name, trainer_data, i):
-                match_types = [None, None]
+                match_types = None
                 if world.options.randomize_trainer_parties == RandomizeTrainerParties.option_match_types:
                     match_types = crystal_data.pokemon[pkmn_data.pokemon].types
                 if "LASS_3" in trainer_name:
