@@ -59,6 +59,16 @@
     ],
     "script": "CeladonCityHiddenPpUp"
   },
+  "CELADON_CAFE_LEFTOVERS": {
+    "label": "Celadon City - Leftovers from Cafe",
+    "flag": "EVENT_FOUND_LEFTOVERS_IN_CELADON_CAFE",
+    "default_item": "LEFTOVERS",
+    "type": "hiddenitem",
+    "tags": [
+      "Hidden"
+    ],
+    "script": "CeladonCafeHiddenLeftovers"
+  },
   "CERULEAN_CITY_BERSERK_GENE": {
     "label": "Cerulean City - Hidden Item in Water",
     "flag": "EVENT_FOUND_BERSERK_GENE_IN_CERULEAN_CITY",
