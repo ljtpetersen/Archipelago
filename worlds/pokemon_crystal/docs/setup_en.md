@@ -84,6 +84,6 @@ Pokémon Crystal has a fully functional map tracker that supports auto-tracking.
 1. Download [Pokémon Crystal AP Tracker](https://github.com/palex00/crystal-ap-tracker/releases/latest) and
    [PopTracker](https://github.com/black-sliver/PopTracker/releases).
 2. Put the tracker pack into `packs/` in your PopTracker install.
-4. Open PopTracker, and load the Pokémon Crystal pack.
-5. For autotracking, click on the "AP" symbol at the top.
-6. Enter the Archipelago server address (the one you connected your client to), slot name, and password.
+3. Open PopTracker, and load the Pokémon Crystal pack.
+4. For autotracking, click on the "AP" symbol at the top.
+5. Enter the Archipelago server address (the one you connected your client to), slot name, and password.
