@@ -558,8 +558,10 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     # Victory Road
 
     if johto_only() != JohtoOnly.option_on:
-        set_rule(get_entrance("REGION_ROUTE_28 -> REGION_VICTORY_ROAD_GATE"), has_mt_silver_badges)
-        set_rule(get_entrance("REGION_VICTORY_ROAD_GATE -> REGION_ROUTE_28"), has_mt_silver_badges)
+        set_rule(get_entrance("REGION_ROUTE_28 -> REGION_VICTORY_ROAD_GATE"),
+                 lambda state: state.has("EVENT_OPENED_MT_SILVER", world.player))
+        set_rule(get_entrance("REGION_VICTORY_ROAD_GATE -> REGION_ROUTE_28"),
+                 lambda state: state.has("EVENT_OPENED_MT_SILVER", world.player))
 
         set_rule(get_location("EVENT_OPENED_MT_SILVER"), has_mt_silver_badges)
         set_rule(get_location("EVENT_BEAT_RED"), has_red_badges)

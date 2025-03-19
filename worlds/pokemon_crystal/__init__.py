@@ -323,7 +323,9 @@ class PokemonCrystalWorld(World):
                                   21: "Olivine City",
                                   19: "Cianwood City",
                                   23: "Mahogany Town",
+                                  24: "Lake of Rage",
                                   25: "Blackthorn City",
+                                  2: "Pallet Town",
                                   3: "Viridian City",
                                   4: "Pewter City",
                                   5: "Cerulean City",
@@ -331,13 +333,17 @@ class PokemonCrystalWorld(World):
                                   8: "Lavender Town",
                                   10: "Celadon City",
                                   9: "Saffron City",
+                                  12: "Cinnabar Island",
                                   11: "Fuchsia City",
                                   18: "Azalea Town",
-                                  20: "Goldenrod City"}
-            spoiler_handle.write(f"\n\nFree Fly Location ({self.multiworld.player_name[self.player]}): "
+                                  20: "Goldenrod City",
+                                  26: "Lake of Rage"
+                                  }
+            spoiler_handle.write(f"\n\n")
+            spoiler_handle.write(f"Free Fly Location ({self.multiworld.player_name[self.player]}): "
                                  f"{free_fly_locations[self.free_fly_location]}\n")
             if self.options.free_fly_location > 1:
-                spoiler_handle.write(f"\n\nMap Card Fly Location ({self.multiworld.player_name[self.player]}): "
+                spoiler_handle.write(f"Map Card Fly Location ({self.multiworld.player_name[self.player]}): "
                                      f"{free_fly_locations[self.map_card_fly_location]}\n")
 
         if self.options.enable_mischief:
