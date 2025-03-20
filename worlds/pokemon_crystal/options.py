@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 
-from Options import Toggle, Choice, DefaultOnToggle, Range, PerGameCommonOptions, NamedRange
+from Options import Toggle, Choice, DefaultOnToggle, Range, PerGameCommonOptions, NamedRange, OptionSet
 
+from .data import data
 
 class Goal(Choice):
     """
@@ -473,6 +474,16 @@ class EnableMischief(Toggle):
     """
     display_name = "Enable Mischief"
 
+class MoveBlocklist(OptionSet):
+    """
+    Pokemon won't learn these moves via learnsets, movesets, or TM's.
+    
+    """
+    display_name = "Move Blocklist"
+    valid_keys = sorted(set(data.moves.keys())
+                        |{key.lower() for key in data.moves.keys()}#accepts lowercase inputs
+                        |{key.replace('_', ' ') for key in data.moves.keys()}#accepts inputs with a space
+                        |{key.replace('_', ' ').lower() for key in data.moves.keys()})#accepts lowercase inputs with a space
 
 @dataclass
 class PokemonCrystalOptions(PerGameCommonOptions):
@@ -505,6 +516,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     randomize_palettes: RandomizePalettes
     randomize_music: RandomizeMusic
     # randomize_sfx: RandomizeSFX
+    move_blocklist: MoveBlocklist
     free_fly_location: FreeFlyLocation
     early_fly: EarlyFly
     hm_badge_requirements: HMBadgeRequirements
