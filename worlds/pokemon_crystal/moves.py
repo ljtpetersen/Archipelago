@@ -43,7 +43,7 @@ def get_random_move(world: "PokemonCrystalWorld", move_type=None, attacking=None
     
     #remove every move from move_pool that is in the blacklist
     if world.options.move_blacklist:
-        move_pool = [move_name for move_name in move_pool if move_name not in world.options.move_blacklist]
+        move_pool = [move_name for move_name in move_pool if move_name not in [move.replace(" ", "_").upper() for move in world.options.move_blacklist]]
     
     if attacking is not None:
         move_pool = [move_name for move_name in move_pool if crystal_data.moves[move_name].power > 0]
@@ -76,7 +76,7 @@ def randomize_tms(world: "PokemonCrystalWorld"):
     
     #remove every move from move_pool that is in the blacklist
     if world.options.move_blacklist:
-        move_pool = [move for move in move_pool if move.name not in [m.replace('_', ' ') for m in world.options.move_blacklist]]
+        move_pool = [move for move in move_pool if move.name not in [m.replace('_', ' ').upper() for m in world.options.move_blacklist]]
         
     world.random.shuffle(move_pool)
     for tm_name, tm_data in world.generated_tms.items():
