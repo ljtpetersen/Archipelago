@@ -208,7 +208,7 @@ class LearnsetTypeBias(Range):
     """
     display_name = "Move Learnset Type Bias"
     default = 0
-    range_start = 1
+    range_start = 0
     range_end = 100
 
 class RandomizeTMMoves(Toggle):
