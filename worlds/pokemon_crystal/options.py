@@ -470,7 +470,10 @@ class MoveBlacklist(OptionSet):
     
     """
     display_name = "Move Blacklist"
-    valid_keys = sorted(data.moves.keys())
+    valid_keys = sorted(set(data.moves.keys())
+                        |{key.lower() for key in data.moves.keys()}#accepts lowercase inputs
+                        |{key.replace('_', ' ') for key in data.moves.keys()}#accepts inputs with a space
+                        |{key.replace('_', ' ').lower() for key in data.moves.keys()})#accepts lowercase inputs with a space
 
 @dataclass
 class PokemonCrystalOptions(PerGameCommonOptions):
