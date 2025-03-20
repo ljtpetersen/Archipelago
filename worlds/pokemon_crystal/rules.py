@@ -608,6 +608,9 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
         set_rule(get_entrance("REGION_ROUTE_2:NORTHEAST -> REGION_ROUTE_2:SOUTHEAST"), can_cut)
 
+        if hidden():
+            set_rule(get_location("Mount Moon Square - Hidden Item under Rock"), can_rocksmash)
+
         # Cerulean
         if hidden():
             set_rule(get_location("Cerulean City - Hidden Item in Water"), can_surf)

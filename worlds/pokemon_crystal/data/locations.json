@@ -660,7 +660,7 @@
     "default_item": "TM_DETECT"
   },
   "MOUNT_MOON_SQUARE_HIDDEN_MOON_STONE": {
-    "label": "Mount Moon Square - Hidden Item on Monday Night",
+    "label": "Mount Moon Square - Hidden Item under Rock",
     "flag": "EVENT_MOUNT_MOON_SQUARE_HIDDEN_MOON_STONE",
     "default_item": "MOON_STONE",
     "type": "hiddenitem",

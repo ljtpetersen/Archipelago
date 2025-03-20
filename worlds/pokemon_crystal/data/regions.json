@@ -1789,7 +1789,9 @@
       "REGION_MOUNT_MOON",
       "REGION_MOUNT_MOON_GIFT_SHOP"
     ],
-    "locations": [],
+    "locations": [
+      "MOUNT_MOON_SQUARE_HIDDEN_MOON_STONE"
+    ],
     "events": []
   },
   "REGION_MOUNT_MORTAR_1F_INSIDE:FRONT": {
