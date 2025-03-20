@@ -41,9 +41,9 @@ def get_random_move(world: "PokemonCrystalWorld", move_type=None, attacking=None
                      not move_data.is_hm and move_data.type == move_type
                      and move_name not in ["STRUGGLE", "BEAT_UP", "NO_MOVE", "STRUGGLE"]]
     
-    #remove every move from move_pool that is in the blacklist
-    if world.options.move_blacklist:
-        move_pool = [move_name for move_name in move_pool if move_name not in [move.replace(" ", "_").upper() for move in world.options.move_blacklist]]
+    #remove every move from move_pool that is in the blocklist
+    if world.options.move_blocklist:
+        move_pool = [move_name for move_name in move_pool if move_name not in [move.replace(" ", "_").upper() for move in world.options.move_blocklist]]
     
     if attacking is not None:
         move_pool = [move_name for move_name in move_pool if crystal_data.moves[move_name].power > 0]
@@ -74,9 +74,9 @@ def randomize_tms(world: "PokemonCrystalWorld"):
     move_pool = [move_data for move_name, move_data in copy.deepcopy(crystal_data.moves).items() if
                  not move_data.is_hm and move_name not in ["ROCK_SMASH", "NO_MOVE", "STRUGGLE"]]
     
-    #remove every move from move_pool that is in the blacklist
-    if world.options.move_blacklist:
-        move_pool = [move for move in move_pool if move.name not in [m.replace('_', ' ').upper() for m in world.options.move_blacklist]]
+    #remove every move from move_pool that is in the blocklist
+    if world.options.move_blocklist:
+        move_pool = [move for move in move_pool if move.name not in [m.replace('_', ' ').upper() for m in world.options.move_blocklist]]
         
     world.random.shuffle(move_pool)
     for tm_name, tm_data in world.generated_tms.items():

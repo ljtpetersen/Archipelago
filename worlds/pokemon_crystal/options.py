@@ -464,12 +464,12 @@ class EnableMischief(Toggle):
     """
     display_name = "Enable Mischief"
 
-class MoveBlacklist(OptionSet):
+class MoveBlocklist(OptionSet):
     """
     Pokemon won't learn these moves via learnsets, movesets, or TM's.
     
     """
-    display_name = "Move Blacklist"
+    display_name = "Move Blocklist"
     valid_keys = sorted(set(data.moves.keys())
                         |{key.lower() for key in data.moves.keys()}#accepts lowercase inputs
                         |{key.replace('_', ' ') for key in data.moves.keys()}#accepts inputs with a space
@@ -505,7 +505,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     randomize_palettes: RandomizePalettes
     randomize_music: RandomizeMusic
     # randomize_sfx: RandomizeSFX
-    move_blacklist: MoveBlacklist
+    move_blocklist: MoveBlocklist
     free_fly_location: FreeFlyLocation
     early_fly: EarlyFly
     hm_badge_requirements: HMBadgeRequirements
