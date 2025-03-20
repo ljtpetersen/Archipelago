@@ -3,7 +3,7 @@ import random
 from typing import TYPE_CHECKING
 
 from .data import data as crystal_data, LearnsetData, TMHMData
-from .options import RandomizeLearnsets, LearnsetTypeBias, StartingMovesTypeBias
+from .options import RandomizeLearnsets, LearnsetTypeBias
 
 if TYPE_CHECKING:
     from . import PokemonCrystalWorld
@@ -14,7 +14,8 @@ def randomize_learnset(world: "PokemonCrystalWorld", pkmn_name):
     learn_levels = []
     move_type=None
     pkmn_types=[]
-    new_learnset[]
+    new_learnset=[]
+    data_types = copy.deepcopy(crystal_data.types)
     for move in pkmn_data.learnset:
         if move.move != "NO_MOVE":
             learn_levels.append(move.level)
@@ -26,7 +27,7 @@ def randomize_learnset(world: "PokemonCrystalWorld", pkmn_name):
             if random.randint(0,100)<=world.options.learnset_type_bias: #rolls for the chance
                 move_type=random.choice(pkmn_types) #chooses one of the pokemons types to give to move generation function
             else: #chooses one of the types other than the pokemons to give to move generation function
-                rem_types=[type for type in crystal_data.types.items() if type not in pkmn_types]
+                rem_types=[type for type in data_types if type not in pkmn_types]
                 move_type=random.choice(rem_types)
         new_learnset.append(LearnsetData(level, get_random_move(world.random, move_type)))
 
