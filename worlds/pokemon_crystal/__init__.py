@@ -337,7 +337,7 @@ class PokemonCrystalWorld(World):
                                   11: "Fuchsia City",
                                   18: "Azalea Town",
                                   20: "Goldenrod City",
-                                  26: "Lake of Rage"
+                                  26: "Mt. Silver"
                                   }
             spoiler_handle.write(f"\n\n")
             spoiler_handle.write(f"Free Fly Location ({self.multiworld.player_name[self.player]}): "
