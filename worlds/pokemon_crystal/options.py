@@ -209,6 +209,20 @@ class RandomizeLearnsets(Choice):
     option_randomize = 1
     option_start_with_four_moves = 2
 
+class LearnsetTypeBias(Range):
+    """
+    This option will have an effect only if Randomize Learnset option is ENABLED.
+
+    Percent chance of each move in a pokemons move learnset to match the pokemons type
+    default value is -1. This means there will be no check in logic for type matches.
+    For lowest possible type matching (most evilest value) is 0. There will be no STAB moves in a Pokemon's Move Pool
+    If set to 100 all moves that a pokemon will learn by leveling up will match one of its Types
+
+    """
+    display_name = "Move Learnset Type Bias"
+    default = -1
+    range_start = -1
+    range_end = 100
 
 class RandomizeTMMoves(Toggle):
     """
@@ -508,6 +522,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     randomize_static_pokemon: RandomizeStaticPokemon
     randomize_trainer_parties: RandomizeTrainerParties
     randomize_learnsets: RandomizeLearnsets
+    learnset_type_bias: LearnsetTypeBias
     randomize_tm_moves: RandomizeTMMoves
     tm_compatibility: TMCompatibility
     hm_compatibility: HMCompatibility
