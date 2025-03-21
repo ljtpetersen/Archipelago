@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING
 
-from BaseClasses import ItemClassification
 from .data import data
 from .phone_data import get_shuffled_basic_calls, template_call_bike_shop, template_call_psychic, template_call_remote, \
     template_call_filler_hint
@@ -33,7 +32,7 @@ def generate_phone_traps(world: "PokemonCrystalWorld"):
             phone_traps_list.append("psychic")
         if world.random.random() < 0.75:
             phone_traps_list.append("bike_shop")
-        if world.random.random() < 0.75:
+        if filler_location and world.random.random() < 0.75:
             phone_traps_list.append("filler_hint")
         remote_count = min(len(remote_locs), 3)
         phone_traps_list += ["remote"] * remote_count
