@@ -22,19 +22,19 @@ def randomize_learnset(world: "PokemonCrystalWorld", pkmn_name):
         elif world.options.randomize_learnsets == RandomizeLearnsets.option_start_with_four_moves:
             learn_levels.insert(0, 1)
     for level in learn_levels:
-        if world.options.learnset_type_bias>0: #checks if user put an option for Move Type bias (default is 0)
+        if world.options.learnset_type_bias>-1: #checks if user put an option for Move Type bias (default is -1)
             pkmn_types=pkmn_data.types
-            if random.randint(0,100)<=world.options.learnset_type_bias: #rolls for the chance
-                move_type=random.choice(pkmn_types) #chooses one of the pokemons types to give to move generation function
+            if world.random.randint(1,100)<=world.options.learnset_type_bias: #rolls for the chance
+                move_type=world.random.choice(pkmn_types) #chooses one of the pokemons types to give to move generation function
             else: #chooses one of the types other than the pokemons to give to move generation function
                 rem_types=[type for type in data_types if type not in pkmn_types]
-                move_type=random.choice(rem_types)
+                move_type=world.random.choice(rem_types)
         new_learnset.append(LearnsetData(level, get_random_move(world.random, move_type=move_type, cur_learnset=new_learnset)))
 
     # All moves available at Lv.1 that do damage (and don't faint the user)
     start_attacking = [learnset for learnset in new_learnset if
                        crystal_data.moves[learnset.move].power > 0
-                       and learnset.move not in ["EXPLOSION", "SELFDESTRUCT", "STRUGGLE", "SNORE"]
+                       and learnset.move not in ["EXPLOSION", "SELFDESTRUCT", "STRUGGLE", "SNORE"] #This list is the damaging moves that should be ignored for checking starting attacking moves
                        and learnset.level == 1]
 
     if not len(start_attacking):  # if there are no attacking moves at Lv.1, add one
@@ -50,12 +50,12 @@ def get_random_move(random, move_type=None, attacking=None, cur_learnset=[]):
         existing_moves.append(move.move)
     if move_type is None:
         move_pool = [move_name for move_name, move_data in crystal_data.moves.items() if
-                     not move_data.is_hm and move_name not in ["STRUGGLE", "BEAT_UP", "NO_MOVE", "STRUGGLE"]
+                     not move_data.is_hm and move_name not in ["STRUGGLE", "BEAT_UP", "NO_MOVE"]
                      and move_name not in existing_moves]
     else:
         move_pool = [move_name for move_name, move_data in crystal_data.moves.items() if
                      not move_data.is_hm and move_data.type == move_type
-                     and move_name not in ["STRUGGLE", "BEAT_UP", "NO_MOVE", "STRUGGLE"]
+                     and move_name not in ["STRUGGLE", "BEAT_UP", "NO_MOVE"]
                      and move_name not in existing_moves]
     if attacking is not None:
         move_pool = [move_name for move_name in move_pool if crystal_data.moves[move_name].power > 0

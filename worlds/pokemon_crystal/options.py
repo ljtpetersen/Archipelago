@@ -200,15 +200,17 @@ class RandomizeLearnsets(Choice):
 
 class LearnsetTypeBias(Range):
     """
+    This option will have an effect only if Randomize Learnset option is ENABLED.
+
     Percent chance of each move in a pokemons move learnset to match the pokemons type
-    default value is 0. This means there will be no check in logic for type matches.
-    For lowest possible type matching (most evilest value) is 1. The game will purposely try to not give you moves with STAB
+    default value is -1. This means there will be no check in logic for type matches.
+    For lowest possible type matching (most evilest value) is 0. There will be no STAB moves in a Pokemon's Move Pool
     If set to 100 all moves that a pokemon will learn by leveling up will match one of its Types
 
     """
     display_name = "Move Learnset Type Bias"
-    default = 0
-    range_start = 0
+    default = -1
+    range_start = -1
     range_end = 100
 
 class RandomizeTMMoves(Toggle):
