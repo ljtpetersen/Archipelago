@@ -417,8 +417,9 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     set_rule(get_location("Burned Tower B1F - Item"), can_strength)
 
     set_rule(get_entrance("REGION_ECRUTEAK_CITY -> REGION_TIN_TOWER_1F"),
-             lambda state: state.has("Clear Bell", world.player) and
-                           state.has("EVENT_CLEARED_RADIO_TOWER", world.player))
+             lambda state: state.has("Clear Bell", world.player))
+    set_rule(get_entrance("REGION_TIN_TOWER_1F -> REGION_TIN_TOWER_2F"),
+             lambda state: state.has("Rainbow Wing", world.player))
 
     set_rule(get_location("Tin Tower 1F - Rainbow Wing"),
              lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
