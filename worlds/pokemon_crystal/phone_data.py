@@ -48,16 +48,16 @@ caller_brock = 40
 caller_eusine = 41
 caller_out_of_area = 42
 
-text_cmd = 0x00 # initiates the text at the beginning of the phone call
-line_cmd = 0x4f # a new line (always the 2nd line)
-para_cmd = 0x51 # a new paragraph
-cont_cmd = 0x55 # outputs text in a new line without needing to press a
-done_cmd = 0x57 # exits the phone call
+text_cmd = 0x00  # Initiates the text at the beginning of the phone call
+para_cmd = 0x51  # Starts a new paragraph, clearing the text box
+line_cmd = 0x4f  # Starts a new line (always the 2nd line)
+cont_cmd = 0x55  # Scrolls to a third line
+done_cmd = 0x57  # Exits the phone call
 
-play_g_cmd = 0x14 # outputs player name
-player_cmd = 0x52 # outputs player name
-rival_cmd = 0x53 # outputs rival name
-poke_cmd = 0x54 # outputs POKÉ
+play_g_cmd = 0x14  # Outputs player name
+player_cmd = 0x52  # Outputs player name
+rival_cmd = 0x53  # Outputs rival name
+poke_cmd = 0x54  # Outputs POKÉ
 
 
 def split_location(location_name):
