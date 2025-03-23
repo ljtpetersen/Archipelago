@@ -475,6 +475,20 @@ bank_of_mom_2 = PhoneScript(caller_bank_of_mom, [
     ScriptLine([done_cmd])
 ])
 
+happy_birthday = PhoneScript(caller_mom, [
+    ScriptLine([text_cmd, "Hi, ", play_g_cmd, "!"]),
+    ScriptLine([line_cmd, "Happy Birthday"]),
+    ScriptLine([cont_cmd, "to you! Happy"]),
+    ScriptLine([line_cmd, "Birthday to y-"]),
+    ScriptLine([para_cmd, "What do you mean"]),
+    ScriptLine([line_cmd, "it's not your"]),
+    ScriptLine([cont_cmd, "birthday? Is today"]),
+    ScriptLine([line_cmd, "not March 23rd?"]),
+    ScriptLine([cont_cmd, "Oh, well. Nevermind"]),
+    ScriptLine([line_cmd, "then!"]),
+    ScriptLine([done_cmd])
+])
+
 phone_scripts = [
     ffxiv,
     brock_oven,
@@ -494,4 +508,5 @@ phone_scripts = [
     elm_mew_call,
     bank_of_mom_1,
     bank_of_mom_2,
+    happy_birthday,
 ]
