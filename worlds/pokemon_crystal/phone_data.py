@@ -542,6 +542,20 @@ lance_cape = PhoneScript(caller_withheld, [
     ScriptLine([done_cmd])
 ])
 
+flareon_call = PhoneScript(caller_withheld, [
+    ScriptLine([text_cmd, "Hey, ", play_g_cmd, "!"]),
+    ScriptLine([para_cmd, "Did you know that"]),
+    ScriptLine([line_cmd, "in terms of human"]),
+    ScriptLine([para_cmd, "companionship,"]),
+    ScriptLine([line_cmd, "FLAREON is"]),
+    ScriptLine([para_cmd, "objectively the"]),
+    ScriptLine([line_cmd, "most huggable"]),
+    ScriptLine([cont_cmd, poke_cmd, "MON?"]),
+    ScriptLine([para_cmd, "While their maximum"]),
+    ScriptLine([line_cmd, "temperature is--"]),
+    ScriptLine([done_cmd])
+])
+
 phone_scripts = [
     ffxiv,
     brock_oven,
@@ -564,4 +578,5 @@ phone_scripts = [
     happy_birthday,
     team_rocket_call,
     lance_cape,
+    flareon_call,
 ]
