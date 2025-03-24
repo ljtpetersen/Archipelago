@@ -475,6 +475,30 @@ bank_of_mom_2 = PhoneScript(caller_bank_of_mom, [
     ScriptLine([done_cmd])
 ])
 
+diglett_call = PhoneScript(caller_elm, [
+    ScriptLine([text_cmd, "Hi, ", play_g_cmd, "!"]),
+    ScriptLine([line_cmd, "I was doing some"]),
+    ScriptLine([para_cmd, "research on DIGLETT"]),
+    ScriptLine([line_cmd, "and discovered something"]),
+    ScriptLine([cont_cmd, "remarkable!"]),
+    ScriptLine([para_cmd, "For ages, the underside"]),
+    ScriptLine([line_cmd, "of DIGLETT and DUGTRIO"]),
+    ScriptLine([para_cmd, "have remained a mystery,"]),
+    ScriptLine([line_cmd, "but I've finally"]),
+    ScriptLine([cont_cmd, "figured it out!"]),
+    ScriptLine([para_cmd, "It took four X-RAYS,"]),
+    ScriptLine([line_cmd, "twenty ultrasounds,"]),
+    ScriptLine([para_cmd, "a seismograph,"]),
+    ScriptLine([line_cmd, "3 well timed photos,"]),
+    ScriptLine([para_cmd, "100 cups of coffee,"]),
+    ScriptLine([line_cmd, "and 2 assistants"]),
+    ScriptLine([para_cmd, "to finally find out"]),
+    ScriptLine([line_cmd, "th-- --lly--"]),
+    ScriptLine([para_cmd, "--llo? Breaking--"]),
+    ScriptLine([line_cmd, "--up? ", play_g_cmd, "?--"]),
+    ScriptLine([done_cmd])
+])
+
 team_rocket_call = PhoneScript(caller_withheld, [
     ScriptLine([text_cmd, "Who are we, you ask?"]),
     ScriptLine([para_cmd, "Prepare for"]),
@@ -619,4 +643,5 @@ phone_scripts = [
     flareon_call,
     blender_call,
     call_your_mother,
+    diglett_call,
 ]
