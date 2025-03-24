@@ -162,7 +162,7 @@ class RandomizeWilds(Toggle):
 
 class ForceFullyEvolved(Range):
     """
-    When an opponent uses a pokemon of the specified level or higher, restricts the species to only fully evolved pokemon.
+    When an opponent uses a Pokemon of the specified level or higher, restricts the species to only fully evolved Pokemon.
 
     Only applies when trainer parties are randomized.
     """
@@ -196,11 +196,12 @@ class RandomizeTrainerParties(Choice):
     option_match_types = 1
     option_completely_random = 2
 
+
 class BoostTrainerPokemonLevels(Choice):
     """
-    Boost levels of every trainers pokemon. There are 2 different boost modes:
-    Percentage Boost: increases every trainer pokemons level by the boost percentage. 
-    Set Min Level: Sets the boost value as the level of every trainer pokemon lower than the boost value.
+    Boost levels of every trainer's Pokemon. There are 2 different boost modes:
+    Percentage Boost: increases every trainer Pokemons level by the boost percentage.
+    Set Min Level: Sets the boost value as the level of every trainer Pokemon lower than the boost value.
     """
     display_name = "Boost Trainer Pokemon Levels"
     default = 0
@@ -208,17 +209,19 @@ class BoostTrainerPokemonLevels(Choice):
     option_percentage_boost = 1
     option_set_min_level = 2
 
+
 class TrainerLevelBoostValue(Range):
     """
     This Value only works if Boost Trainer Pokemon Levels is being used.
     Meaning of this value is depended on Trainer Boost Mode.
-    Percantage Boost: This value represent the boost amount percantage
-    Set Min Level: This value is the LEVEL the trainer pokemon will have if they have a lower level in vanilla
+    Percentage Boost: This value represent the boost amount percentage
+    Set Min Level: This value is the LEVEL the trainer Pokemon will have if they have a lower level in vanilla
     """
     display_name = "Trainer Level Boost Value"
     default = 1
     range_start = 1
     range_end = 100
+
 
 class RandomizeLearnsets(Choice):
     """
@@ -247,18 +250,19 @@ class LearnsetTypeBias(Range):
     range_start = -1
     range_end = 100
 
+
 class RandomizeMoveValues(Choice):
     """
     Restricted: Generates values based on vanilla
     multiplies Power of each move with a random number between 0,5 to 1,5 and
-    Adds or substract 0, 5 or 10 from original PP | Min 5 Max 40
+    Adds or subtracts 0, 5 or 10 from original PP | Min 5, Max 40
  
     Full Exclude Accuracy: Fully randomizes move Power and PP
     Randomizes each move's Power [20-150], PP [5-40] linearly. All possible values have the same weight.
      
-    Full: Previous + also randomizes Accuracy
+    Full: Previous + also randomizes accuracy.
     Accuracy has a flat chance of %70 for being % 100 accurate if not it is again linear distributed between 30-100. 
-    For now it does not randomize Accuracy of OHKO moves, status moves (eg. Toxic) and unique damage moves (eg. Seismic Toss)
+    For now, it does not randomize Accuracy of OHKO moves, status moves (e.g. Toxic) and unique damage moves (e.g. Seismic Toss)
     """
     display_name = "Randomize Move Values"
     default = 0
@@ -266,7 +270,8 @@ class RandomizeMoveValues(Choice):
     option_restricted = 1
     option_full_exclude_accuracy = 2
     option_full = 3
- 
+
+
 class RandomizeMoveTypes(Toggle):
     """
     Randomizes each move's Type
@@ -275,6 +280,7 @@ class RandomizeMoveTypes(Toggle):
     default = 0
     option_vanilla = 0
     option_random_types = 1
+
 
 class RandomizeTMMoves(Toggle):
     """
@@ -567,6 +573,7 @@ class ParalysisTrapWeight(Range):
 class ItemReceiveSound(DefaultOnToggle):
     """
     Play item received sound on receiving a remote item
+    All items will be considered remote when Remote Items is enabled
     """
     display_name = "Item Receive Sound"
 
@@ -585,6 +592,15 @@ class MoveBlocklist(OptionSet):
     """
     display_name = "Move Blocklist"
     valid_keys = sorted(set(data.moves.keys()))
+
+
+class RemoteItems(Toggle):
+    """
+    Instead of placing your own items directly into the ROM, all items are received from the server, including items you find for yourself.
+    This enables co-op of a single slot and recovering more items after a lost save file (if you're so unlucky).
+    But it changes pickup behavior slightly and requires connection to the server to receive any items.
+    """
+    display_name = "Remote Items"
 
 
 @dataclass
@@ -645,5 +661,6 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     burn_trap_weight: BurnTrapWeight
     freeze_trap_weight: FreezeTrapWeight
     paralysis_trap_weight: ParalysisTrapWeight
+    remote_items: RemoteItems
     item_receive_sound: ItemReceiveSound
     enable_mischief: EnableMischief

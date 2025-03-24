@@ -52,7 +52,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         if location.address is None:
             continue
 
-        if location.item and location.item.player == world.player:
+        if not world.options.remote_items and location.item and location.item.player == world.player:
             item_id = location.item.code
             item_id = item_id - 256 if item_id > 256 else item_id
             write_bytes(patch, [item_id], location.rom_address)
@@ -191,11 +191,11 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         # 0xC9 = ret
         write_bytes(patch, [0xC9], data.rom_addresses["AP_Setting_FruitTreesReset"])
 
-    for move_name, move in world.generated_moves.items(): #effect modification is also possible but not included
+    for move_name, move in world.generated_moves.items():  # effect modification is also possible but not included
         if move_name in ["NO_MOVE", "CURSE"]:
             continue
         address = data.rom_addresses["AP_MoveData_Type_" + move_name]
-        move_type_id = [data.type_ids[move.type] ]
+        move_type_id = [data.type_ids[move.type]]
         write_bytes(patch, move_type_id, address)  # uses same type id conversion that pkmn type randomizer
         address = data.rom_addresses["AP_MoveData_Power_" + move_name]
         write_bytes(patch, [move.power], address)  # power 20-150
@@ -455,6 +455,9 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
     if world.options.undergrounds_require_power.value in [UndergroundsRequirePower.option_neither,
                                                           UndergroundsRequirePower.option_north_south]:
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_EastWestUndergroundOpen"] + 1)
+
+    if world.options.remote_items:
+        write_bytes(patch, [1], data.rom_addresses["AP_Setting_RemoteItems"])
 
     # Set slot name
     for i, byte in enumerate(world.player_name.encode("utf-8")):

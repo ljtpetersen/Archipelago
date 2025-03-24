@@ -6,6 +6,7 @@ from typing import List, ClassVar, Dict, Any, Tuple
 import settings
 from BaseClasses import Tutorial, ItemClassification
 from Fill import fill_restrictive
+from Options import Toggle
 from worlds.AutoWorld import World, WebWorld
 from .client import PokemonCrystalClient
 from .data import PokemonData, TrainerData, MiscData, TMHMData, data as crystal_data, \
@@ -72,7 +73,7 @@ class PokemonCrystalWorld(World):
 
     free_fly_location: int
     map_card_fly_location: int
-    generated_moves=Dict[str, MoveData]
+    generated_moves = Dict[str, MoveData]
     generated_pokemon: Dict[str, PokemonData]
     generated_starters: Tuple[List[str], List[str], List[str]]
     generated_starter_helditems: Tuple[str, str, str]
@@ -137,6 +138,12 @@ class PokemonCrystalWorld(World):
                         "Pokemon Crystal: Mt. Silver Badges >8 incompatible with Johto Only "
                         "if badges are not completely random. Changing Mt. Silver Badges to 8 for player %s.",
                         self.multiworld.get_player_name(self.player))
+
+        # In race mode we don't patch any item location information into the ROM
+        if self.multiworld.is_race and not self.options.remote_items:
+            logging.warning("Pokemon Crystal: Forcing Player %s (%s) to use remote items due to race mode.",
+                            self.player, self.player_name)
+            self.options.remote_items.value = Toggle.option_true
 
     def create_regions(self) -> None:
         regions = create_regions(self)
@@ -252,10 +259,10 @@ class PokemonCrystalWorld(World):
         self.generated_wooper = "WOOPER"
 
         if self.options.randomize_move_values.value:
-             randomize_move_values(self)
- 
+            randomize_move_values(self)
+
         if self.options.randomize_move_types.value:
-             randomize_move_types(self)
+            randomize_move_types(self)
 
         randomize_pokemon(self)
 
