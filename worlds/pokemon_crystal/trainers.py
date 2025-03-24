@@ -31,7 +31,9 @@ def randomize_trainers(world: "PokemonCrystalWorld"):
                 if "LASS_3" in trainer_name:
                     new_pokemon = get_random_nezumi(world.random)
                 else:
-                    new_pokemon = get_random_pokemon(world, types=match_types, force_fully_evolved_at=world.options.force_fully_evolved, current_level=pkmn_data.level)
+                    new_pokemon = get_random_pokemon(world, types=match_types,
+                                                     force_fully_evolved_at=world.options.force_fully_evolved,
+                                                     current_level=pkmn_data.level)
             if pkmn_data.item is not None:
                 # If this trainer has items, add an item
                 new_item = get_random_filler_item(world.random)
@@ -64,16 +66,18 @@ def randomize_trainer_pokemon_moves(world, pkmn_data, new_pokemon):
             new_moves[i] = new_move
     return new_moves
 
-def boost_trainer_pokemon(world: "PokemonCrystalWorld"): #mode 1 multiples pkmn levels by boost | mode 2 sets the levels to boost
-    for trainer_name, trainer_data in world.trainer_list.items():
-        new_party=[]
+
+def boost_trainer_pokemon(world: "PokemonCrystalWorld"):
+    # mode 1 multiplies PKMN levels by boost | mode 2 sets the levels to boost
+    for trainer_name, trainer_data in world.generated_trainers.items():
+        new_party = []
         for trainer_mon in trainer_data.pokemon:
-            new_level=trainer_mon.level
+            new_level = trainer_mon.level
             if world.options.boost_trainers == BoostTrainerPokemonLevels.option_percentage_boost:
-                new_level = int(trainer_mon.level*(1+(world.options.trainer_level_boost)/100))
-                if new_level>100: new_level=100
+                new_level = int(trainer_mon.level * (1 + world.options.trainer_level_boost / 100))
+                if new_level > 100: new_level = 100
             elif world.options.boost_trainers == BoostTrainerPokemonLevels.option_set_min_level:
-                if new_level<world.options.trainer_level_boost:
+                if new_level < world.options.trainer_level_boost:
                     new_level = world.options.trainer_level_boost
             new_party.append(trainer_mon._replace(level=new_level))
         world.generated_trainers[trainer_name] = world.generated_trainers[trainer_name]._replace(pokemon=new_party)
