@@ -196,6 +196,29 @@ class RandomizeTrainerParties(Choice):
     option_match_types = 1
     option_completely_random = 2
 
+class BoostTrainerPokemonLevels(Choice):
+    """
+    Boost levels of every trainers pokemon. There are 2 different boost modes:
+    Percentage Boost: increases every trainer pokemons level by the boost percentage. 
+    Set Min Level: Sets the boost value as the level of every trainer pokemon lower than the boost value.
+    """
+    display_name = "Boost Trainer Pokemon Levels"
+    default = 0
+    option_vanilla = 0
+    option_percentage_boost = 1
+    option_set_min_level = 2
+
+class TrainerLevelBoostValue(Range):
+    """
+    This Value only works if Boost Trainer Pokemon Levels is being used.
+    Meaning of this value is depended on Trainer Boost Mode.
+    Percantage Boost: This value represent the boost amount percantage
+    Set Min Level: This value is the LEVEL the trainer pokemon will have if they have a lower level in vanilla
+    """
+    display_name = "Trainer Level Boost Value"
+    default = 1
+    range_start = 1
+    range_end = 100
 
 class RandomizeLearnsets(Choice):
     """
@@ -586,6 +609,8 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     normalize_encounter_rates: NormalizeEncounterRates
     randomize_static_pokemon: RandomizeStaticPokemon
     randomize_trainer_parties: RandomizeTrainerParties
+    boost_trainers: BoostTrainerPokemonLevels
+    trainer_level_boost: TrainerLevelBoostValue
     randomize_learnsets: RandomizeLearnsets
     learnset_type_bias: LearnsetTypeBias
     randomize_move_values: RandomizeMoveValues

@@ -31,7 +31,6 @@ def randomize_learnset(world: "PokemonCrystalWorld", pkmn_name):
                 rem_types = [type for type in data_types if type not in pkmn_types]
                 move_type = world.random.choice(rem_types)
         new_learnset.append(LearnsetData(level, get_random_move(world, move_type=move_type, cur_learnset=new_learnset)))
-
     # All moves available at Lv.1 that do damage (and don't faint the user)
     start_attacking = [learnset for learnset in new_learnset if
                        world.generated_moves[learnset.move].power > 0
@@ -43,6 +42,7 @@ def randomize_learnset(world: "PokemonCrystalWorld", pkmn_name):
         new_learnset[0] = LearnsetData(1, get_random_move(world, attacking=True)) #overwrites whatever the 1st move is
 
     return new_learnset
+
 
 
 def get_random_move(world: "PokemonCrystalWorld", move_type=None, attacking=None, cur_learnset=None,
@@ -70,9 +70,10 @@ def get_random_move(world: "PokemonCrystalWorld", move_type=None, attacking=None
 
     if move_pool:
         return world.random.choice(move_pool)
+    elif move_type:
+        return get_random_move(world)
     else:
         return get_random_move(world, enforce_blocklist=False)
-
 
 def get_tmhm_compatibility(world: "PokemonCrystalWorld", pkmn_name):
     pkmn_data = world.generated_pokemon[pkmn_name]
