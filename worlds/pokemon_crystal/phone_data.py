@@ -575,6 +575,25 @@ blender_call = PhoneScript(caller_mom, [
     ScriptLine([done_cmd])
 ])
 
+call_your_mother = PhoneScript(caller_withheld, [
+    ScriptLine([text_cmd, "Here's some advice…"]),
+    ScriptLine([para_cmd, "Brush your teeth,"]),
+    ScriptLine([line_cmd, "be kind to to one"]),
+    ScriptLine([cont_cmd, "another"]),
+    ScriptLine([para_cmd, "Take 10 minutes to"]),
+    ScriptLine([line_cmd, "call your mother."]),
+    ScriptLine([para_cmd, "It's been three long"]),
+    ScriptLine([line_cmd, "weeks now,"]),
+    ScriptLine([para_cmd, "A text is not enough."]),
+    ScriptLine([line_cmd, "You gotta get on the"]),
+    ScriptLine([cont_cmd, "phone,"]),
+    ScriptLine([para_cmd, "And give your mother"]),
+    ScriptLine([line_cmd, "a call!"]),
+    ScriptLine([para_cmd, "You gotta do what"]),
+    ScriptLine([line_cmd, "I say--!"]),
+    ScriptLine([done_cmd])
+])
+
 phone_scripts = [
     ffxiv,
     brock_oven,
@@ -599,4 +618,5 @@ phone_scripts = [
     lance_cape,
     flareon_call,
     blender_call,
+    call_your_mother,
 ]
