@@ -1,6 +1,7 @@
-import orjson
 import pkgutil
 from typing import Dict, List, NamedTuple, Set, FrozenSet, Any, Union
+
+import orjson
 
 from BaseClasses import ItemClassification
 
@@ -114,7 +115,6 @@ class MiscData(NamedTuple):
     fuchsia_gym_trainers: List[List[int]]
     radio_tower_questions: List[str]
     saffron_gym_warps: MiscSaffronWarps
-    ecruteak_gym_warps: List[List[List[int]]]
 
 
 class MusicConst(NamedTuple):
@@ -419,8 +419,7 @@ def _init() -> None:
         saffron_warps[warp_name] = MiscWarp(warp_data["coords"], warp_data["id"])
 
     radio_tower_data = ["Y", "Y", "N", "Y", "N"]
-    data.misc = MiscData(fuchsia_data, radio_tower_data, MiscSaffronWarps(saffron_warps, saffron_data["pairs"]),
-                         ecruteak_data)
+    data.misc = MiscData(fuchsia_data, radio_tower_data, MiscSaffronWarps(saffron_warps, saffron_data["pairs"]))
 
     data.types = type_data["types"]
     data.type_ids = type_data["ids"]

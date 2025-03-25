@@ -270,15 +270,8 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
             ids = [world.generated_misc.saffron_gym_warps.warps[warp].id for warp in pair]
             write_bytes(patch, [ids[1]], addresses[0])  # reverse ids
             write_bytes(patch, [ids[0]], addresses[1])
-        eg_warp_counts = [1, 3, 3, 2]  # number of warps to write (the rest are clear)
-        for i in range(0, 4):
-            address = data.rom_addresses["AP_Misc_EcruteakGym_Warps" + str(i + 1)]
-            warp_count = eg_warp_counts[i]
-            line_warps = world.generated_misc.ecruteak_gym_warps[i][:warp_count]
-            line_warps.sort(key=lambda warp: warp[0])
-            for warp in line_warps:
-                write_bytes(patch, [warp[1], warp[0]], address)
-                address += 5
+        address = data.rom_addresses["AP_Misc_Ecruteak_Gym_Warp"]
+        write_bytes(patch, [2, 5], address)
         for move in ["GUILLOTINE", "HORN_DRILL", "FISSURE"]:
             address = data.rom_addresses["AP_MoveData_Effect_" + move]
             write_bytes(patch, [0x65], address)  # false swipe effect
