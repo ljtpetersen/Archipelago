@@ -304,6 +304,8 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         # gives the chairman a 15/16 chance of repeating the rapidash rant each time
         address = data.rom_addresses["AP_Misc_Rapidash_Loop"] + 1
         write_bytes(patch, [1], address)
+        address = data.rom_addresses["AP_Misc_Amphy"] + 1
+        write_bytes(patch, [1], address)
 
     if world.options.blind_trainers:
         address = data.rom_addresses["AP_Setting_Blind_Trainers"]
