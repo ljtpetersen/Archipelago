@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
-from Options import Toggle, Choice, DefaultOnToggle, Range, PerGameCommonOptions, NamedRange, OptionSet
+from Options import Toggle, Choice, DefaultOnToggle, Range, PerGameCommonOptions, NamedRange, OptionSet, \
+    StartInventoryPool
 from .data import data
 
 
@@ -153,7 +154,8 @@ class RandomizeStarters(Choice):
     option_completely_random = 2
     option_first_stage_can_evolve = 3
     option_base_stat_mode = 4
-    
+
+
 class StarterBST(NamedRange):
     """
     If you chose Base Stat Mode for your starters, what is the average base stat total you want your available starters to be?
@@ -690,3 +692,4 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     remote_items: RemoteItems
     item_receive_sound: ItemReceiveSound
     enable_mischief: EnableMischief
+    start_inventory_from_pool: StartInventoryPool
