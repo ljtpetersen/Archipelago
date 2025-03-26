@@ -1770,7 +1770,6 @@
     "exits": [
       "REGION_ROUTE_3",
       "REGION_ROUTE_4",
-      "REGION_MOUNT_MOON",
       "REGION_MOUNT_MOON_SQUARE"
     ],
     "locations": [],
@@ -2136,7 +2135,9 @@
       "OLIVINE_LIGHTHOUSE_5F_RARE_CANDY",
       "OLIVINE_LIGHTHOUSE_5F_SUPER_REPEL",
       "OLIVINE_LIGHTHOUSE_5F_TM_SWAGGER",
-      "OLIVINE_LIGHTHOUSE_5F_HIDDEN_HYPER_POTION"
+      "OLIVINE_LIGHTHOUSE_5F_HIDDEN_HYPER_POTION",
+      "ITEM_FROM_BIRD_KEEPER_DENIS",
+      "ITEM_FROM_SAILOR_ERNEST"
     ],
     "events": []
   },
@@ -2147,8 +2148,6 @@
     ],
     "locations": [
       "OLIVINE_LIGHTHOUSE_6F_SUPER_POTION",
-      "ITEM_FROM_BIRD_KEEPER_DENIS",
-      "ITEM_FROM_SAILOR_ERNEST"
     ],
     "events": [
       "EVENT_JASMINE_EXPLAINED_AMPHYS_SICKNESS",
@@ -2761,7 +2760,10 @@
       "ROUTE_2_HIDDEN_MAX_ETHER",
       "ROUTE_2_HIDDEN_REVIVE",
       "ROUTE_2_MAX_POTION",
-      "FRUITTREE_ROUTE_2"
+      "FRUITTREE_ROUTE_2",
+      "ITEM_FROM_BUG_CATCHER_ROB",
+      "ITEM_FROM_BUG_CATCHER_DOUG",
+      "ITEM_FROM_BUG_CATCHER_ED"
     ],
     "events": []
   },
@@ -2804,10 +2806,7 @@
       "REGION_ROUTE_2:NORTHEAST"
     ],
     "locations": [
-      "NUGGET_FROM_GUY",
-      "ITEM_FROM_BUG_CATCHER_ROB",
-      "ITEM_FROM_BUG_CATCHER_DOUG",
-      "ITEM_FROM_BUG_CATCHER_ED"
+      "NUGGET_FROM_GUY"
     ],
     "events": []
   },
@@ -4208,8 +4207,7 @@
     ],
     "locations": [
       "SPROUT_TOWER_1F_PARLYZ_HEAL",
-      "ITEM_FROM_SAGE_CHOW",
-      "FRUITTREE_VIOLET_CITY"
+      "ITEM_FROM_SAGE_CHOW"
     ],
     "events": []
   },
@@ -4693,7 +4691,8 @@
     "locations": [
       "VIOLET_CITY_HIDDEN_HYPER_POTION",
       "VIOLET_CITY_PP_UP",
-      "VIOLET_CITY_RARE_CANDY"
+      "VIOLET_CITY_RARE_CANDY",
+      "FRUITTREE_VIOLET_CITY"
     ],
     "events": []
   },
