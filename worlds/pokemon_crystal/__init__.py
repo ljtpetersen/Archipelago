@@ -10,7 +10,7 @@ from Options import Toggle
 from worlds.AutoWorld import World, WebWorld
 from .client import PokemonCrystalClient
 from .data import PokemonData, TrainerData, MiscData, TMHMData, data as crystal_data, \
-    WildData, StaticPokemon, MusicData, MoveData, FlyRegion
+    WildData, StaticPokemon, MusicData, MoveData, FlyRegion, TradeData
 from .items import PokemonCrystalItem, create_item_label_to_code_map, get_item_classification, \
     ITEM_GROUPS, item_const_name_to_id, item_const_name_to_label
 from .locations import create_locations, PokemonCrystalLocation, create_location_label_to_id_map
@@ -20,7 +20,7 @@ from .music import randomize_music
 from .options import PokemonCrystalOptions, JohtoOnly, RandomizeBadges, Goal, HMBadgeRequirements, Route32Condition
 from .phone import generate_phone_traps
 from .phone_data import PhoneScript
-from .pokemon import randomize_pokemon, randomize_starters
+from .pokemon import randomize_pokemon, randomize_starters, randomize_traded_pokemon
 from .regions import create_regions, setup_free_fly
 from .rom import generate_output, PokemonCrystalProcedurePatch
 from .rules import set_rules
@@ -87,6 +87,7 @@ class PokemonCrystalWorld(World):
     generated_music: MusicData
     generated_wooper: str
     generated_static: Dict[str, StaticPokemon]
+    generated_trades: List[TradeData]
 
     def generate_early(self) -> None:
         if self.options.early_fly:
@@ -252,6 +253,7 @@ class PokemonCrystalWorld(World):
         self.generated_tms = copy.deepcopy(crystal_data.tmhm)
         self.generated_wild = copy.deepcopy(crystal_data.wild)
         self.generated_static = copy.deepcopy(crystal_data.static)
+        self.generated_trades = copy.deepcopy(crystal_data.trade)
         self.generated_music = copy.deepcopy(crystal_data.music)
         self.generated_palettes = {}
         self.generated_phone_traps = []
@@ -285,6 +287,9 @@ class PokemonCrystalWorld(World):
 
         if self.options.randomize_static_pokemon.value:
             randomize_static_pokemon(self)
+
+        if self.options.randomize_trades.value:
+            randomize_traded_pokemon(self)
 
         if self.options.randomize_music.value:
             randomize_music(self)

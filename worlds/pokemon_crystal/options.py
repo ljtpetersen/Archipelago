@@ -202,6 +202,18 @@ class RandomizeStaticPokemon(Toggle):
     display_name = "Randomize Static Pokemon"
 
 
+class RandomizeTrades(Choice):
+    """
+    Randomizes species of in-game trades
+    """
+    display_name = "Randomize Trades"
+    default = 0
+    option_vanilla = 0
+    option_received = 1
+    option_requested = 2
+    option_both = 3
+
+
 class RandomizeTrainerParties(Choice):
     """
     Randomizes Pokemon in enemy trainer parties
@@ -662,6 +674,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     force_fully_evolved: ForceFullyEvolved
     normalize_encounter_rates: NormalizeEncounterRates
     randomize_static_pokemon: RandomizeStaticPokemon
+    randomize_trades: RandomizeTrades
     randomize_trainer_parties: RandomizeTrainerParties
     boost_trainers: BoostTrainerPokemonLevels
     trainer_level_boost: TrainerLevelBoostValue
