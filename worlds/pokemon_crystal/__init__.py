@@ -124,7 +124,7 @@ class PokemonCrystalWorld(World):
         self.trainer_name_level_dict = {}
         self.encounter_name_list = []
         self.encounter_level_list = []
-        
+
         self.finished_level_scaling = Event()
 
     def generate_early(self) -> None:
@@ -290,30 +290,6 @@ class PokemonCrystalWorld(World):
         if self.options.randomize_move_types.value:
             randomize_move_types(self)
 
-        self.finished_level_scaling.wait()
-
-        randomize_pokemon(self)
-
-        if self.options.randomize_starters.value:
-            randomize_starters(self)
-
-        if self.options.randomize_tm_moves.value:
-            randomize_tms(self)
-
-        if self.options.randomize_trainer_parties.value:
-            randomize_trainers(self)
-        elif self.options.randomize_learnsets.value:
-            vanilla_trainer_movesets(self)
-
-        if self.options.boost_trainers:
-            boost_trainer_pokemon(self)
-
-        if self.options.randomize_wilds.value:
-            randomize_wild_pokemon(self)
-
-        if self.options.randomize_static_pokemon.value:
-            randomize_static_pokemon(self)
-
         if self.options.randomize_trades.value:
             randomize_traded_pokemon(self)
 
@@ -325,6 +301,30 @@ class PokemonCrystalWorld(World):
 
         if self.options.phone_trap_weight.value:
             generate_phone_traps(self)
+
+        if self.options.randomize_tm_moves.value:
+            randomize_tms(self)
+
+        randomize_pokemon(self)
+
+        if self.options.randomize_starters.value:
+            randomize_starters(self)
+
+        if self.options.randomize_wilds.value:
+            randomize_wild_pokemon(self)
+
+        self.finished_level_scaling.wait()
+
+        if self.options.randomize_trainer_parties.value:
+            randomize_trainers(self)
+        elif self.options.randomize_learnsets.value:
+            vanilla_trainer_movesets(self)
+
+        if self.options.boost_trainers:
+            boost_trainer_pokemon(self)
+
+        if self.options.randomize_static_pokemon.value:
+            randomize_static_pokemon(self)
 
         patch = PokemonCrystalProcedurePatch(player=self.player, player_name=self.player_name)
         patch.write_file("basepatch.bsdiff4", pkgutil.get_data(__name__, "data/basepatch.bsdiff4"))
