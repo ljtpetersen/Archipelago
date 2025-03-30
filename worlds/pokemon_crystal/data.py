@@ -157,6 +157,14 @@ class StaticPokemon(NamedTuple):
     addresses: List[str]
 
 
+class TradeData(NamedTuple):
+    index: int
+    requested_pokemon: str
+    received_pokemon: str
+    requested_gender: int
+    held_item: str
+
+
 class FlyRegion(NamedTuple):
     id: int
     name: str
@@ -183,6 +191,7 @@ class PokemonCrystalData:
     misc: MiscData
     music: MusicData
     static: Dict[str, StaticPokemon]
+    trades: List[TradeData]
     fly_regions: List[FlyRegion]
 
     def __init__(self) -> None:
@@ -455,6 +464,15 @@ def _init() -> None:
     data.static = {}
     for static_name, static_data in data_json["static"].items():
         data.static[static_name] = StaticPokemon(static_data["pokemon"], static_data["addresses"])
+
+    data.trade = []
+    for trade_data in data_json["trade"]:
+        data.trade.append(
+            TradeData(trade_data["index"],
+                      trade_data["requested_pokemon"],
+                      trade_data["received_pokemon"],
+                      trade_data["requested_gender"],
+                      trade_data["held_item"]))
 
     data.fly_regions = [
         FlyRegion(2, "Pallet Town", "REGION_PALLET_TOWN"),

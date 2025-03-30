@@ -159,7 +159,8 @@
       "REGION_BLACKTHORN_GYM_2F"
     ],
     "locations": [
-      "ITEM_FROM_COOLTRAINERM_PAUL"
+      "ITEM_FROM_COOLTRAINERM_PAUL",
+      "ITEM_FROM_COOLTRAINERM_MIKE"
     ],
     "events": []
   },
@@ -169,7 +170,6 @@
     "locations": [
       "TM24_DRAGONBREATH",
       "RISING_BADGE_FROM_CLAIR",
-      "ITEM_FROM_COOLTRAINERM_MIKE",
       "ITEM_FROM_COOLTRAINERF_LOLA"
     ],
     "events": [

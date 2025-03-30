@@ -120,6 +120,21 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
                 cur_address = data.rom_addresses[address] + 1
                 write_bytes(patch, [pokemon_id], cur_address)
 
+    if world.options.randomize_trades:
+        trade_table_address = data.rom_addresses["AP_Setting_TradeTable"]
+        for trade in world.generated_trades:
+            trade_address = trade_table_address + (trade.index * 32)  # each trade record is 32 bytes
+            requested = data.pokemon[trade.requested_pokemon].id
+            write_bytes(patch, [requested], trade_address + 1)
+
+            received = data.pokemon[trade.received_pokemon].id
+            write_bytes(patch, [received], trade_address + 2)
+
+            write_bytes(patch, [trade.requested_gender], trade_address + 30)
+
+            item_id = item_const_name_to_id(trade.held_item)
+            write_bytes(patch, [item_id], trade_address + 16)
+
     if world.options.randomize_starters:
         for j, pokemon in enumerate(["CYNDAQUIL_", "TOTODILE_", "CHIKORITA_"]):
             pokemon_id = data.pokemon[world.generated_starters[j][0]].id
