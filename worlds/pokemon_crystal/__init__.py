@@ -6,7 +6,7 @@ from typing import List, ClassVar, Dict, Any, Tuple
 
 import settings
 from BaseClasses import Tutorial, ItemClassification, MultiWorld
-from Fill import fill_restrictive
+from Fill import fill_restrictive, FillError
 from Options import Toggle
 from worlds.AutoWorld import World, WebWorld
 from .client import PokemonCrystalClient
@@ -271,12 +271,29 @@ class PokemonCrystalWorld(World):
                 badge_locs.remove(storm_loc)
                 badge_items.remove(storm_badge)
 
-            # 5/8 badge locations in each region do not require a HM to access, so only trying once should be okay.
-            # I generated 1000 seeds with shuffled badges and none of them broke here, so it's fine probably
-            self.random.shuffle(badge_locs)
             collection_state = self.multiworld.get_all_state(False)
-            fill_restrictive(self.multiworld, collection_state, badge_locs, badge_items,
-                             single_player_placement=True, lock=True, allow_excluded=True)
+
+            # If we can't do this in 5 attempts then just accept our fate
+            for attempt in range(6):
+                attempt_locs = badge_locs.copy()
+                attempt_items = badge_items.copy()
+                self.random.shuffle(attempt_locs)
+                fill_restrictive(self.multiworld, collection_state, attempt_locs, attempt_items,
+                                 single_player_placement=True, lock=True, allow_excluded=True, allow_partial=True)
+                if not attempt_items and not attempt_locs:
+                    break
+
+                if attempt >= 5:
+                    raise FillError(
+                        f"Failed to shuffle badges for player {self.player} ({self.player_name}). Aborting.")
+
+                for location in badge_locs:
+                    location.locked = False
+                    if location.item is not None:
+                        location.item.location = None
+                        location.item = None
+
+                logging.debug(f"Failed to shuffle badges for player {self.player} ({self.player_name}). Retrying.")
 
     @classmethod
     def stage_generate_output(cls, multiworld: MultiWorld, output_directory: str):
