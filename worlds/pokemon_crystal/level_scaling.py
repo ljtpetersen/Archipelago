@@ -15,7 +15,7 @@ def perform_level_scaling(multiworld: MultiWorld):
         # "EVENT_RIVAL_CHERRYGROVE_CITY",
         # "EVENT_BEAT_SAGE_LI", # Sprout Tower Boss
         "EVENT_ZEPHYR_BADGE_FROM_FALKNER",
-        # "EVENT_CLEARED_SLOWPOKE_WELL",
+        "EVENT_CLEARED_SLOWPOKE_WELL",
         # "EVENT_HIVE_BADGE_FROM_BUGSY",
         "EVENT_RIVAL_AZALEA_TOWN",
         "EVENT_PLAIN_BADGE_FROM_WHITNEY",
@@ -55,7 +55,7 @@ def perform_level_scaling(multiworld: MultiWorld):
         "EVENT_EARTH_BADGE_FROM_BLUE",
         "EVENT_BEAT_RIVAL_IN_MT_MOON",
         # "EVENT_RIVAL_INDIGO_PLATEAU_POKECENTER", # this is the league rematch, wed and fri only; requires mt. moon rival
-        "EVENT_KOJI_ALLOWS_YOU_PASSAGE_TO_TIN_TOWER", # 3rd of Wise Trio.
+        "EVENT_KOJI_ALLOWS_YOU_PASSAGE_TO_TIN_TOWER",  # 3rd of Wise Trio.
         "EVENT_BEAT_RED"  # Either Red is the final boss, or he's not lol.  Either way, might as well have a roof.
     ]
 
