@@ -97,6 +97,8 @@ class PokemonCrystalWorld(World):
     trainer_name_list: List[str]
     trainer_level_list: List[int]
     trainer_name_level_dict: Dict[str, int]
+    
+    blocklisted_moves: set
 
     finished_level_scaling: Event
 
@@ -124,6 +126,8 @@ class PokemonCrystalWorld(World):
         self.trainer_name_level_dict = {}
         self.encounter_name_list = []
         self.encounter_level_list = []
+
+        self.blocklisted_moves = set()
 
         self.finished_level_scaling = Event()
 
@@ -183,6 +187,8 @@ class PokemonCrystalWorld(World):
             logging.warning("Pokemon Crystal: Forcing Player %s (%s) to use remote items due to race mode.",
                             self.player, self.player_name)
             self.options.remote_items.value = Toggle.option_true
+
+        self.blocklisted_moves = {move.replace(" ", "_").upper() for move in self.options.move_blocklist}
 
     def create_regions(self) -> None:
         regions = create_regions(self)

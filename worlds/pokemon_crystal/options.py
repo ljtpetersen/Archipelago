@@ -644,16 +644,17 @@ class EnableMischief(Toggle):
 class MoveBlocklist(OptionSet):
     """
     Pokemon won't learn these moves via learnsets or TM's.
-    Moves should be provided in the form: ICE_BEAM
+    Moves should be provided in the form: "Ice Beam"
+    Does not apply to vanilla learnsets or TMs
     """
     display_name = "Move Blocklist"
-    valid_keys = sorted(set(data.moves.keys()))
+    valid_keys = sorted({move.replace("_", " ").title() for move in data.moves.keys()})
 
 
 class FlyLocationBlocklist(OptionSet):
     """
     These locations won't be given to you as fly locations either as your free one or from receiving the map card.
-    Locations should be provided in the format "Ecruteak City"
+    Locations should be provided in the form: "Ecruteak City"
     New Bark Town, Cherrygrove City and Indigo Plateau cannot be chosen as free fly locations and are not valid options
     If you blocklist enough locations that there aren't enough locations left for your total number of free fly locations, the blocklist will simply do nothing
     """

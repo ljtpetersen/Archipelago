@@ -63,9 +63,9 @@ def get_random_move(world: "PokemonCrystalWorld", move_type=None, attacking=None
                      and move_name not in existing_moves]
 
     # remove every move from move_pool that is in the blocklist
-    if enforce_blocklist and world.options.move_blocklist:
+    if enforce_blocklist and world.blocklisted_moves:
         move_pool = [move_name for move_name in move_pool if
-                     move_name not in world.options.move_blocklist]
+                     move_name not in world.blocklisted_moves]
 
     if move_pool:
         return world.random.choice(move_pool)
@@ -103,8 +103,8 @@ def randomize_tms(world: "PokemonCrystalWorld"):
 
     # remove every move from filtered_move_pool that is in the blocklist
 
-    if world.options.move_blocklist:
-        filtered_move_pool = [move for move in global_move_pool if move.name not in world.options.move_blocklist]
+    if world.blocklisted_moves:
+        filtered_move_pool = [move for move in global_move_pool if move.name not in world.blocklisted_moves]
 
     world.random.shuffle(global_move_pool)
     world.random.shuffle(filtered_move_pool)
