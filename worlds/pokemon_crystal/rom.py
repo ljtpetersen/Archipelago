@@ -113,6 +113,8 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         write_bytes(patch, [bank], table_offset_adr + 4)
     write_bytes(patch, [0xFF], item_name_table_adr + item_name_table_length - 1)
 
+    world.finished_level_scaling.wait()
+
     if world.options.randomize_static_pokemon:
         for _static_name, pkmn_data in world.generated_static.items():
             pokemon_id = data.pokemon[pkmn_data.pokemon].id
@@ -320,6 +322,8 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         address = data.rom_addresses["AP_Misc_Amphy"] + 1
         write_bytes(patch, [1], address)
         address = data.rom_addresses["AP_Misc_SecretSwitch"] + 1
+        write_bytes(patch, [1], address)
+        address = data.rom_addresses["AP_Misc_RedGyarados"] + 1
         write_bytes(patch, [1], address)
 
     if world.options.blind_trainers:

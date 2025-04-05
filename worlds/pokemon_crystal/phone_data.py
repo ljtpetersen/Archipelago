@@ -66,7 +66,7 @@ def split_location(location_name):
         return [line_cmd, location_name]
     if len(location_name) < 33:
         return [line_cmd, location_name[:15] + "-", cont_cmd, location_name[15:]]
-    return [line_cmd, location_name[:15] + "-", cont_cmd, location_name[15:33] + "…"]
+    return [line_cmd, location_name[:15] + "-", cont_cmd, location_name[15:30] + "…"]
 
 
 def template_call_remote(location: Location, world):
@@ -206,7 +206,7 @@ gura_call = PhoneScript(caller_withheld, [
     ScriptLine([para_cmd, "about our lord and"]),
     ScriptLine([line_cmd, "savior LIGHTNING"]),
     ScriptLine([cont_cmd, "MCQUEEN?"]),
-    ScriptLine([para_cmd, "He's he star of"]),
+    ScriptLine([para_cmd, "He's the star of"]),
     ScriptLine([line_cmd, "several feature"]),
     ScriptLine([cont_cmd, "films, such as"]),
     ScriptLine([para_cmd, "CARS, CARS 2,"]),
@@ -637,6 +637,40 @@ call_your_mother = PhoneScript(caller_withheld, [
     ScriptLine([done_cmd])
 ])
 
+fuzz_call = PhoneScript(caller_out_of_area, [
+    ScriptLine([text_cmd, "................"]),
+    ScriptLine([line_cmd, "................"]),
+    ScriptLine([cont_cmd, "................"]),
+    ScriptLine([para_cmd, "................"]),
+    ScriptLine([line_cmd, "................"]),
+    ScriptLine([cont_cmd, "................"]),
+    ScriptLine([para_cmd, "..F............."]),
+    ScriptLine([line_cmd, "................"]),
+    ScriptLine([cont_cmd, "................"]),
+    ScriptLine([para_cmd, "................"]),
+    ScriptLine([line_cmd, "................"]),
+    ScriptLine([cont_cmd, "................"]),
+    ScriptLine([done_cmd])
+])
+
+daily_wowers_call = PhoneScript(caller_out_of_area, [
+    ScriptLine([text_cmd, "It's time for"]),
+    ScriptLine([line_cmd, "daily WOWers!"]),
+    ScriptLine([para_cmd, "chrisWOW chris-"]),
+    ScriptLine([line_cmd, "WOW chrisWOW"]),
+    ScriptLine([cont_cmd, "chrisWOW"]),
+    ScriptLine([para_cmd, "chrisWOW chris-"]),
+    ScriptLine([line_cmd, "WOW chrisWOW"]),
+    ScriptLine([cont_cmd, "chrisWOW"]),
+    ScriptLine([para_cmd, "WOWOWOWOWOWOW"]),
+    ScriptLine([line_cmd, "OWOWOWOWOWOWO"]),
+    ScriptLine([cont_cmd, "WOWOWOWOWOWOW"]),
+    ScriptLine([para_cmd, "OWOWOWOWOWOWO"]),
+    ScriptLine([line_cmd, "WOWOWOWOWOWOW"]),
+    ScriptLine([cont_cmd, "OWOW x247chWOW"]),
+    ScriptLine([done_cmd])
+])
+
 phone_scripts = [
     ffxiv,
     brock_oven,
@@ -663,4 +697,6 @@ phone_scripts = [
     blender_call,
     call_your_mother,
     diglett_call,
+    fuzz_call,
+    daily_wowers_call,
 ]

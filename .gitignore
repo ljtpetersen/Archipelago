@@ -4,11 +4,13 @@
 *_Spoiler.txt
 *.bmbp
 *.apbp
+*.apcivvi
 *.apl2ac
 *.apm3
 *.apmc
 *.apz5
 *.aptloz
+*.aptww
 *.apemerald
 *.pyc
 *.pyd
@@ -200,3 +202,6 @@ minecraft_versions.json
 .LSOverride
 Thumbs.db
 [Dd]esktop.ini
+
+# AP fuzzer
+fuzz.py
