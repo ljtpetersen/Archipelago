@@ -1,5 +1,5 @@
 import pkgutil
-from typing import Dict, List, NamedTuple, Set, FrozenSet, Any, Union
+from typing import Dict, List, NamedTuple, Set, FrozenSet, Any, Union, Optional
 
 import orjson
 
@@ -210,6 +210,33 @@ class PokemonCrystalData:
         self.pokemon = {}
         self.trades = []
         self.moves = {}
+
+
+class PokemonCrystalGameSetting(NamedTuple):
+    option_byte_index: int
+    offset: int
+    length: int
+    values: dict[str, int]
+    default: int
+
+    def set_option_byte(self, option_selection: Optional[str], option_bytes: bytearray):
+        if option_selection is True:
+            option_selection = "on"
+        elif option_selection is False:
+            option_selection = "off"
+        elif isinstance(option_selection, int):
+            option_selection = str(option_selection)
+
+        value = self.values.get(option_selection, self.default)
+        mask = ((self.length * 2) - 1) << self.offset
+        value = (value << self.offset) & mask
+
+        option_bytes[self.option_byte_index] &= ~mask
+        option_bytes[self.option_byte_index] |= value
+
+
+ON_OFF = {"off": 0, "on": 1}
+INVERTED_ON_OFF = {"off": 1, "on": 0}
 
 
 def load_json_data(data_name: str) -> Union[List[Any], Dict[str, Any]]:
@@ -509,6 +536,32 @@ def _init() -> None:
         FlyRegion(25, "Blackthorn City", "REGION_BLACKTHORN_CITY"),
         FlyRegion(26, "Silver Cave", "REGION_SILVER_CAVE_OUTSIDE")
     ]
+
+    data.game_settings = {
+        "text_speed": PokemonCrystalGameSetting(0, 0, 2, {"instant": 0, "fast": 1, "mid": 2, "slow": 3}, 2),
+        "battle_shift": PokemonCrystalGameSetting(0, 3, 1, {"shift": 1, "set": 0}, 1),
+        "battle_animations": PokemonCrystalGameSetting(0, 4, 2, {"all": 0, "no_scene": 1, "no_bars": 2, "speedy": 3},
+                                                       0),
+        "sound": PokemonCrystalGameSetting(0, 6, 1, {"mono": 0, "stereo": 1}, 0),
+        "menu_account": PokemonCrystalGameSetting(0, 7, 1, ON_OFF, 1),
+
+        "text_frame": PokemonCrystalGameSetting(1, 0, 4, dict([(f"{x + 1}", x) for x in range(8)]), 0),
+        "bike_music": PokemonCrystalGameSetting(1, 4, 1, INVERTED_ON_OFF, 1),
+        "surf_music": PokemonCrystalGameSetting(1, 5, 1, INVERTED_ON_OFF, 1),
+        "skip_nicknames": PokemonCrystalGameSetting(1, 6, 1, ON_OFF, 0),
+        "auto_run": PokemonCrystalGameSetting(1, 7, 1, ON_OFF, 0),
+
+        "spinners": PokemonCrystalGameSetting(2, 0, 1, {"normal": 0, "rotators": 1}, 0),
+        "fast_egg_hatch": PokemonCrystalGameSetting(2, 1, 1, ON_OFF, 0),
+        "fast_egg_make": PokemonCrystalGameSetting(2, 2, 1, ON_OFF, 0),
+        "rods_always_work": PokemonCrystalGameSetting(2, 3, 1, ON_OFF, 0),
+        "catch_exp": PokemonCrystalGameSetting(2, 4, 1, ON_OFF, 0),
+        "poison_flicker": PokemonCrystalGameSetting(2, 5, 1, INVERTED_ON_OFF, 0),
+        "turbo_a": PokemonCrystalGameSetting(2, 6, 1, ON_OFF, 0),
+        "low_hp_beep": PokemonCrystalGameSetting(2, 7, 1, INVERTED_ON_OFF, 0),
+
+        "time_of_day": PokemonCrystalGameSetting(3, 0, 2, {"auto": 0, "morn": 1, "day": 2, "nite": 3}, 0)
+    }
 
 
 _init()

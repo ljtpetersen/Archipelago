@@ -47,6 +47,14 @@ class PokemonCrystalProcedurePatch(APProcedurePatch, APTokenMixin):
 
 
 def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: PokemonCrystalProcedurePatch) -> None:
+    option_bytes = bytearray(max([item.option_byte_index for item in data.game_settings.values()]) + 1)
+
+    for setting_name, setting in data.game_settings.items():
+        option_selection = world.options.game_options.get(setting_name, None)
+        setting.set_option_byte(option_selection, option_bytes)
+
+    write_bytes(patch, option_bytes, data.rom_addresses["AP_Setting_DefaultOptions"])
+
     item_texts = []
     for location in world.multiworld.get_locations(world.player):
         if location.address is None:
