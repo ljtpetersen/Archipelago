@@ -90,11 +90,19 @@ class RandomizeHiddenItems(Toggle):
     display_name = "Randomize Hidden Items"
 
 
-class RequireItemfinder(DefaultOnToggle):
+class RequireItemfinder(Choice):
     """
     Hidden items require Itemfinder in logic
+
+    Not Required: Hidden items do not require the Itemfinder at all
+    Logically Required: Hidden items will expect you to have Itemfinder for logic but can be picked up without it
+    Hard Required: Hidden items cannot be picked up without the Itemfinder
     """
     display_name = "Require Itemfinder"
+    default = 1
+    option_not_required = 0
+    option_logically_required = 1
+    option_hard_required = 2
 
 
 class Route32Condition(Choice):
