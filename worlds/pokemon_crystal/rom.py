@@ -8,7 +8,7 @@ from settings import get_settings
 from worlds.Files import APProcedurePatch, APTokenMixin, APTokenTypes, APPatchExtension
 from .data import data
 from .items import item_const_name_to_id
-from .options import Route32Condition, UndergroundsRequirePower, RequireItemfinder
+from .options import Route32Condition, UndergroundsRequirePower, RequireItemfinder, Goal
 from .utils import convert_to_ingame_text
 
 if TYPE_CHECKING:
@@ -492,6 +492,9 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
 
     if world.options.require_itemfinder.value == RequireItemfinder.option_hard_required:
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_ItemfinderRequired"] + 1)
+
+    if world.options.goal.value != Goal.option_elite_four:
+        write_bytes(patch, [1], data.rom_addresses["AP_Setting_SkipE4Credits"] + 1)
 
     # Set slot name
     for i, byte in enumerate(world.player_name.encode("utf-8")):
