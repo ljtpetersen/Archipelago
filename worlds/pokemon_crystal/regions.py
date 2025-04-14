@@ -45,7 +45,7 @@ def create_regions(world: "PokemonCrystalWorld") -> Dict[str, Region]:
             # Level Scaling
             if world.options != LevelScaling.option_off:
                 trainer_name_level_list: List[Tuple[str, int]] = []
-                # encounter_name_level_list: List[Tuple[str, int]] = []
+                encounter_name_level_list: List[Tuple[str, int]] = []
 
                 # Create plando locations for the trainers in their regions.
                 for trainer in region_data.trainers:
@@ -57,17 +57,16 @@ def create_regions(world: "PokemonCrystalWorld") -> Dict[str, Region]:
                     new_region.locations.append(scaling_event)
 
                 # Create plando locations for the statics in their regions.
-                # TODO modify static data to support level scaling.
-                # for static in region_data.statics:
-                #    scaling_event = PokemonCrystalLocation(
-                #        world.player, static.name, new_region, None, None, None, frozenset({"static scaling"}))
-                #    scaling_event.show_in_spoiler = False
-                #    scaling_event.place_locked_item(PokemonCrystalItem(
-                #        "Static Pokemon", ItemClassification.filler, None, world.player))
-                #    new_region.locations.append(scaling_event)
+                for static in region_data.statics:
+                    scaling_event = PokemonCrystalLocation(
+                        world.player, static.name, new_region, None, None, None, frozenset({"static scaling"}))
+                    scaling_event.show_in_spoiler = False
+                    scaling_event.place_locked_item(PokemonCrystalItem(
+                        "Static Pokemon", ItemClassification.filler, None, world.player))
+                    new_region.locations.append(scaling_event)
 
-                    # Create plando locations for the wilds in their regions.
-                    # TODO once wilds logic gets implemented.
+                # Create plando locations for the wilds in their regions.
+                # TODO once wilds logic gets implemented.
 
                 min_level = 100
                 # Create a new list of all the Trainer Pokemon and their levels
@@ -78,12 +77,11 @@ def create_regions(world: "PokemonCrystalWorld") -> Dict[str, Region]:
                     trainer_name_level_list.append((trainer.name, min_level))
                     world.trainer_name_level_dict[trainer.name] = min_level
 
-                # min_level = 100
+                min_level = 100
                 # Now we do the same for statics.
-                # for static in region_data.statics:
-                #     min_level = min(min_level, static.level)
-                #     encounter_name_level_list.append((static, min_level))
-                #     world.encounter_name_level_dict[static] = min_level
+                for static in region_data.statics:
+                    min_level = min(min_level, static.level)
+                    encounter_name_level_list.append((static.name, min_level))
 
                 # And finally the wilds.
                 # TODO add wilds scaling.
@@ -92,9 +90,9 @@ def create_regions(world: "PokemonCrystalWorld") -> Dict[str, Region]:
                 trainer_name_level_list.sort(key=lambda i: i[1])
                 world.trainer_name_list += [i[0] for i in trainer_name_level_list]
                 world.trainer_level_list += [i[1] for i in trainer_name_level_list]
-                # encounter_name_level_list.sort(key=lambda i: i[1])
-                # world.encounter_name_list += [i[0] for i in encounter_name_level_list]
-                # world.encounter_level_list += [i[1] for i in encounter_name_level_list]
+                encounter_name_level_list.sort(key=lambda i: i[1])
+                world.encounter_name_list += [i[0] for i in encounter_name_level_list]
+                world.encounter_level_list += [i[1] for i in encounter_name_level_list]
                 # End level scaling in regions.py
 
             for region_exit in region_data.exits:

@@ -340,6 +340,8 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         set_rule(get_entrance("REGION_ILEX_FOREST:NORTH -> REGION_ILEX_FOREST:SOUTH"), can_cut)
         set_rule(get_entrance("REGION_ILEX_FOREST:SOUTH -> REGION_ILEX_FOREST:NORTH"), can_cut)
 
+    set_rule(get_location("Celebi"), lambda state: state.has("GS Ball", world.player))
+
     add_rule(get_entrance("REGION_ILEX_FOREST:SOUTH -> REGION_ILEX_FOREST:NORTH"),
              lambda state: state.has("EVENT_CLEARED_SLOWPOKE_WELL", world.player))
 

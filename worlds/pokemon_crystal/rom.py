@@ -129,6 +129,11 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
             for address in pkmn_data.addresses:
                 cur_address = data.rom_addresses[address] + 1
                 write_bytes(patch, [pokemon_id], cur_address)
+            if pkmn_data.level_address is not None:
+                if pkmn_data.level_type in ["givepoke", "loadwildmon"]:
+                    write_bytes(patch, [pkmn_data.level], data.rom_addresses[pkmn_data.level_address] + 2)
+                elif pkmn_data.level_type == "custom":
+                    write_bytes(patch, [pkmn_data.level], data.rom_addresses[pkmn_data.level_address] + 1)
 
     if world.options.randomize_trades:
         trade_table_address = data.rom_addresses["AP_Setting_TradeTable"]
@@ -360,7 +365,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         if MiscOption.MomItems.value in world.generated_misc.selected:
             address = data.rom_addresses["AP_Misc_MomItems"]
             for mom_item in world.generated_misc.mom_items:
-                write_bytes(patch, item_const_name_to_id(mom_item.item), address + (8 * mom_item.index) + 7)
+                write_bytes(patch, [item_const_name_to_id(mom_item.item)], address + (8 * mom_item.index) + 7)
 
     if world.options.blind_trainers:
         address = data.rom_addresses["AP_Setting_Blind_Trainers"]

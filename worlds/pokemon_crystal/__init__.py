@@ -93,7 +93,6 @@ class PokemonCrystalWorld(World):
     generated_trades: List[TradeData]
     encounter_name_list: List[str]
     encounter_level_list: List[int]
-    encounter_name_level_dict: Dict[str, int]
     trainer_name_list: List[str]
     trainer_level_list: List[int]
     trainer_name_level_dict: Dict[str, int]

@@ -402,11 +402,6 @@
     "exits": [
       "REGION_CELADON_CITY"
     ],
-    "statics": [
-      "Pikachu",
-      "Porygon",
-      "Larvitar"
-    ],
     "locations": [],
     "events": []
   },
@@ -1374,11 +1369,6 @@
     "johto": true,
     "exits": [
       "REGION_GOLDENROD_CITY"
-    ],
-    "statics": [
-      "Abra",
-      "Cubone",
-      "Wobbuffet"
     ],
     "locations": [],
     "events": []

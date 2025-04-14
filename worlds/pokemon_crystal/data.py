@@ -164,8 +164,12 @@ class WildData(NamedTuple):
 
 
 class StaticPokemon(NamedTuple):
+    name: str
     pokemon: str
     addresses: List[str]
+    level: int
+    level_type: str
+    level_address: Optional[str]
 
 
 class TradeData(NamedTuple):
@@ -321,6 +325,22 @@ def _init() -> None:
             trainer_attributes["name_length"]
         )
 
+    data.static = {}
+    for static_name, static_data in data_json["static"].items():
+        level_type = static_data["type"]
+        if level_type == "loadwildmon" or level_type == "givepoke":
+            level_address = static_data["addresses"][0]
+        elif level_type == "custom":
+            level_address = static_data["level_address"]
+        else:
+            level_address = None
+        data.static[static_name] = StaticPokemon(static_name,
+                                                 static_data["pokemon"],
+                                                 static_data["addresses"],
+                                                 static_data["level"],
+                                                 static_data["type"],
+                                                 level_address)
+
     data.regions = {}
 
     for region_name, region_json in regions_json.items():
@@ -354,6 +374,11 @@ def _init() -> None:
         if "trainers" in region_json:
             for trainer in region_json["trainers"]:  #
                 new_region.trainers.append(data.trainers[trainer])
+        #
+        # statics
+        if "statics" in region_json:
+            for static in region_json["statics"]:
+                new_region.statics.append(data.static[static])
 
         # Exits
         for region_exit in region_json["exits"]:
@@ -533,10 +558,6 @@ def _init() -> None:
                            music_maps,
                            data_json["music"]["encounters"],
                            data_json["music"]["scripts"])
-
-    data.static = {}
-    for static_name, static_data in data_json["static"].items():
-        data.static[static_name] = StaticPokemon(static_data["pokemon"], static_data["addresses"])
 
     data.trades = []
     for trade_data in data_json["trade"]:
