@@ -20,7 +20,7 @@ from .misc import misc_activities, get_misc_spoiler_log
 from .moves import randomize_tms, randomize_move_values, randomize_move_types
 from .music import randomize_music
 from .options import PokemonCrystalOptions, JohtoOnly, RandomizeBadges, Goal, HMBadgeRequirements, Route32Condition, \
-    LevelScaling
+    LevelScaling, RedGyaradosAccess
 from .phone import generate_phone_traps
 from .phone_data import PhoneScript
 from .pokemon import randomize_pokemon, randomize_starters, randomize_traded_pokemon
@@ -180,6 +180,15 @@ class PokemonCrystalWorld(World):
                         "Pokemon Crystal: Mt. Silver Badges >8 incompatible with Johto Only "
                         "if badges are not completely random. Changing Mt. Silver Badges to 8 for player %s.",
                         self.multiworld.get_player_name(self.player))
+
+        if (self.options.red_gyarados_access
+                and self.options.randomize_badges.value == RandomizeBadges.option_vanilla
+                and "Whirlpool" and not self.options.hm_badge_requirements == HMBadgeRequirements.option_no_badges
+                and "Whirlpool" not in self.options.remove_badge_requirement):
+            self.options.red_gyarados_access.value = RedGyaradosAccess.option_vanilla
+            logging.warning("Pokemon Crystal: Red Gyarados access requires Whirlpool and Vanilla Badges are not "
+                            "compatible, setting Red Gyarados access to vanilla for player %s.",
+                            self.multiworld.get_player_name(self.player))
 
         # In race mode we don't patch any item location information into the ROM
         if self.multiworld.is_race and not self.options.remote_items:

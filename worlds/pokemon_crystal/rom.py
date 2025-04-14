@@ -540,6 +540,17 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
     if tile:
         write_bytes(patch, [tile], data.rom_addresses["Route2_Blocks"] + map_tile_index(5, 1, 10))
 
+    if world.options.red_gyarados_access:
+        map_width = 20
+        whirlpool_tile = 0x07
+        rock_tile = 0x0A
+        water_tile = 0x35
+        address = data.rom_addresses["LakeOfRage_Blocks"]
+        write_bytes(patch, [rock_tile, whirlpool_tile, 0x39],
+                    address + map_tile_index(8, 10, map_width))
+        write_bytes(patch, [0x30, water_tile, water_tile, rock_tile], address + map_tile_index(7, 11, map_width))
+        write_bytes(patch, [0x31, whirlpool_tile, 0x3A, 0x31], address + map_tile_index(7, 12, map_width))
+
     # Set slot name
     for i, byte in enumerate(world.player_name.encode("utf-8")):
         write_bytes(patch, [byte], data.rom_addresses["AP_Seed_Name"] + i)

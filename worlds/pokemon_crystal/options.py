@@ -119,6 +119,16 @@ class Route32Condition(Choice):
     option_none = 2
 
 
+class RedGyaradosAccess(Choice):
+    """
+    Sets whether the Red Gyarados requires Whirlpool to access
+    """
+    display_name = "Red Gyarados Access"
+    default = 0
+    option_vanilla = 0
+    option_whirlpool = 1
+
+
 class Route2Access(Choice):
     """
     Sets the roadblock to move between the west of route 2 and Diglett's cave
@@ -735,6 +745,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     randomize_hidden_items: RandomizeHiddenItems
     require_itemfinder: RequireItemfinder
     route_32_condition: Route32Condition
+    red_gyarados_access: RedGyaradosAccess
     route_2_access: Route2Access
     trainersanity: Trainersanity
     trainersanity_alerts: TrainersanityAlerts
