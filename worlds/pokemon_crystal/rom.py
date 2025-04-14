@@ -482,7 +482,8 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
             write_bytes(patch, map_fly_offset, data.rom_addresses["AP_Setting_MapCardFreeFly_Offset"] + 1)
 
     if not world.options.remove_ilex_cut_tree:
-        write_bytes(patch, [1], data.rom_addresses["AP_Setting_IlexCutTree"] + 1)
+        # Set cut tree tile to floor
+        write_bytes(patch, [0x1], data.rom_addresses["IlexForest_Blocks"] + map_tile_index(0, 11, 15))
 
     if world.options.skip_elite_four:
         # Lance's room is ID 7
