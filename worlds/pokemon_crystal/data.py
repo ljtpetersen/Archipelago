@@ -270,6 +270,11 @@ ON_OFF = {"off": 0, "on": 1}
 INVERTED_ON_OFF = {"off": 1, "on": 0}
 
 
+class PokemonCrystalMapSizeData(NamedTuple):
+    width: int
+    height: int
+
+
 def load_json_data(data_name: str) -> Union[List[Any], Dict[str, Any]]:
     return orjson.loads(pkgutil.get_data(__name__, "data/" + data_name).decode('utf-8-sig'))
 
@@ -297,6 +302,7 @@ def _init() -> None:
     radio_addr_data = data_json["misc"]["radio_channel_addresses"]
     mom_items_data = data_json["misc"]["mom_items"]
     tmhm_data = data_json["tmhm"]
+    map_size_data = data_json["map_sizes"]
 
     data.rom_version = data_json["rom_version"]
     data.rom_version_11 = data_json["rom_version11"]
@@ -617,6 +623,11 @@ def _init() -> None:
 
         "time_of_day": PokemonCrystalGameSetting(3, 0, 2, {"auto": 0, "morn": 1, "day": 2, "nite": 3}, 0)
     }
+
+    data.map_sizes = {}
+
+    for map_name, map_size in map_size_data.items():
+        data.map_sizes[map_name] = PokemonCrystalMapSizeData(map_size[0], map_size[1])
 
 
 _init()

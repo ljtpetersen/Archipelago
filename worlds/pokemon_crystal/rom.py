@@ -5,11 +5,11 @@ from typing import TYPE_CHECKING
 import bsdiff4
 
 from settings import get_settings
-from worlds.Files import APProcedurePatch, APTokenMixin, APTokenTypes, APPatchExtension
+from worlds.Files import APProcedurePatch, APTokenMixin, APPatchExtension
 from .data import data, MiscOption
 from .items import item_const_name_to_id
 from .options import Route32Condition, UndergroundsRequirePower, RequireItemfinder, Goal, Route2Access
-from .utils import convert_to_ingame_text, map_tile_index
+from .utils import convert_to_ingame_text, write_bytes, replace_map_tiles
 
 if TYPE_CHECKING:
     from . import PokemonCrystalWorld
@@ -483,7 +483,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
 
     if not world.options.remove_ilex_cut_tree:
         # Set cut tree tile to floor
-        write_bytes(patch, [0x1], data.rom_addresses["IlexForest_Blocks"] + map_tile_index(0, 11, 15))
+        replace_map_tiles(patch, "IlexForest", 0, 11, [0x1])
 
     if world.options.skip_elite_four:
         # Lance's room is ID 7
@@ -538,18 +538,16 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         tile = None
 
     if tile:
-        write_bytes(patch, [tile], data.rom_addresses["Route2_Blocks"] + map_tile_index(5, 1, 10))
+        replace_map_tiles(patch, "Route2", 5, 1, [tile])
 
     if world.options.red_gyarados_access:
-        map_width = 20
         whirlpool_tile = 0x07
         rock_tile = 0x0A
         water_tile = 0x35
-        address = data.rom_addresses["LakeOfRage_Blocks"]
-        write_bytes(patch, [rock_tile, whirlpool_tile, 0x39],
-                    address + map_tile_index(8, 10, map_width))
-        write_bytes(patch, [0x30, water_tile, water_tile, rock_tile], address + map_tile_index(7, 11, map_width))
-        write_bytes(patch, [0x31, whirlpool_tile, 0x3A, 0x31], address + map_tile_index(7, 12, map_width))
+        map_name = "LakeOfRage"
+        replace_map_tiles(patch, map_name, 8, 10, [rock_tile, whirlpool_tile, 0x39])
+        replace_map_tiles(patch, map_name, 7, 11, [0x30, water_tile, water_tile, rock_tile])
+        replace_map_tiles(patch, map_name, 7, 12, [0x31, whirlpool_tile, 0x3A, 0x31])
 
     # Set slot name
     for i, byte in enumerate(world.player_name.encode("utf-8")):
@@ -566,11 +564,3 @@ def get_base_rom_as_bytes() -> bytes:
         base_rom_bytes = bytes(infile.read())
 
     return base_rom_bytes
-
-
-def write_bytes(patch, byte_array, address):
-    patch.write_token(
-        APTokenTypes.WRITE,
-        address,
-        bytes(byte_array)
-    )

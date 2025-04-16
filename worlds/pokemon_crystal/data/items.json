@@ -384,7 +384,7 @@
   },
   "SILVER_WING": {
     "name": "Silver Wing",
-    "classification": "USEFUL",
+    "classification": "PROGRESSION",
     "tags": [
       "KeyItem",
       "Unique"
@@ -597,7 +597,7 @@
   },
   "GS_BALL": {
     "name": "GS Ball",
-    "classification": "USEFUL",
+    "classification": "PROGRESSION",
     "tags": [
       "KeyItem",
       "Unique",

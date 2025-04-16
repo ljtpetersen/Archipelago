@@ -1,7 +1,9 @@
+import logging
 from typing import TYPE_CHECKING
 
 from .data import data
 from .options import FreeFlyLocation, Route32Condition, JohtoOnly
+from ..Files import APTokenTypes
 
 if TYPE_CHECKING:
     from . import PokemonCrystalWorld
@@ -81,6 +83,18 @@ def bound(value: int, lower_bound: int, upper_bound: int) -> int:
     return max(min(value, upper_bound), lower_bound)
 
 
-def map_tile_index(x: int, y: int, width: int) -> int:
+def replace_map_tiles(patch, map_name: str, x: int, y: int, tiles):
     # x and y are 0 indexed
-    return (y * width) + x
+    tile_index = (y * data.map_sizes[map_name].width) + x
+    base_address = data.rom_addresses[f"{map_name}_Blocks"]
+
+    logging.debug(f"Writing {len(tiles)} new tile(s) to map {map_name} at {x},{y}")
+    write_bytes(patch, tiles, base_address + tile_index)
+
+
+def write_bytes(patch, byte_array, address):
+    patch.write_token(
+        APTokenTypes.WRITE,
+        address,
+        bytes(byte_array)
+    )

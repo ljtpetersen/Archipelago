@@ -439,6 +439,8 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     set_rule(get_entrance("REGION_TIN_TOWER_1F -> REGION_TIN_TOWER_2F"),
              lambda state: state.has("Rainbow Wing", world.player))
 
+    set_rule(get_location("Ho_Oh"), lambda state: state.has("Rainbow Wing", world.player))
+
     set_rule(get_location("Tin Tower 1F - Rainbow Wing"),
              lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
 
@@ -476,6 +478,8 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
              lambda state: can_whirlpool(state) and can_flash(state))
     set_rule(get_entrance("REGION_ROUTE_41 -> REGION_WHIRL_ISLAND_SE"),
              lambda state: can_whirlpool(state) and can_flash(state))
+
+    set_rule(get_location("Lugia"), lambda state: state.has("Silver Wing", world.player))
 
     # Cianwood
     set_rule(get_entrance("REGION_CIANWOOD_CITY -> REGION_ROUTE_41"), can_surf)
