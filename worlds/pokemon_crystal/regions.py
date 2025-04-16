@@ -4,7 +4,7 @@ from BaseClasses import Region, ItemClassification, Entrance
 from .data import data
 from .items import PokemonCrystalItem
 from .locations import PokemonCrystalLocation
-from .options import FreeFlyLocation, JohtoOnly, LevelScaling
+from .options import FreeFlyLocation, JohtoOnly, LevelScaling, BlackthornDarkCaveAccess
 from .rules import can_map_card_fly
 
 if TYPE_CHECKING:
@@ -109,6 +109,9 @@ def create_regions(world: "PokemonCrystalWorld") -> Dict[str, Region]:
     if world.options.johto_only.value == JohtoOnly.option_off and world.options.east_west_underground:
         regions["REGION_ROUTE_7"].connect(regions["REGION_ROUTE_8"])
         regions["REGION_ROUTE_8"].connect(regions["REGION_ROUTE_7"])
+
+    if world.options.blackthorn_dark_cave_access.value == BlackthornDarkCaveAccess.option_waterfall:
+        regions["REGION_DARK_CAVE_VIOLET_ENTRANCE"].connect(regions["REGION_DARK_CAVE_BLACKTHORN_ENTRANCE"])
 
     world.trainer_level_list.sort()
     world.encounter_level_list.sort()

@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from BaseClasses import CollectionState
 from worlds.generic.Rules import add_rule, set_rule
 from .data import data
-from .options import JohtoOnly, Route32Condition, UndergroundsRequirePower, Route2Access
+from .options import JohtoOnly, Route32Condition, UndergroundsRequirePower, Route2Access, BlackthornDarkCaveAccess
 
 if TYPE_CHECKING:
     from . import PokemonCrystalWorld
@@ -257,6 +257,10 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     set_rule(get_location("Cherrygrove City - Mystic Water from Island Man"), can_surf)
 
     set_rule(get_entrance("REGION_ROUTE_31 -> REGION_DARK_CAVE_VIOLET_ENTRANCE"), can_flash)
+
+    if world.options.blackthorn_dark_cave_access.value == BlackthornDarkCaveAccess.option_waterfall:
+        set_rule(get_entrance("REGION_DARK_CAVE_VIOLET_ENTRANCE -> REGION_DARK_CAVE_BLACKTHORN_ENTRANCE"),
+                 lambda state: can_surf(state) and can_waterfall(state))
 
     set_rule(get_location("EVENT_GAVE_KENYA"), lambda state: state.has("EVENT_GOT_KENYA", world.player))
     set_rule(get_location("Route 31 - TM50 for delivering Kenya"),

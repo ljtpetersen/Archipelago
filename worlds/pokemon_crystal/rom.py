@@ -8,7 +8,8 @@ from settings import get_settings
 from worlds.Files import APProcedurePatch, APTokenMixin, APPatchExtension
 from .data import data, MiscOption
 from .items import item_const_name_to_id
-from .options import Route32Condition, UndergroundsRequirePower, RequireItemfinder, Goal, Route2Access
+from .options import Route32Condition, UndergroundsRequirePower, RequireItemfinder, Goal, Route2Access, \
+    BlackthornDarkCaveAccess
 from .utils import convert_to_ingame_text, write_bytes, replace_map_tiles
 
 if TYPE_CHECKING:
@@ -548,6 +549,18 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         replace_map_tiles(patch, map_name, 8, 10, [rock_tile, whirlpool_tile, 0x39])
         replace_map_tiles(patch, map_name, 7, 11, [0x30, water_tile, water_tile, rock_tile])
         replace_map_tiles(patch, map_name, 7, 12, [0x31, whirlpool_tile, 0x3A, 0x31])
+
+    if world.options.blackthorn_dark_cave_access.value == BlackthornDarkCaveAccess.option_waterfall:
+        map_name = "DarkCaveVioletEntrance"
+        replace_map_tiles(patch, map_name, 6, 0, [0x11, 0x10])
+        replace_map_tiles(patch, map_name, 6, 1, [0x08, 0x0A])
+        replace_map_tiles(patch, map_name, 6, 2, [0x0C, 0x0E, 0x27, 0x0C, 0x0D, 0x0E])
+        replace_map_tiles(patch, map_name, 6, 3, [0x2D, 0x2F, 0x2C, 0x2D, 0x2E, 0x2F])
+        replace_map_tiles(patch, map_name, 9, 4, [0x04, 0x06])
+
+        map_name = "DarkCaveBlackthornEntrance"
+        replace_map_tiles(patch, map_name, 2, 7, [0x02])
+        replace_map_tiles(patch, map_name, 2, 8, [0x02])
 
     # Set slot name
     for i, byte in enumerate(world.player_name.encode("utf-8")):

@@ -143,6 +143,18 @@ class Route2Access(Choice):
     option_open = 2
 
 
+class BlackthornDarkCaveAccess(Choice):
+    """
+    Sets the roadblock required to travel from Route 31 to Blackthorn City through Dark Cave
+    Vanilla: Traversal is not possible
+    Waterfall: A waterfall is added to the Violet side of Dark Cave and a ledge is removed on the Blackthorn side, allowing passage with Flash, Surf and Waterfall
+    """
+    display_name = "Blackthorn Dark Cave Access"
+    default = 0
+    option_vanilla = 0
+    option_waterfall = 1
+
+
 class Trainersanity(Toggle):
     """
     Adds checks for defeating trainers
@@ -747,6 +759,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     route_32_condition: Route32Condition
     red_gyarados_access: RedGyaradosAccess
     route_2_access: Route2Access
+    blackthorn_dark_cave_access: BlackthornDarkCaveAccess
     trainersanity: Trainersanity
     trainersanity_alerts: TrainersanityAlerts
     randomize_pokegear: RandomizePokegear
