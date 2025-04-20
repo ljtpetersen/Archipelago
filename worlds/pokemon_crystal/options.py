@@ -473,15 +473,16 @@ class RandomizeMusic(Toggle):
 
 class FreeFlyLocation(Choice):
     """
-    If enabled, unlocks a random fly location for free
-    If Free Fly and Map Card is selected, an extra fly location
-    is unlocked when the Pokegear and Map Card are obtained
+    Free Fly: Unlocks a random Fly destination when Fly is obtained.
+    Free Fly and Map Card: Additionally unlocks a random Fly destination after obtaining both the Pokegear and Map Card.
+    Map Card: Unlocks a single random Fly destination only after obtaining both the Pokegear and Map card.
     """
     display_name = "Free Fly Location"
     default = 0
     option_off = 0
     option_free_fly = 1
     option_free_fly_and_map_card = 2
+    option_map_card = 3
 
 
 class EarlyFly(Toggle):

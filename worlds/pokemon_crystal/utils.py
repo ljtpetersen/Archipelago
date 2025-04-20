@@ -25,7 +25,7 @@ def get_random_filler_item(random):
     return random.choice(group)
 
 
-def get_free_fly_location(world: "PokemonCrystalWorld"):
+def get_free_fly_locations(world: "PokemonCrystalWorld"):
     location_pool = data.fly_regions[:]
 
     if world.options.route_32_condition.value != Route32Condition.option_any_badge:
@@ -46,7 +46,7 @@ def get_free_fly_location(world: "PokemonCrystalWorld"):
 
         # figure out how many fly locations are needed
         locations_required = 1
-        if world.options.free_fly_location == FreeFlyLocation.option_free_fly_and_map_card:
+        if world.options.free_fly_location.value == FreeFlyLocation.option_free_fly_and_map_card:
             locations_required = 2
 
         # calculate what the list of locations would be after the blocklist
@@ -58,8 +58,11 @@ def get_free_fly_location(world: "PokemonCrystalWorld"):
             location_pool = location_pool_after_blocklist
 
     world.random.shuffle(location_pool)
-    world.free_fly_location = location_pool.pop()
-    if world.options.free_fly_location == FreeFlyLocation.option_free_fly_and_map_card:
+    if world.options.free_fly_location.value in [FreeFlyLocation.option_free_fly,
+                                                 FreeFlyLocation.option_free_fly_and_map_card]:
+        world.free_fly_location = location_pool.pop()
+    if world.options.free_fly_location.value in [FreeFlyLocation.option_free_fly_and_map_card,
+                                                 FreeFlyLocation.option_map_card]:
         world.map_card_fly_location = location_pool.pop()
 
 

@@ -6,6 +6,7 @@ import bsdiff4
 
 from settings import get_settings
 from worlds.Files import APProcedurePatch, APTokenMixin, APPatchExtension
+from . import FreeFlyLocation
 from .data import data, MiscOption
 from .items import item_const_name_to_id
 from .options import Route32Condition, UndergroundsRequirePower, RequireItemfinder, Goal, Route2Access, \
@@ -472,15 +473,18 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
                 quantity = 0
             start_inventory_address += 2
 
-    if world.options.free_fly_location:
+    if world.options.free_fly_location.value in [FreeFlyLocation.option_free_fly,
+                                                 FreeFlyLocation.option_free_fly_and_map_card]:
         free_fly_write = [0, 0, 0, 0]
         free_fly_write[int(world.free_fly_location.id / 8)] = 1 << (world.free_fly_location.id % 8)
         write_bytes(patch, free_fly_write, data.rom_addresses["AP_Setting_FreeFly"])
-        if world.options.free_fly_location > 1:
-            map_fly_offset = int(world.map_card_fly_location.id / 8).to_bytes(2, "little")
-            map_fly_byte = 1 << (world.map_card_fly_location.id % 8)
-            write_bytes(patch, [map_fly_byte], data.rom_addresses["AP_Setting_MapCardFreeFly_Byte"] + 1)
-            write_bytes(patch, map_fly_offset, data.rom_addresses["AP_Setting_MapCardFreeFly_Offset"] + 1)
+
+    if world.options.free_fly_location.value in [FreeFlyLocation.option_free_fly_and_map_card,
+                                                 FreeFlyLocation.option_map_card]:
+        map_fly_offset = int(world.map_card_fly_location.id / 8).to_bytes(2, "little")
+        map_fly_byte = 1 << (world.map_card_fly_location.id % 8)
+        write_bytes(patch, [map_fly_byte], data.rom_addresses["AP_Setting_MapCardFreeFly_Byte"] + 1)
+        write_bytes(patch, map_fly_offset, data.rom_addresses["AP_Setting_MapCardFreeFly_Offset"] + 1)
 
     if not world.options.remove_ilex_cut_tree:
         # Set cut tree tile to floor

@@ -20,15 +20,15 @@ from .misc import misc_activities, get_misc_spoiler_log
 from .moves import randomize_tms, randomize_move_values, randomize_move_types
 from .music import randomize_music
 from .options import PokemonCrystalOptions, JohtoOnly, RandomizeBadges, Goal, HMBadgeRequirements, Route32Condition, \
-    LevelScaling, RedGyaradosAccess
+    LevelScaling, RedGyaradosAccess, FreeFlyLocation
 from .phone import generate_phone_traps
 from .phone_data import PhoneScript
 from .pokemon import randomize_pokemon, randomize_starters, randomize_traded_pokemon
-from .regions import create_regions, setup_free_fly
+from .regions import create_regions, setup_free_fly_regions
 from .rom import generate_output, PokemonCrystalProcedurePatch
 from .rules import set_rules
 from .trainers import boost_trainer_pokemon, randomize_trainers, vanilla_trainer_movesets
-from .utils import get_random_filler_item, get_free_fly_location
+from .utils import get_random_filler_item, get_free_fly_locations
 from .wild import randomize_wild_pokemon, randomize_static_pokemon
 
 
@@ -203,8 +203,8 @@ class PokemonCrystalWorld(World):
         create_locations(self, regions)
         self.multiworld.regions.extend(regions.values())
         if self.options.free_fly_location:
-            get_free_fly_location(self)
-            setup_free_fly(self)
+            get_free_fly_locations(self)
+            setup_free_fly_regions(self)
 
     def create_items(self) -> None:
         item_locations = [
@@ -401,10 +401,13 @@ class PokemonCrystalWorld(World):
         slot_data["free_fly_location"] = 0
         slot_data["map_card_fly_location"] = 0
 
-        if self.options.free_fly_location:
+        if self.options.free_fly_location.value in [FreeFlyLocation.option_free_fly,
+                                                    FreeFlyLocation.option_free_fly_and_map_card]:
             slot_data["free_fly_location"] = self.free_fly_location.id
-            if self.options.free_fly_location > 1:
-                slot_data["map_card_fly_location"] = self.map_card_fly_location.id
+            
+        if self.options.free_fly_location.value in [FreeFlyLocation.option_free_fly_and_map_card,
+                                                    FreeFlyLocation.option_free_fly_and_map_card]:
+            slot_data["map_card_fly_location"] = self.map_card_fly_location.id
 
         return slot_data
 
@@ -417,13 +420,16 @@ class PokemonCrystalWorld(World):
                 types_2 = ", ".join(self.generated_pokemon[evo[2]].types)
                 spoiler_handle.write(f"{evo[0]} ({types_0}) -> {evo[1]} ({types_1}) -> {evo[2]} ({types_2})\n")
 
-        if self.options.free_fly_location:
+        if self.options.free_fly_location.value in [FreeFlyLocation.option_free_fly,
+                                                    FreeFlyLocation.option_free_fly_and_map_card]:
             spoiler_handle.write(f"\n\n")
             spoiler_handle.write(f"Free Fly Location ({self.multiworld.player_name[self.player]}): "
                                  f"{self.free_fly_location.name}\n")
-            if self.options.free_fly_location > 1:
-                spoiler_handle.write(f"Map Card Fly Location ({self.multiworld.player_name[self.player]}): "
-                                     f"{self.map_card_fly_location.name}\n")
+
+        if self.options.free_fly_location.value in [FreeFlyLocation.option_free_fly_and_map_card,
+                                                    FreeFlyLocation.option_map_card]:
+            spoiler_handle.write(f"Map Card Fly Location ({self.multiworld.player_name[self.player]}): "
+                                 f"{self.map_card_fly_location.name}\n")
 
         if self.options.enable_mischief:
             spoiler_handle.write(f"\n\nMischief ({self.multiworld.player_name[self.player]}):\n\n")
