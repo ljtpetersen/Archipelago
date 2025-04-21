@@ -2977,7 +2977,7 @@
     "default_item": "TM_RETURN",
     "script": "AP_NPC_GoldenrodDeptStore5F_TM_RETURN"
   },
-  "TM28_FRUSTRATION": {
+  "TM21_FRUSTRATION": {
     "label": "Goldenrod Dept. Store 5F - TM21 from Receptionist",
     "flag": "EVENT_GOT_TM21_FRUSTRATION",
     "type": "giveitem",
