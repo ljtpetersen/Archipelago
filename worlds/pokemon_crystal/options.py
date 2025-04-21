@@ -727,9 +727,9 @@ class EnableMischief(Toggle):
 
 class MoveBlocklist(OptionSet):
     """
-    Pokemon won't learn these moves via learnsets or TM's.
+    Pokemon won't learn these moves via learnsets and no TM will contain them.
     Moves should be provided in the form: "Ice Beam"
-    Does not apply to vanilla learnsets or TMs
+    Does not apply to vanilla learnsets or vanilla TMs
     """
     display_name = "Move Blocklist"
     valid_keys = sorted({move.replace("_", " ").title() for move in data.moves.keys()})
