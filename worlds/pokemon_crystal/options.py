@@ -121,7 +121,7 @@ class Route32Condition(Choice):
 
 class KantoAccessCondition(Choice):
     """
-    Sets the condition required to pass into Kanto from the Victory Road gate (and vice versa)
+    Sets the condition required to pass between Victory Road gate and Kanto
     Wake Snorlax: Wake the Snorlax outside of Diglett's Cave
     Badge Count: Require the number of badges specified by kanto_access_badges
     Become Champion: Defeat Lance and enter the Hall of Fame
@@ -137,7 +137,7 @@ class KantoAccessCondition(Choice):
 
 class KantoAccessBadges(Range):
     """
-    Sets the number of badges required to pass between
+    Sets the number of badges required to pass between Victory Road gate and Kanto
     Only applies if Kanto Access Condition is set to badge_count
     """
     display_name = "Kanto Access Badges"
@@ -158,7 +158,7 @@ class RedGyaradosAccess(Choice):
 
 class Route2Access(Choice):
     """
-    Sets the roadblock for moving between the west of route 2 and Diglett's cave
+    Sets the roadblock for moving between the west of Route 2 and Diglett's cave
     Vanilla: Cut is required
     Ledge: A ledge is added north of Diglett's cave allowing east -> west access without Cut
     Open: No requirement
@@ -186,7 +186,8 @@ class BlackthornDarkCaveAccess(Choice):
     """
     Sets the roadblock for travelling from Route 31 to Blackthorn City through Dark Cave
     Vanilla: Traversal is not possible
-    Waterfall: A waterfall is added to the Violet side of Dark Cave and a ledge is removed on the Blackthorn side, allowing passage with Flash, Surf and Waterfall
+    Waterfall: A waterfall is added to the Violet side of Dark Cave and a ledge is removed on the Blackthorn side,
+    allowing passage with Flash, Surf and Waterfall
     """
     display_name = "Blackthorn Dark Cave Access"
     default = 0
@@ -444,7 +445,7 @@ class TMCompatibility(NamedRange):
 
 class HMCompatibility(NamedRange):
     """
-    Percent chance for Pokemon to be compatible with a HM
+    Percent chance for Pokemon to be compatible with an HM
     """
     display_name = "HM Compatibility"
     default = 0
