@@ -96,7 +96,8 @@
     "default_item": "MACHINE_PART",
     "type": "hiddenitem",
     "tags": [
-      "KeyIyem"
+      "KeyItem",
+      "Hidden"
     ],
     "script": "CeruleanGymHiddenMachinePart"
   },
