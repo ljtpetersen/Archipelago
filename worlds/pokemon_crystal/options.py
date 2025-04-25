@@ -378,7 +378,7 @@ class RandomizeLearnsets(Choice):
 
 class LearnsetTypeBias(NamedRange):
     """
-    This option will have an effect only if Randomize Learnset option is ENABLED.
+    This option will have an effect only if Randomize Learnset option is enabled.
 
     Percent chance of each move in a Pokemon's learnset to match its type.
     Default value is -1. This means there will be no check in logic for type matches.
