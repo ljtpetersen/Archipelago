@@ -10,7 +10,7 @@ from . import FreeFlyLocation
 from .data import data, MiscOption
 from .items import item_const_name_to_id
 from .options import Route32Condition, UndergroundsRequirePower, RequireItemfinder, Goal, Route2Access, \
-    BlackthornDarkCaveAccess, NationalParkAccess, KantoAccessCondition, Route3Access
+    BlackthornDarkCaveAccess, NationalParkAccess, KantoAccessCondition, Route3Access, EncounterSlotDistribution
 from .utils import convert_to_ingame_text, write_bytes, replace_map_tiles
 
 if TYPE_CHECKING:
@@ -189,7 +189,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
             cur_address = data.rom_addresses["AP_FishMons_" + fish_name]
             for rod_type in [fish_data.old, fish_data.good, fish_data.super]:
                 for i, encounter in enumerate(rod_type):
-                    if world.options.normalize_encounter_rates:
+                    if world.options.encounter_slot_distribution.value == EncounterSlotDistribution.option_equal:
                         # fishing encounter rates are stored as an increasing fraction of 255
                         encounter_rate = int(((i + 1) / len(rod_type)) * 255)
                         write_bytes(patch, [encounter_rate], cur_address)
@@ -202,7 +202,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
             cur_address = data.rom_addresses["TreeMonSet_" + tree_name]
             for rarity in [tree_data.common, tree_data.rare]:
                 for i, encounter in enumerate(rarity):
-                    if world.options.normalize_encounter_rates:
+                    if world.options.encounter_slot_distribution.value == EncounterSlotDistribution.option_equal:
                         # headbutt encounter rates are stored as individual percentages
                         encounter_rate = int(1 / len(rarity) * 100)
                         if i + 1 == len(rarity):
@@ -221,11 +221,21 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         write_bytes(patch, [wooper_id], wooper_sprite_address)
         write_bytes(patch, [wooper_id], wooper_cry_address)
 
-    if world.options.normalize_encounter_rates:
-        # list of percentage, byte offset for encounter tables (byte offsets are index * 2)
-        grass_prob_table = [f(x) for x in range(7) for f in (lambda x: int((x + 1) / 7 * 100), lambda x: x * 2)]
-        water_prob_table = [f(x) for x in range(3) for f in (lambda x: int((x + 1) / 3 * 100), lambda x: x * 2)]
+    grass_probs = []
+    water_probs = []
+
+    if world.options.encounter_slot_distribution.value == EncounterSlotDistribution.option_remove_one_percents:
+        grass_probs = [20, 40, 55, 70, 80, 90, 100]
+    elif world.options.encounter_slot_distribution.value == EncounterSlotDistribution.option_equal:
+        grass_probs = [14, 28, 42, 57, 71, 85, 100]
+        water_probs = [33, 66, 100]
+
+    if grass_probs:
+        grass_prob_table = [f(x) for x in enumerate(grass_probs) for f in (lambda x: x[1], lambda x: x[0] * 2)]
         write_bytes(patch, grass_prob_table, data.rom_addresses["AP_Prob_GrassMon"])
+
+    if water_probs:
+        water_prob_table = [f(x) for x in enumerate(water_probs) for f in (lambda x: x[1], lambda x: x[0] * 2)]
         write_bytes(patch, water_prob_table, data.rom_addresses["AP_Prob_WaterMon"])
 
     if world.options.randomize_berry_trees:

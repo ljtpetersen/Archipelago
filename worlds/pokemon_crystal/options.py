@@ -303,11 +303,18 @@ class ForceFullyEvolved(Range):
     default = 100
 
 
-class NormalizeEncounterRates(Toggle):
+class EncounterSlotDistribution(Choice):
     """
-    Normalizes the chance of encountering each wild Pokemon in a given area
+    Sets how the Pokemon encounter slots in an area are distributed.
+
+    Remove 1%'s modifies grass/cave encounters to 20%/20%/15%/15%/10%/10%/10% and does not modify any others.
+    Equal sets all encounter slots to have (almost) equal probability.
     """
-    display_name = "Normalize Encounter Rates"
+    display_name = "Encounter Slot Distribution"
+    default = 0
+    option_vanilla = 0
+    option_remove_one_percents = 1
+    option_equal = 2
 
 
 class RandomizeStaticPokemon(Toggle):
@@ -857,7 +864,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     starters_bst_average: StarterBST
     randomize_wilds: RandomizeWilds
     force_fully_evolved: ForceFullyEvolved
-    normalize_encounter_rates: NormalizeEncounterRates
+    encounter_slot_distribution: EncounterSlotDistribution
     randomize_static_pokemon: RandomizeStaticPokemon
     level_scaling: LevelScaling
     randomize_trades: RandomizeTrades
