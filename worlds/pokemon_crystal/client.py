@@ -171,8 +171,6 @@ class PokemonCrystalClient(BizHawkClient):
 
             if num_received_items < len(ctx.items_received) and received_item_is_empty:
                 next_item = ctx.items_received[num_received_items].item
-                # Randomized TMs are offset by 256
-                next_item = next_item if next_item < 256 else next_item - 256
                 await bizhawk.write(ctx.bizhawk_ctx, [
                     (data.ram_addresses["wArchipelagoItemReceived"],
                      next_item.to_bytes(1, "little"), "WRAM")

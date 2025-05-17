@@ -59,13 +59,15 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
 
     item_texts = []
     for location in world.multiworld.get_locations(world.player):
-        if location.address is None or location.address > POKEDEX_OFFSET:
+        if location.address is None:
             continue
+
+        location_address = location.rom_address if location.address < POKEDEX_OFFSET \
+            else data.rom_addresses["AP_DexsanityItems"] + (location.address - POKEDEX_OFFSET) - 1
 
         if not world.options.remote_items and location.item and location.item.player == world.player:
             item_id = location.item.code
-            item_id = item_id - 256 if item_id > 256 else item_id
-            write_bytes(patch, [item_id], location.rom_address)
+            write_bytes(patch, [item_id], location_address)
         else:
             # for in game text
             item_flag = location.address
@@ -73,7 +75,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
             item_name = location.item.name.upper()
             item_texts.append([player_name, item_name, item_flag])
 
-            write_bytes(patch, [item_const_name_to_id("AP_ITEM")], location.rom_address)
+            write_bytes(patch, [item_const_name_to_id("AP_ITEM")], location_address)
 
     # table has format: location id (2 bytes), string address (2 bytes), string bank (1 byte),
     # and is terminated by 0xFF
