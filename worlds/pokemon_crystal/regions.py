@@ -59,15 +59,14 @@ KANTO_LOCKED = [
     "HIKER_PARRY_POWER", "LASS_DANA_POWER",
     "PICNICKER_ERIN_POWER", "PICNICKER_GINA_POWER",
     "PICNICKER_TIFFANY_POWER", "POKEMANIAC_BRENT_POWER",
-    "RIVAL_FERALIGATR_INDIGO", "RIVAL_MEGANIUM_INDIGO", # Rival is in a Kanto region rn,
-    "RIVAL_TYPHLOSION_INDIGO", "SAILOR_HUEY_POWER",     # so this is redundant, but eh.
+    "RIVAL_FERALIGATR_INDIGO", "RIVAL_MEGANIUM_INDIGO",  # Rival is in a Kanto region rn,
+    "RIVAL_TYPHLOSION_INDIGO", "SAILOR_HUEY_POWER",  # so this is redundant, but eh.
     "SCHOOLBOY_ALAN_POWER", "SCHOOLBOY_CHAD_POWER",
     "SCHOOLBOY_JACK_POWER"
 ]
 
 E4_LOCKED = list(set(CHAMPION_LOCKED + KANTO_LOCKED))
 REMATCHES = list(set(MAP_LOCKED + ROCKETHQ_LOCKED + RADIO_LOCKED + E4_LOCKED + KANTO_LOCKED))
-
 
 
 class RegionData:
@@ -105,11 +104,10 @@ def create_regions(world: "PokemonCrystalWorld") -> Dict[str, Region]:
             regions[region_name] = new_region
 
             for event_data in region_data.events:
-                event = PokemonCrystalLocation(world.player, event_data.name, new_region)
-                event.show_in_spoiler = False
-                event.place_locked_item(PokemonCrystalItem(
-                    event_data.name, ItemClassification.progression, None, world.player))
-                new_region.locations.append(event)
+                event_location = PokemonCrystalLocation(world.player, event_data.name, new_region)
+                event_location.show_in_spoiler = False
+                event_location.place_locked_item(world.create_event(event_data.name))
+                new_region.locations.append(event_location)
 
             # Level Scaling
             if world.options != LevelScaling.option_off:

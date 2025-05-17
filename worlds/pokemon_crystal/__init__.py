@@ -453,3 +453,11 @@ class PokemonCrystalWorld(World):
             item_code,
             self.player
         )
+
+    def create_event(self, name: str) -> PokemonCrystalItem:
+        return PokemonCrystalItem(
+            name,
+            ItemClassification.progression,
+            None,
+            self.player
+        )
