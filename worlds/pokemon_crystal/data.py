@@ -104,6 +104,7 @@ class MiscOption(Enum):
     OhkoMoves = 8
     RadioChannels = 9
     MomItems = 10
+    IcePath = 11
 
     @staticmethod
     def all():

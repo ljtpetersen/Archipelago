@@ -391,6 +391,10 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
             for mom_item in world.generated_misc.mom_items:
                 write_bytes(patch, [item_const_name_to_id(mom_item.item)], address + (8 * mom_item.index) + 7)
 
+        if MiscOption.IcePath.value in world.generated_misc.selected:
+            write_bytes(patch, [13, 3], data.rom_addresses["AP_Misc_IcePathWarp_1"])
+            write_bytes(patch, [13, 13], data.rom_addresses["AP_Misc_IcePathWarp_2"])
+
     if world.options.blind_trainers:
         address = data.rom_addresses["AP_Setting_Blind_Trainers"]
         write_bytes(patch, [0xC9], address)  # 0xC9 = ret
