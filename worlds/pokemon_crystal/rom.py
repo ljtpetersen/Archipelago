@@ -654,9 +654,8 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
     if world.options.route_3_access == Route3Access.option_boulder_badge:
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_PewterCityBadgeRequired"] + 1)
 
-    # Set slot name
-    for i, byte in enumerate(world.player_name.encode("utf-8")):
-        write_bytes(patch, [byte], data.rom_addresses["AP_Seed_Name"] + i)
+    # Set slot auth
+    write_bytes(patch, world.auth, data.rom_addresses["AP_Seed_Auth"])
 
     patch.write_file("token_data.bin", patch.get_token_binary())
 

@@ -74,6 +74,8 @@ class PokemonCrystalWorld(World):
     location_name_to_id = create_location_label_to_id_map()
     item_name_groups = ITEM_GROUPS  # item_groups
 
+    auth: bytes
+
     free_fly_location: FlyRegion
     map_card_fly_location: FlyRegion
     generated_moves = Dict[str, MoveData]
@@ -309,6 +311,10 @@ class PokemonCrystalWorld(World):
 
                 logging.debug(f"Failed to shuffle badges for player {self.player} ({self.player_name}). Retrying.")
 
+    def generate_basic(self) -> None:
+        # Create auth
+        self.auth = self.random.randbytes(16)
+
     @classmethod
     def stage_generate_output(cls, multiworld: MultiWorld, output_directory: str):
         perform_level_scaling(multiworld)
@@ -410,6 +416,11 @@ class PokemonCrystalWorld(World):
                                              and MiscOption.SecretSwitch.value in self.generated_misc.selected) else 0
 
         return slot_data
+
+    def modify_multidata(self, multidata: Dict[str, Any]):
+        import base64
+        multidata["connect_names"][base64.b64encode(self.auth).decode("ascii")] \
+            = multidata["connect_names"][self.player_name]
 
     def write_spoiler(self, spoiler_handle) -> None:
         if self.options.randomize_starters:
