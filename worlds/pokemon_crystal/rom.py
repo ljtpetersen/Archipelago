@@ -656,6 +656,10 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
     if world.options.route_3_access == Route3Access.option_boulder_badge:
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_PewterCityBadgeRequired"] + 1)
 
+    headbutt_seed = (world.multiworld.seed & 0xFFFF).to_bytes(2, "little")
+    write_bytes(patch, headbutt_seed[:0], data.rom_addresses["AP_Setting_TreeMonSeed_1"] + 1)
+    write_bytes(patch, headbutt_seed[-1:], data.rom_addresses["AP_Setting_TreeMonSeed_2"] + 1)
+
     # Set slot name
     for i, byte in enumerate(world.player_name.encode("utf-8")):
         write_bytes(patch, [byte], data.rom_addresses["AP_Seed_Name"] + i)
