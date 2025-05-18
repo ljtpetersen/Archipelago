@@ -113,9 +113,12 @@ def get_tmhm_compatibility(world: "PokemonCrystalWorld", pkmn_name):
 
 
 def randomize_tms(world: "PokemonCrystalWorld"):
+    ignored_moves = ["ROCK_SMASH", "NO_MOVE", "STRUGGLE"]
+    if world.options.dexsanity:
+        ignored_moves += ["HEADBUTT", "SWEET_SCENT"]
     global_move_pool = [move_data for move_name, move_data in world.generated_moves.items() if
                         not move_data.is_hm
-                        and move_name not in ["ROCK_SMASH", "NO_MOVE", "STRUGGLE"]]
+                        and move_name not in ignored_moves]
 
     filtered_move_pool = [move for move in global_move_pool if move.id not in world.blocklisted_moves]
 
@@ -123,7 +126,7 @@ def randomize_tms(world: "PokemonCrystalWorld"):
     world.random.shuffle(filtered_move_pool)
 
     for tm_name, tm_data in world.generated_tms.items():
-        if tm_data.is_hm or tm_name == "ROCK_SMASH":
+        if tm_data.is_hm or tm_name in ignored_moves:
             continue
         if not filtered_move_pool:
             new_move = global_move_pool.pop()
