@@ -6,7 +6,7 @@ import bsdiff4
 
 from settings import get_settings
 from worlds.Files import APProcedurePatch, APTokenMixin, APPatchExtension
-from . import FreeFlyLocation, POKEDEX_OFFSET
+from . import FreeFlyLocation, APWORLD_VERSION, POKEDEX_OFFSET
 from .data import data, MiscOption
 from .items import item_const_name_to_id
 from .options import Route32Condition, UndergroundsRequirePower, RequireItemfinder, Goal, Route2Access, \
@@ -636,6 +636,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
 
     # Set slot auth
     write_bytes(patch, world.auth, data.rom_addresses["AP_Seed_Auth"])
+    write_bytes(patch, APWORLD_VERSION.encode("ascii")[:32], data.rom_addresses["AP_Version"])
 
     patch.write_file("token_data.bin", patch.get_token_binary())
 

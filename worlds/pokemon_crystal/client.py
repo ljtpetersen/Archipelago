@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 import worlds._bizhawk as bizhawk
 from NetUtils import ClientStatus
 from worlds._bizhawk.client import BizHawkClient
-from .data import data, POKEDEX_OFFSET
+from .data import data, APWORLD_VERSION, POKEDEX_OFFSET
 
 if TYPE_CHECKING:
     from worlds._bizhawk.context import BizHawkClientContext
@@ -106,7 +106,8 @@ class PokemonCrystalClient(BizHawkClient):
             rom_info = ((await bizhawk.read(ctx.bizhawk_ctx, [(data.rom_addresses["AP_ROM_Header"], 11, "ROM"),
                                                               (data.rom_addresses["AP_ROM_Version"], 2, "ROM"),
                                                               (data.rom_addresses["AP_ROM_Revision"], 1, "ROM"),
-                                                              (data.rom_addresses["AP_Setting_RemoteItems"], 1, "ROM")
+                                                              (data.rom_addresses["AP_Setting_RemoteItems"], 1, "ROM"),
+                                                              (data.rom_addresses["AP_Version"], 32, "ROM")
                                                               ])))
 
             rom_name = bytes([byte for byte in rom_info[0] if byte != 0]).decode("ascii")
@@ -123,11 +124,16 @@ class PokemonCrystalClient(BizHawkClient):
 
             required_rom_version = data.rom_version if rom_revision == 0 else data.rom_version_11
             if rom_version != required_rom_version:
+                generator_apworld_version = bytes([byte for byte in rom_info[4] if byte != 0]).decode("ascii")
+                if not generator_apworld_version:
+                    generator_apworld_version = "too old to know"
                 generator_version = "{0:x}".format(rom_version)
                 client_version = "{0:x}".format(required_rom_version)
                 logger.info("ERROR: The patch file used to create this ROM is not compatible with "
                             "this client. Double check your version of pokemon_crystal.apworld "
                             "against the version used to generate this game.")
+                logger.info(f"Client APWorld version: {APWORLD_VERSION}, "
+                            f"Generator APWorld version: {generator_apworld_version}")
                 logger.info(f"ROM Revision: V1.{rom_revision}, Client checksum: {client_version}, "
                             f"Generator checksum: {generator_version}")
                 return False
