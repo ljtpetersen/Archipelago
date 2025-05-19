@@ -24,7 +24,7 @@ from .options import PokemonCrystalOptions, JohtoOnly, RandomizeBadges, Goal, HM
 from .phone import generate_phone_traps
 from .phone_data import PhoneScript
 from .pokemon import randomize_pokemon, randomize_starters, randomize_traded_pokemon, generate_dexsanity_checks, \
-    fill_dexsanity_locations
+    fill_dexsanity_locations, generate_logically_available_pokemon
 from .regions import create_regions, setup_free_fly_regions
 from .rom import generate_output, PokemonCrystalProcedurePatch
 from .rules import set_rules
@@ -79,22 +79,29 @@ class PokemonCrystalWorld(World):
 
     free_fly_location: FlyRegion
     map_card_fly_location: FlyRegion
-    generated_moves = Dict[str, MoveData]
+
+    generated_moves: Dict[str, MoveData]
     generated_pokemon: Dict[str, PokemonData]
-    generated_dexsanity: Dict[str, PokemonData]
-    generated_starters: Tuple[List[str], List[str], List[str]]
-    generated_starter_helditems: Tuple[str, str, str]
+
     generated_trainers: Dict[str, TrainerData]
-    generated_palettes: Dict[str, List[int]]
-    generated_phone_traps: List[PhoneScript]
-    generated_phone_indices: List[int]
-    generated_misc: MiscData
+
     generated_tms: Dict[str, TMHMData]
     generated_wild: WildData
-    generated_music: MusicData
-    generated_wooper: str
     generated_static: Dict[str, StaticPokemon]
     generated_trades: List[TradeData]
+
+    generated_dexsanity: set[str]
+    generated_wooper: str
+    generated_starters: Tuple[List[str], List[str], List[str]]
+    generated_starter_helditems: Tuple[str, str, str]
+    generated_palettes: Dict[str, List[int]]
+
+    generated_music: MusicData
+    generated_misc: MiscData
+
+    generated_phone_traps: List[PhoneScript]
+    generated_phone_indices: List[int]
+
     encounter_name_list: List[str]
     encounter_level_list: List[int]
     trainer_name_list: List[str]
@@ -108,23 +115,24 @@ class PokemonCrystalWorld(World):
     def __init__(self, multiworld: MultiWorld, player: int):
         super().__init__(multiworld, player)
         self.generated_moves = copy.deepcopy(crystal_data.moves)
+        self.generated_pokemon = copy.deepcopy(crystal_data.pokemon)
         self.generated_trainers = copy.deepcopy(crystal_data.trainers)
-        self.generated_misc = copy.deepcopy(crystal_data.misc)
         self.generated_tms = copy.deepcopy(crystal_data.tmhm)
         self.generated_wild = copy.deepcopy(crystal_data.wild)
         self.generated_static = copy.deepcopy(crystal_data.static)
         self.generated_trades = copy.deepcopy(crystal_data.trades)
-        self.generated_music = copy.deepcopy(crystal_data.music)
-        self.generated_pokemon = copy.deepcopy(crystal_data.pokemon)
-        self.generated_dexsanity = {}
+        self.generated_dexsanity = set()
+        self.generated_wooper = "WOOPER"
         self.generated_starters = (["CYNDAQUIL", "QUILAVA", "TYPHLOSION"],
                                    ["TOTODILE", "CROCONAW", "FERALIGATR"],
                                    ["CHIKORITA", "BAYLEEF", "MEGANIUM"])
         self.generated_starter_helditems = ("BERRY", "BERRY", "BERRY")
         self.generated_palettes = {}
+        self.generated_music = copy.deepcopy(crystal_data.music)
+        self.generated_misc = copy.deepcopy(crystal_data.misc)
         self.generated_phone_traps = []
         self.generated_phone_indices = []
-        self.generated_wooper = "WOOPER"
+
         self.trainer_name_list = []
         self.trainer_level_list = []
         self.trainer_name_level_dict = {}
@@ -133,6 +141,7 @@ class PokemonCrystalWorld(World):
 
         self.blocklisted_moves = set()
 
+        self.logically_available_pokemon = set()
         self.available_wild_regions = set()
 
         self.finished_level_scaling = Event()
@@ -220,6 +229,8 @@ class PokemonCrystalWorld(World):
     def create_regions(self) -> None:
         regions = create_regions(self)
 
+        generate_logically_available_pokemon(self)
+        
         if self.options.dexsanity:
             generate_dexsanity_checks(self)
 

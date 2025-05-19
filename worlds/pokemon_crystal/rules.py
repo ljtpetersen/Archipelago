@@ -1157,7 +1157,8 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
             if "Hidden" in location.tags:
                 add_rule(location, lambda state: state.has("Itemfinder", world.player))
 
-    for (pokemon_id, pokemon_data) in world.generated_dexsanity.items():
+    for pokemon_id in world.generated_dexsanity:
+        pokemon_data = world.generated_pokemon[pokemon_id]
         set_rule(get_location(f"Pokedex - {pokemon_data.friendly_name}"),
                  lambda state, species_id=pokemon_id: state.has(f"CATCH_{species_id}", world.player))
 
@@ -1201,8 +1202,8 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         if world.options.evolution_methods_required:
             locations_to_evolutions = defaultdict[str, list[EvolutionData]](lambda: [])
             locations_to_pokemon = dict[str, str]()
-            for pokemon_id, pokemon_data in world.generated_pokemon.items():
-                for evolution in pokemon_data.evolutions:
+            for pokemon_id in world.logically_available_pokemon:
+                for evolution in world.generated_pokemon[pokemon_id].evolutions:
                     if evolution_in_logic(world, evolution):
                         location_name = evolution_location_name(world, pokemon_id, evolution.pokemon)
                         locations_to_pokemon[location_name] = pokemon_id

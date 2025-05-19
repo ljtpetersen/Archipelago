@@ -80,7 +80,8 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
     if world.options.dexsanity:
         pokedex_region = regions["Pokedex"]
 
-        for (pokemon_id, pokemon_data) in world.generated_dexsanity.items():
+        for pokemon_id in world.generated_dexsanity:
+            pokemon_data = world.generated_pokemon[pokemon_id]
             new_location = PokemonCrystalLocation(
                 world.player,
                 f"Pokedex - {pokemon_data.friendly_name}",
@@ -93,15 +94,15 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
         if world.options.evolution_methods_required:
             evolution_region = regions["Evolutions"]
             created_locations = set()
-            for pokemon_id, pokemon_data in world.generated_pokemon.items():
-                for evolution in pokemon_data.evolutions:
+            for pokemon_id in world.logically_available_pokemon:
+                for evolution in world.generated_pokemon[pokemon_id].evolutions:
                     location_name = evolution_location_name(world, pokemon_id, evolution.pokemon)
                     if not evolution_in_logic(world, evolution) or location_name in created_locations: continue
                     new_location = PokemonCrystalLocation(
                         world.player,
                         location_name,
                         evolution_region,
-                        tags=frozenset({"dexsanity", "evolution"})
+                        tags=frozenset({"evolution"})
                     )
                     new_location.show_in_spoiler = False
                     new_location.place_locked_item(

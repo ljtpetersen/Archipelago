@@ -5,7 +5,7 @@ from . import StaticPokemon
 from .data import data as crystal_data, EncounterMon
 from .moves import get_tmhm_compatibility, randomize_learnset
 from .options import RandomizeTypes, RandomizePalettes, RandomizeBaseStats, RandomizeStarters, RandomizeTrades
-from .utils import get_random_filler_item
+from .utils import get_random_filler_item, evolution_in_logic
 
 if TYPE_CHECKING:
     from . import PokemonCrystalWorld
@@ -137,49 +137,56 @@ def randomize_traded_pokemon(world: "PokemonCrystalWorld"):
     world.generated_trades = new_trades
 
 
-def generate_dexsanity_checks(world: "PokemonCrystalWorld"):
-    pokemon_items = list(world.generated_pokemon.items())
-    world.random.shuffle(pokemon_items)
-    available_pokemon = _get_available_pokemon(world)
-    pokemon_items = [item for item in pokemon_items if item[0] in available_pokemon]
-    for _ in range(min(world.options.dexsanity.value, len(pokemon_items))):
-        chosen_pokemon = pokemon_items.pop()
-        world.generated_dexsanity[chosen_pokemon[0]] = chosen_pokemon[1]
-
-
-def _get_available_pokemon(world: "PokemonCrystalWorld") -> set[str]:
-    available_pokemon = set()
+def generate_logically_available_pokemon(world: "PokemonCrystalWorld"):
+    wild_pokemon = set()
 
     for region, wilds in world.generated_wild.grass.items():
         if f"WildGrass_{region}" in world.available_wild_regions:
             for wild in wilds:
-                available_pokemon.add(wild.pokemon)
+                wild_pokemon.add(wild.pokemon)
     for region, wilds in world.generated_wild.water.items():
         if f"WildWater_{region}" in world.available_wild_regions:
             for wild in wilds:
-                available_pokemon.add(wild.pokemon)
+                wild_pokemon.add(wild.pokemon)
     for region, wilds in world.generated_wild.fish.items():
         if f"WildFish_{region}" in world.available_wild_regions:
             for wild in wilds.old:
-                available_pokemon.add(wild.pokemon)
+                wild_pokemon.add(wild.pokemon)
             for wild in wilds.good:
-                available_pokemon.add(wild.pokemon)
+                wild_pokemon.add(wild.pokemon)
             for wild in wilds.super:
-                available_pokemon.add(wild.pokemon)
+                wild_pokemon.add(wild.pokemon)
     for region, wilds in world.generated_wild.tree.items():
         region_id = "WildRockSmash" if region == "Rock" else f"WildTree_{region}"
         if region_id in world.available_wild_regions:
             for wild in wilds.common:
-                available_pokemon.add(wild.pokemon)
+                wild_pokemon.add(wild.pokemon)
             if region != "Rock":
                 for wild in wilds.rare:
-                    available_pokemon.add(wild.pokemon)
+                    wild_pokemon.add(wild.pokemon)
 
     for static in world.generated_static.values():
         if f"Static_{static.name}" in world.available_wild_regions:
-            available_pokemon.add(static.pokemon)
+            wild_pokemon.add(static.pokemon)
 
-    return available_pokemon
+    evolution_pokemon = set()
+
+    for pokemon in wild_pokemon:
+        for evo in world.generated_pokemon[pokemon].evolutions:
+            if evolution_in_logic(world, evo):
+                evolution_pokemon.add(evo.pokemon)
+                for second_evo in world.generated_pokemon[evo.pokemon].evolutions:
+                    evolution_pokemon.add(second_evo.pokemon)
+
+    world.logically_available_pokemon = wild_pokemon | evolution_pokemon
+
+
+def generate_dexsanity_checks(world: "PokemonCrystalWorld"):
+    all_pokemon = list(world.generated_pokemon.keys())
+    world.random.shuffle(all_pokemon)
+    pokemon_items = [pokemon for pokemon in all_pokemon if pokemon in world.logically_available_pokemon]
+    for _ in range(min(world.options.dexsanity.value, len(pokemon_items))):
+        world.generated_dexsanity.add(pokemon_items.pop())
 
 
 def fill_dexsanity_locations(world: "PokemonCrystalWorld"):
