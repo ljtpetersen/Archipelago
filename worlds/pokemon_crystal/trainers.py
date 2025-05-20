@@ -39,7 +39,7 @@ def randomize_trainers(world: "PokemonCrystalWorld"):
 
             # If the current pokemon is rival's starter, don't change its evolution line
             if is_rival_starter_pokemon(trainer_name, trainer_data, i):
-                if pkmn_data.level >= world.options.force_fully_evolved:
+                if world.options.force_fully_evolved.value and pkmn_data.level >= world.options.force_fully_evolved:
                     new_pokemon = get_last_evolution(new_pokemon, world.random)
             else:
                 match_types = None

@@ -238,7 +238,7 @@ def get_random_pokemon(world: "PokemonCrystalWorld", priority_list: set[str] | N
 
         # If we have a level to force fully evolved at and the current level of the pokemon is passed in,
         # exlude Pokemon with evolutions from the list if the level is greater or equal than forced_fully_evolved
-        if force_fully_evolved_at is not None and current_level is not None:
+        if force_fully_evolved_at and current_level is not None:
             if current_level >= force_fully_evolved_at and pkmn_data.evolutions:
                 return True
 

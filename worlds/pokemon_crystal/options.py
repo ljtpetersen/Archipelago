@@ -71,7 +71,7 @@ class RadioTowerBadges(Range):
 
 class VanillaClair(Toggle):
     """
-    Clair refuses to give you the Rising Badge until you prove you're worth
+    Clair refuses to give you the Rising Badge until you prove your worth
     to the Elders in the Dragon's Den Shrine, which requires Whirlpool to access.
     """
     display_name = "Vanilla Clair"
@@ -337,16 +337,19 @@ class RandomizeWilds(Choice):
     option_catch_em_all = 3
 
 
-class ForceFullyEvolved(Range):
+class ForceFullyEvolved(NamedRange):
     """
     When an opponent uses a Pokemon of the specified level or higher, restricts the species to only fully evolved Pokemon.
 
     Only applies when trainer parties are randomized.
     """
     display_name = "Force Fully Evolved"
-    range_start = 1
+    range_start = 0
     range_end = 100
-    default = 100
+    default = 0
+    special_range_names = {
+        "off": 0
+    }
 
 
 class EncounterSlotDistribution(Choice):
@@ -358,6 +361,7 @@ class EncounterSlotDistribution(Choice):
         Grass/Cave: 20%/20%/15%/15%/10%/10%/10%
         Headbutt:  20%/20%/20%/15%/15%/10%
         Rock Smash: 70%/30%
+        Fishing is left vanilla
     Equal sets all encounter slots to have (almost) equal probability.
     """
     display_name = "Encounter Slot Distribution"
