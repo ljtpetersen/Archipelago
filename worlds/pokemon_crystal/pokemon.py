@@ -218,7 +218,7 @@ def _fill_dexsanity_area(world: "PokemonCrystalWorld", area_name: str, encounter
             pass
 
 
-def get_random_pokemon(world: "PokemonCrystalWorld", priority_list: set[str] | None = None, types=None,
+def get_random_pokemon(world: "PokemonCrystalWorld", priority_pokemon: set[str] | None = None, types=None,
                        base_only=False, force_fully_evolved_at=None, current_level=None, starter=False,
                        exclude_unown=False):
     bst_range = world.options.starters_bst_average * .10
@@ -257,8 +257,8 @@ def get_random_pokemon(world: "PokemonCrystalWorld", priority_list: set[str] | N
 
         return False
 
-    if priority_list:
-        pokemon_pool = [pkmn_name for pkmn_name in priority_list if
+    if priority_pokemon:
+        pokemon_pool = [pkmn_name for pkmn_name in priority_pokemon if
                         not filter_out_pokemon(pkmn_name, world.generated_pokemon[pkmn_name])]
     else:
         pokemon_pool = [pkmn_name for pkmn_name, pkmn_data in world.generated_pokemon.items()

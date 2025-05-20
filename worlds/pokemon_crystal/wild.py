@@ -9,23 +9,21 @@ if TYPE_CHECKING:
 
 
 def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
-    priority_list = set()
+    priority_pokemon = set()
 
     if world.options.randomize_wilds.value == RandomizeWilds.option_catch_em_all:
-        priority_list = set(world.generated_pokemon.keys())
+        priority_pokemon = set(world.generated_pokemon.keys())
     elif world.options.randomize_wilds.value == RandomizeWilds.option_base_forms:
-        priority_list = set(world.generated_pokemon.keys())
-        for pokemon_id, pokemon_data in world.generated_pokemon.items():
-            for evolution in pokemon_data.evolutions:
-                priority_list.discard(evolution.pokemon)
+        priority_pokemon = set([pokemon_id for pokemon_id, pokemon_data in world.generated_pokemon.items() if
+                                pokemon_data.is_base])
 
     world.generated_wooper = get_random_pokemon(world, exclude_unown=True)
 
     def randomize_encounter_list(encounter_list: list[EncounterMon], exclude_unown=False):
         new_encounters = []
         for encounter in encounter_list:
-            pokemon = get_random_pokemon(world, priority_list=priority_list, exclude_unown=exclude_unown)
-            priority_list.discard(pokemon)
+            pokemon = get_random_pokemon(world, priority_pokemon=priority_pokemon, exclude_unown=exclude_unown)
+            priority_pokemon.discard(pokemon)
             new_encounters.append(encounter._replace(pokemon=pokemon))
         return new_encounters
 
