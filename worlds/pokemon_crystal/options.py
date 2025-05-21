@@ -337,6 +337,26 @@ class RandomizeWilds(Choice):
     option_catch_em_all = 3
 
 
+class EncounterGrouping(Choice):
+    """
+    Determines how randomized wild Pokemon are grouped in encounter tables.
+
+    All Split: Each encounter area will have each slot randomized separately. For example, grass areas will have seven
+        randomized encounter slots. This does not guarantee slot uniqueness.
+    One to One: Each encounter area will retain its vanilla slot grouping. For exampke, if an area has two encounters
+        in vanilla, it will be randomized as two slots. This does not guarantee slot uniqueness.
+    One per Method: Each encounter method on a route will be treated as a single slot. For example, the grass on a route
+     will contain only a single encounter. Each rod is a separate encounter.
+
+    This setting has no effect if wild Pokemon are not randomized.
+    """
+    display_name = "Encounter Grouping"
+    default = 0
+    option_all_split = 0
+    option_one_to_one = 1
+    option_one_per_method = 2
+
+
 class ForceFullyEvolved(NamedRange):
     """
     When an opponent uses a Pokemon of the specified level or higher, restricts the species to only fully evolved Pokemon.
@@ -921,6 +941,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     randomize_starters: RandomizeStarters
     starters_bst_average: StarterBST
     randomize_wilds: RandomizeWilds
+    encounter_grouping: EncounterGrouping
     force_fully_evolved: ForceFullyEvolved
     encounter_slot_distribution: EncounterSlotDistribution
     randomize_static_pokemon: RandomizeStaticPokemon

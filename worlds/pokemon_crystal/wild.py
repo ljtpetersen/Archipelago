@@ -1,7 +1,8 @@
+from collections import defaultdict
 from typing import TYPE_CHECKING
 
 from .data import FishData, TreeMonData, EncounterMon
-from .options import RandomizeWilds
+from .options import RandomizeWilds, EncounterGrouping
 from .pokemon import get_random_pokemon
 
 if TYPE_CHECKING:
@@ -20,11 +21,27 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
     world.generated_wooper = get_random_pokemon(world, exclude_unown=True)
 
     def randomize_encounter_list(encounter_list: list[EncounterMon], exclude_unown=False):
-        new_encounters = []
-        for encounter in encounter_list:
+        new_encounters = list[EncounterMon]()
+        if world.options.encounter_grouping.value == EncounterGrouping.option_one_per_method:
             pokemon = get_random_pokemon(world, priority_pokemon=priority_pokemon, exclude_unown=exclude_unown)
             priority_pokemon.discard(pokemon)
-            new_encounters.append(encounter._replace(pokemon=pokemon))
+            for encounter in encounter_list:
+                new_encounters.append(encounter._replace(pokemon=pokemon))
+        elif world.options.encounter_grouping.value == EncounterGrouping.option_one_to_one:
+            distribution = defaultdict[str, list[int]](lambda: [])
+            new_encounters = [encounter for encounter in encounter_list]
+            for i, encounter in enumerate(encounter_list):
+                distribution[encounter.pokemon] += [i]
+            for pokemon, slots in distribution.items():
+                pokemon = get_random_pokemon(world, priority_pokemon=priority_pokemon, exclude_unown=exclude_unown)
+                priority_pokemon.discard(pokemon)
+                for slot in slots:
+                    new_encounters[slot] = new_encounters[slot]._replace(pokemon=pokemon)
+        else:
+            for encounter in encounter_list:
+                pokemon = get_random_pokemon(world, priority_pokemon=priority_pokemon, exclude_unown=exclude_unown)
+                priority_pokemon.discard(pokemon)
+                new_encounters.append(encounter._replace(pokemon=pokemon))
         return new_encounters
 
     for grass_name, grass_encounters in world.generated_wild.grass.items():
