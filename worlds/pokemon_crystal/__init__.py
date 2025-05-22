@@ -17,15 +17,15 @@ from .items import PokemonCrystalItem, create_item_label_to_code_map, get_item_c
     ITEM_GROUPS, item_const_name_to_id, item_const_name_to_label
 from .level_scaling import perform_level_scaling
 from .locations import create_locations, PokemonCrystalLocation, create_location_label_to_id_map
-from .misc import misc_activities, get_misc_spoiler_log
+from .misc import randomize_mischief, get_misc_spoiler_log
 from .moves import randomize_tms, randomize_move_values, randomize_move_types
 from .music import randomize_music
 from .options import PokemonCrystalOptions, JohtoOnly, RandomizeBadges, Goal, HMBadgeRequirements, Route32Condition, \
     LevelScaling, RedGyaradosAccess, FreeFlyLocation
 from .phone import generate_phone_traps
 from .phone_data import PhoneScript
-from .pokemon import randomize_pokemon, randomize_starters, randomize_traded_pokemon, generate_dexsanity_checks, \
-    fill_wild_encounter_locations, generate_logically_available_pokemon, generate_breeding_data
+from .pokemon import randomize_pokemon_data, randomize_starters, randomize_traded_pokemon, generate_dexsanity_checks, \
+    fill_wild_encounter_locations, generate_breeding_data, generate_evolution_data
 from .regions import create_regions, setup_free_fly_regions
 from .rom import generate_output, PokemonCrystalProcedurePatch
 from .rules import set_rules
@@ -223,25 +223,16 @@ class PokemonCrystalWorld(World):
 
         self.blocklisted_moves = {move.replace(" ", "_").upper() for move in self.options.move_blocklist.value}
 
-        if self.options.randomize_wilds.value:
-            randomize_wild_pokemon(self)
-
-        if self.options.randomize_static_pokemon.value:
-            randomize_static_pokemon(self)
+        randomize_wild_pokemon(self)
+        randomize_static_pokemon(self)
+        generate_evolution_data(self)
+        generate_breeding_data(self)
 
     def create_regions(self) -> None:
         regions = create_regions(self)
-
-        generate_logically_available_pokemon(self)
-
-        if self.options.breeding_methods_required:
-            generate_breeding_data(self)
-
-        if self.options.dexsanity:
-            generate_dexsanity_checks(self)
-
         create_locations(self, regions)
         self.multiworld.regions.extend(regions.values())
+        
         if self.options.free_fly_location:
             get_free_fly_locations(self)
             setup_free_fly_regions(self)
@@ -367,38 +358,20 @@ class PokemonCrystalWorld(World):
 
     def generate_output(self, output_directory: str) -> None:
 
-        if self.options.randomize_move_values.value:
-            randomize_move_values(self)
+        randomize_move_values(self)
+        randomize_move_types(self)
+        randomize_traded_pokemon(self)
+        randomize_music(self)
+        randomize_mischief(self)
+        randomize_tms(self)
+        randomize_pokemon_data(self)
+        randomize_starters(self)
 
-        if self.options.randomize_move_types.value:
-            randomize_move_types(self)
-
-        if self.options.randomize_trades.value:
-            randomize_traded_pokemon(self)
-
-        if self.options.randomize_music.value:
-            randomize_music(self)
-
-        if self.options.enable_mischief.value:
-            misc_activities(self)
-
-        if self.options.phone_trap_weight.value:
-            generate_phone_traps(self)
-
-        if self.options.randomize_tm_moves.value:
-            randomize_tms(self)
-
-        randomize_pokemon(self)
+        generate_phone_traps(self)
 
         self.finished_level_scaling.wait()
 
-        if self.options.boost_trainers:
-            boost_trainer_pokemon(self)
-
-        if self.options.randomize_trainer_parties.value:
-            randomize_trainers(self)
-        elif self.options.randomize_learnsets.value:
-            vanilla_trainer_movesets(self)
+        randomize_trainers(self)
 
         patch = PokemonCrystalProcedurePatch(player=self.player, player_name=self.player_name)
         patch.write_file("basepatch.bsdiff4", pkgutil.get_data(__name__, "data/basepatch.bsdiff4"))

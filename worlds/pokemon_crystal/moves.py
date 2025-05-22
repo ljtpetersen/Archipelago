@@ -113,6 +113,8 @@ def get_tmhm_compatibility(world: "PokemonCrystalWorld", pkmn_name):
 
 
 def randomize_tms(world: "PokemonCrystalWorld"):
+    if not world.options.randomize_tm_moves: return
+
     ignored_moves = ["ROCK_SMASH", "NO_MOVE", "STRUGGLE"]
     if world.options.dexsanity:
         ignored_moves += ["HEADBUTT", "SWEET_SCENT"]
@@ -147,6 +149,8 @@ def get_random_move_from_learnset(world: "PokemonCrystalWorld", pokemon, level):
 
 
 def randomize_move_values(world: "PokemonCrystalWorld"):
+    if not world.options.randomize_move_values: return
+
     acc100 = 70  # Moves have a 70% chance to get 100% accuracy
     for move_name, move_data in world.generated_moves.items():
         if move_name in ["NO_MOVE", "CURSE", "DRAGON_RAGE", "SONICBOOM"]:
@@ -179,6 +183,8 @@ def randomize_move_values(world: "PokemonCrystalWorld"):
 
 
 def randomize_move_types(world: "PokemonCrystalWorld"):
+    if not world.options.randomize_move_types: return
+
     data_types = copy.deepcopy(crystal_data.types)
     for move_name, move_data in world.generated_moves.items():
         if move_name in ["NO_MOVE", "CURSE"]:

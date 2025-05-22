@@ -30,6 +30,14 @@ def get_last_evolution(pokemon, random):
 
 
 def randomize_trainers(world: "PokemonCrystalWorld"):
+    if world.options.boost_trainers:
+        boost_trainer_pokemon(world)
+
+    if not world.options.randomize_trainer_parties:
+        if world.options.randomize_learnsets:
+            vanilla_trainer_movesets(world)
+        return
+
     for trainer_name, trainer_data in world.generated_trainers.items():
         new_party = trainer_data.pokemon
         for i, pkmn_data in enumerate(trainer_data.pokemon):
@@ -86,6 +94,7 @@ def randomize_trainer_pokemon_moves(world, pkmn_data, new_pokemon):
 
 
 def boost_trainer_pokemon(world: "PokemonCrystalWorld"):
+    if not world.options.boost_trainers: return
     # mode 1 multiplies PKMN levels by boost | mode 2 sets the levels to boost
     for trainer_name, trainer_data in world.generated_trainers.items():
         new_party = []

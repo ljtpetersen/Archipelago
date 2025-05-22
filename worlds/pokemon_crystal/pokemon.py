@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from . import PokemonCrystalWorld
 
 
-def randomize_pokemon(world: "PokemonCrystalWorld"):
+def randomize_pokemon_data(world: "PokemonCrystalWorld"):
     # follow_evolutions can change types after the pokemon has already been randomized,
     # so we randomize types before all else
     if world.options.randomize_types.value:
@@ -58,11 +58,11 @@ def randomize_pokemon(world: "PokemonCrystalWorld"):
         world.generated_pokemon[pkmn_name] = world.generated_pokemon[pkmn_name]._replace(tm_hm=new_tm_hms,
                                                                                          learnset=new_learnset,
                                                                                          base_stats=new_base_stats)
-    if world.options.randomize_starters:
-        randomize_starters(world)
 
 
 def randomize_starters(world: "PokemonCrystalWorld"):
+    if not world.options.randomize_starters: return
+
     def get_starter_rival_fights(starter_name):
         return [(rival_name, rival) for rival_name, rival in world.generated_trainers.items() if
                 rival_name.startswith("RIVAL_" + starter_name)]
@@ -116,6 +116,8 @@ def randomize_starters(world: "PokemonCrystalWorld"):
 
 
 def randomize_traded_pokemon(world: "PokemonCrystalWorld"):
+    if not world.options.randomize_trades: return
+
     new_trades = []
     for trade in world.generated_trades:
         randomize_received = world.options.randomize_trades.value in [RandomizeTrades.option_received,
@@ -137,56 +139,8 @@ def randomize_traded_pokemon(world: "PokemonCrystalWorld"):
     world.generated_trades = new_trades
 
 
-def generate_logically_available_pokemon(world: "PokemonCrystalWorld"):
-    wild_pokemon = set()
-
-    for region, wilds in world.generated_wild.grass.items():
-        if f"WildGrass_{region}" in world.available_wild_regions:
-            for wild in wilds:
-                wild_pokemon.add(wild.pokemon)
-    for region, wilds in world.generated_wild.water.items():
-        if f"WildWater_{region}" in world.available_wild_regions:
-            for wild in wilds:
-                wild_pokemon.add(wild.pokemon)
-    for region, wilds in world.generated_wild.fish.items():
-        if f"WildFish_{region}" in world.available_wild_regions:
-            for wild in wilds.old:
-                wild_pokemon.add(wild.pokemon)
-            for wild in wilds.good:
-                wild_pokemon.add(wild.pokemon)
-            for wild in wilds.super:
-                wild_pokemon.add(wild.pokemon)
-    for region, wilds in world.generated_wild.tree.items():
-        region_id = "WildRockSmash" if region == "Rock" else f"WildTree_{region}"
-        if region_id in world.available_wild_regions:
-            for wild in wilds.common:
-                wild_pokemon.add(wild.pokemon)
-            if region != "Rock":
-                for wild in wilds.rare:
-                    wild_pokemon.add(wild.pokemon)
-
-    for static in world.generated_static.values():
-        if f"Static_{static.name}" in world.available_wild_regions:
-            wild_pokemon.add(static.pokemon)
-
-    evolution_pokemon = set()
-
-    for pokemon in wild_pokemon:
-        for evo in world.generated_pokemon[pokemon].evolutions:
-            if evolution_in_logic(world, evo):
-                evolution_pokemon.add(evo.pokemon)
-                for second_evo in world.generated_pokemon[evo.pokemon].evolutions:
-                    evolution_pokemon.add(second_evo.pokemon)
-
-    world.logically_available_pokemon = wild_pokemon | evolution_pokemon
-
-
 def generate_dexsanity_checks(world: "PokemonCrystalWorld"):
-    all_pokemon = list(world.generated_pokemon.keys())
-    world.random.shuffle(all_pokemon)
-    pokemon_items = [pokemon for pokemon in all_pokemon if pokemon in world.logically_available_pokemon]
-    for _ in range(min(world.options.dexsanity.value, len(pokemon_items))):
-        world.generated_dexsanity.add(pokemon_items.pop())
+    if not world.options.dexsanity: return
 
 
 def fill_wild_encounter_locations(world: "PokemonCrystalWorld"):
@@ -220,6 +174,8 @@ def _fill_encounter_area(world: "PokemonCrystalWorld", area_name: str, encounter
 
 
 def generate_breeding_data(world: "PokemonCrystalWorld"):
+    if not world.options.breeding_methods_required: return
+
     def process_evolution(base: str, evolution: str):
         if evolution not in world.logically_available_pokemon: return
         evolution_data = world.generated_pokemon[evolution]
@@ -234,6 +190,19 @@ def generate_breeding_data(world: "PokemonCrystalWorld"):
                 process_evolution(pokemon_id, second_evo.pokemon)
 
     world.logically_available_pokemon |= world.generated_breeding.keys()
+
+
+def generate_evolution_data(world: "PokemonCrystalWorld"):
+    evolution_pokemon = set()
+
+    for pokemon in world.logically_available_pokemon:
+        for evo in world.generated_pokemon[pokemon].evolutions:
+            if evolution_in_logic(world, evo):
+                evolution_pokemon.add(evo.pokemon)
+                for second_evo in world.generated_pokemon[evo.pokemon].evolutions:
+                    evolution_pokemon.add(second_evo.pokemon)
+
+    world.logically_available_pokemon |= evolution_pokemon
 
 
 def get_random_pokemon(world: "PokemonCrystalWorld", priority_pokemon: set[str] | None = None, types=None,

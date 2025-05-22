@@ -7,7 +7,9 @@ if TYPE_CHECKING:
     from . import PokemonCrystalWorld
 
 
-def misc_activities(world: "PokemonCrystalWorld"):
+def randomize_mischief(world: "PokemonCrystalWorld"):
+    if not world.options.enable_mischief: return
+
     # Decide which mischief is active
     all_mischief = world.generated_misc.selected
 

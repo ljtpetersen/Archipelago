@@ -9,6 +9,8 @@ if TYPE_CHECKING:
 
 
 def generate_phone_traps(world: "PokemonCrystalWorld"):
+    if not world.options.phone_trap_weight: return
+
     if world.options.phone_trap_weight.value:
         bike_shop_location = world.multiworld.get_location(data.locations["BICYCLE"].label, world.player)
         if world.options.johto_only:
