@@ -1,6 +1,7 @@
 import copy
 from typing import TYPE_CHECKING
 
+from BaseClasses import ItemClassification
 from . import StaticPokemon
 from .data import data as crystal_data, EncounterMon
 from .moves import get_tmhm_compatibility, randomize_learnset
@@ -159,12 +160,15 @@ def fill_wild_encounter_locations(world: "PokemonCrystalWorld"):
 
 
 def _fill_encounter_area(world: "PokemonCrystalWorld", area_name: str, encounters: list[EncounterMon | StaticPokemon]):
+    seen_pokemon = set()
     for (i, encounter) in enumerate(encounters):
         # Not all encounter regions may be needed so we just ignore ones that don't exist
         try:
             location = world.get_location(f"{area_name}_{i + 1}")
-            location.place_locked_item(world.create_event(encounter.pokemon if not (
-                    encounter is StaticPokemon and encounter.exclude_from_logic) else "NO_POKEMON"))
+            location.place_locked_item(world.create_event(encounter.pokemon))
+            if encounter.pokemon in seen_pokemon:
+                location.item.classification = ItemClassification.useful
+            seen_pokemon.add(encounter.pokemon)
         except KeyError:
             pass
 
