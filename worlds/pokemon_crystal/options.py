@@ -673,6 +673,7 @@ class HMBadgeRequirements(Choice):
     Add Kanto: HMs can be used with the Johto or Kanto badge
     Regional: HMs can be used in Johto with the Johto badge and in Kanto with the Kanto badge
         This does not apply to Fly which will default to either badge.
+        Routes 26, 27, 28 and Tohjo Falls are in Johto for HM purposes.
     """
     display_name = "HM Badge Requirements"
     default = 0
