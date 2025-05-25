@@ -814,6 +814,19 @@ class ExpModifier(NamedRange):
     }
 
 
+class StartingMoney(NamedRange):
+    """
+    Sets your starting money.
+    """
+    display_name = "Starting Money"
+    default = 3000
+    range_start = 0
+    range_end = 999999
+    special_range_names = {
+        "vanilla": 3000
+    }
+
+
 class AllPokemonSeen(Toggle):
     """
     Start will all Pokemon seen in your Pokedex.
@@ -1048,6 +1061,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     skip_elite_four: SkipEliteFour
     better_marts: BetterMarts
     experience_modifier: ExpModifier
+    starting_money: StartingMoney
     all_pokemon_seen: AllPokemonSeen
     phone_trap_weight: PhoneTrapWeight
     sleep_trap_weight: SleepTrapWeight

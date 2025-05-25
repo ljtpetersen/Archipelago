@@ -666,6 +666,10 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_AllPokemonSeen_1"] + 1)
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_AllPokemonSeen_2"] + 1)
 
+    start_money = world.options.starting_money.value.to_bytes(3, "big")
+    for i, byte in enumerate(start_money):
+        write_bytes(patch, [byte], data.rom_addresses[f"AP_Setting_StartMoney_{i + 1}"] + 1)
+
     # Set slot auth
     write_bytes(patch, world.auth, data.rom_addresses["AP_Seed_Auth"])
     write_bytes(patch, APWORLD_VERSION.encode("ascii")[:32], data.rom_addresses["AP_Version"])
