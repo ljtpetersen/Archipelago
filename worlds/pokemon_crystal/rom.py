@@ -488,7 +488,9 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
     write_bytes(patch, [world.options.mt_silver_count.value], data.rom_addresses["AP_Setting_MtSilverCount_Gate_1"] + 1)
     write_bytes(patch, [world.options.mt_silver_count.value], data.rom_addresses["AP_Setting_MtSilverCount_Gate_2"] + 1)
 
-    write_bytes(patch, [world.options.red_badges - 1], data.rom_addresses["AP_Setting_RedBadges"] + 1)
+    write_bytes(patch, [world.options.red_requirement.value], data.rom_addresses["AP_Setting_RedRequirement"] + 1)
+    write_bytes(patch, [world.options.red_count], data.rom_addresses["AP_Setting_RedCount_1"] + 1)
+    write_bytes(patch, [world.options.red_count], data.rom_addresses["AP_Setting_RedCount_2"] + 1)
 
     if not world.options.johto_only:
         kanto_access_become_champion = [1] if (world.options.kanto_access_condition.value

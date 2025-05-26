@@ -22,7 +22,7 @@ from .misc import randomize_mischief, get_misc_spoiler_log
 from .moves import randomize_tms, randomize_move_values, randomize_move_types
 from .music import randomize_music
 from .options import PokemonCrystalOptions, JohtoOnly, RandomizeBadges, Goal, HMBadgeRequirements, Route32Condition, \
-    LevelScaling, RedGyaradosAccess, FreeFlyLocation, EliteFourRequirement, MtSilverRequirement
+    LevelScaling, RedGyaradosAccess, FreeFlyLocation, EliteFourRequirement, MtSilverRequirement, RedRequirement
 from .phone import generate_phone_traps
 from .phone_data import PhoneScript
 from .pokemon import randomize_pokemon_data, randomize_starters, randomize_traded_pokemon, \
@@ -187,6 +187,14 @@ class PokemonCrystalWorld(World):
                     "Changing Elite Four Gyms to 8 for player %s.",
                     self.multiworld.get_player_name(self.player))
 
+            if (self.options.red_requirement.value == RedRequirement.option_gyms
+                    and self.options.red_count.value > 8):
+                self.options.red_count.value = 8
+                logging.warning(
+                    "Pokemon Crystal: Red Gyms >8 incompatible with Johto Only. "
+                    "Changing Red Gyms to 8 for player %s.",
+                    self.multiworld.get_player_name(self.player))
+
             if (self.options.mt_silver_requirement.value == MtSilverRequirement.option_gyms
                     and self.options.mt_silver_count.value > 8):
                 self.options.mt_silver_count.value = 8
@@ -203,8 +211,8 @@ class PokemonCrystalWorld(World):
                     self.multiworld.get_player_name(self.player))
 
             if self.options.randomize_badges != RandomizeBadges.option_completely_random:
-                if self.options.red_badges.value > 8:
-                    self.options.red_badges.value = 8
+                if self.options.red_count.value > 8 and self.options.red_requirement == RedRequirement.option_badges:
+                    self.options.red_count.value = 8
                     logging.warning(
                         "Pokemon Crystal: Red Badges >8 incompatible with Johto Only "
                         "if badges are not completely random. Changing Red Badges to 8 for player %s.",
@@ -286,17 +294,18 @@ class PokemonCrystalWorld(World):
         if self.options.johto_only.value == JohtoOnly.option_include_silver_cave:
             if self.options.mt_silver_requirement.value == MtSilverRequirement.option_badges:
                 badge_option_counts += [self.options.mt_silver_count.value]
-            badge_option_counts += [self.options.red_badges.value]
+            if self.options.red_requirement == RedRequirement.option_badges:
+                badge_option_counts += [self.options.red_count.value]
 
-        total_badges = max(badge_option_counts)
+        required_badges = max(badge_option_counts)
 
         add_items = []
         # Extra badges to add to the pool in johto only
-        if self.options.johto_only and total_badges > 8:
+        if self.options.johto_only and required_badges > 8:
             kanto_badges = [item_data.item_const for item_data in crystal_data.items.values() if
                             "KantoBadge" in item_data.tags]
             self.random.shuffle(kanto_badges)
-            add_items += kanto_badges[:total_badges - 8]
+            add_items += kanto_badges[:required_badges - 8]
 
         if self.options.johto_only:
             add_items.append("SUPER_ROD")
@@ -423,7 +432,8 @@ class PokemonCrystalWorld(World):
             "johto_only",
             "elite_four_requirement",
             "elite_four_count",
-            "red_badges",
+            "red_requirement",
+            "red_count",
             "randomize_badges",
             "randomize_hidden_items",
             "require_itemfinder",

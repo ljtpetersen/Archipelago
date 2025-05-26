@@ -49,13 +49,23 @@ class EliteFourCount(Range):
     range_end = 16
 
 
-class RedBadges(Range):
+class RedRequirement(Choice):
     """
-    Number of badges required to battle Red
+    Sets the requirement to battle Red
     """
-    display_name = "Red Badges"
+    display_name = "Red Requirement"
+    default = 0
+    option_badges = 0
+    option_gyms = 1
+
+
+class RedCount(Range):
+    """
+    Number of badges/gyms required to battle Red
+    """
+    display_name = "Red Count"
     default = 16
-    range_start = 1
+    range_start = 0
     range_end = 16
 
 
@@ -1017,7 +1027,8 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     johto_only: JohtoOnly
     elite_four_requirement: EliteFourRequirement
     elite_four_count: EliteFourCount
-    red_badges: RedBadges
+    red_requirement: RedRequirement
+    red_count: RedCount
     mt_silver_requirement: MtSilverRequirement
     mt_silver_count: MtSilverCount
     radio_tower_badges: RadioTowerBadges

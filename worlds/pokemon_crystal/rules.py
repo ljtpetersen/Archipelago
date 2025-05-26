@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 from worlds.generic.Rules import add_rule, set_rule
-from . import HMBadgeRequirements, EliteFourRequirement
+from . import HMBadgeRequirements, EliteFourRequirement, RedRequirement
 from .data import data, EvolutionType, EvolutionData
 from .options import Goal, JohtoOnly, Route32Condition, UndergroundsRequirePower, Route2Access, \
     BlackthornDarkCaveAccess, \
@@ -236,9 +236,12 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     else:
         def has_elite_four_requirement(state: CollectionState):
             return has_n_badges(state, world.options.elite_four_count.value)
-
-    def has_red_badges(state: CollectionState):
-        return has_n_badges(state, world.options.red_badges.value)
+    if world.options.red_requirement == RedRequirement.option_gyms:
+        def has_red_requirement(state: CollectionState):
+            return has_beaten_n_gyms(state, world.options.red_count.value)
+    else:
+        def has_red_requirement(state: CollectionState):
+            return has_n_badges(state, world.options.red_count.value)
 
     if world.options.mt_silver_requirement == MtSilverRequirement.option_gyms:
         def has_mt_silver_requirement(state: CollectionState):
@@ -969,8 +972,8 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         set_rule(get_entrance("REGION_VICTORY_ROAD_GATE -> REGION_ROUTE_28"), has_mt_silver_requirement)
         set_rule(get_location("EVENT_OPENED_MT_SILVER"), has_mt_silver_requirement)
 
-        set_rule(get_location("EVENT_BEAT_RED"), has_red_badges)
-        # set_rule(get_location("RED_1"), has_red_badges)
+        set_rule(get_location("EVENT_BEAT_RED"), has_red_requirement)
+        # set_rule(get_location("RED_1"), has_red_requirement)
 
         # Route 28
         set_rule(get_location("Route 28 - TM47 from Celebrity in House"), can_cut)
