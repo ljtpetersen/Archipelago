@@ -474,11 +474,19 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
 
     write_bytes(patch, [world.options.radio_tower_badges - 1], data.rom_addresses["AP_Setting_RocketBadges"] + 1)
 
-    mt_silver_text = convert_to_ingame_text("{:02d}".format(world.options.mt_silver_badges.value))
-    write_bytes(patch, mt_silver_text, data.rom_addresses["AP_Setting_MtSilverBadges_Text"] + 1)
-    write_bytes(patch, mt_silver_text, data.rom_addresses["AP_Setting_MtSilverBadges_Text2"] + 1)
-    write_bytes(patch, [world.options.mt_silver_badges - 1], data.rom_addresses["AP_Setting_MtSilverBadges_Oak"] + 1)
-    write_bytes(patch, [world.options.mt_silver_badges - 1], data.rom_addresses["AP_Setting_MtSilverBadges_Gate"] + 1)
+    mt_silver_text = convert_to_ingame_text("{:02d}".format(world.options.mt_silver_count.value))
+    write_bytes(patch, [world.options.mt_silver_requirement.value],
+                data.rom_addresses["AP_Setting_MtSilverRequirement_Gate"] + 1)
+    write_bytes(patch, [world.options.mt_silver_requirement.value],
+                data.rom_addresses["AP_Setting_MtSilverRequirement_Oak"] + 1)
+    write_bytes(patch, mt_silver_text, data.rom_addresses["AP_Setting_MtSilverBadges_Gate_Text"] + 1)
+    write_bytes(patch, mt_silver_text, data.rom_addresses["AP_Setting_MtSilverGyms_Gate_Text"] + 1)
+    write_bytes(patch, mt_silver_text, data.rom_addresses["AP_Setting_MtSilverBadges_Oak_Text"] + 1)
+    write_bytes(patch, mt_silver_text, data.rom_addresses["AP_Setting_MtSilverGyms_Oak_Text"] + 1)
+    write_bytes(patch, [world.options.mt_silver_count.value], data.rom_addresses["AP_Setting_MtSilverCount_Oak_1"] + 1)
+    write_bytes(patch, [world.options.mt_silver_count.value], data.rom_addresses["AP_Setting_MtSilverCount_Oak_2"] + 1)
+    write_bytes(patch, [world.options.mt_silver_count.value], data.rom_addresses["AP_Setting_MtSilverCount_Gate_1"] + 1)
+    write_bytes(patch, [world.options.mt_silver_count.value], data.rom_addresses["AP_Setting_MtSilverCount_Gate_2"] + 1)
 
     write_bytes(patch, [world.options.red_badges - 1], data.rom_addresses["AP_Setting_RedBadges"] + 1)
 

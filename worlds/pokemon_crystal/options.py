@@ -59,13 +59,23 @@ class RedBadges(Range):
     range_end = 16
 
 
-class MtSilverBadges(Range):
+class MtSilverRequirement(Choice):
     """
-    Number of badges required to access Mt. Silver and Silver Cave
+    Sets the requirement to access Mt. Silver and Silver Cave
     """
-    display_name = "Mt. Silver Badges"
+    display_name = "Mt. Silver Requirement"
+    default = 0
+    option_badges = 0
+    option_gyms = 1
+
+
+class MtSilverCount(Range):
+    """
+    Number of badges/gyms required to access Mt. Silver and Silver Cave
+    """
+    display_name = "Mt. Silver Count"
     default = 16
-    range_start = 1
+    range_start = 0
     range_end = 16
 
 
@@ -1008,7 +1018,8 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     elite_four_requirement: EliteFourRequirement
     elite_four_count: EliteFourCount
     red_badges: RedBadges
-    mt_silver_badges: MtSilverBadges
+    mt_silver_requirement: MtSilverRequirement
+    mt_silver_count: MtSilverCount
     radio_tower_badges: RadioTowerBadges
     vanilla_clair: VanillaClair
     randomize_starting_town: RandomizeStartingTown
