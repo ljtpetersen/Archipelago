@@ -1017,7 +1017,7 @@ class GameOptions(OptionDict):
     low_hp_beep: on/off - Sets whether the low HP beep is played in battle
     time_of_day: auto/morn/day/nite - Sets a time of day override, auto follows the clock
     battle_move_stats: off/on - Sets whether or not to display power and accuracy for moves in battle
-    skip_fanfares: off/on - Sets whether item receive fanfares are skipped
+    short_fanfares: off/on - Sets whether item receive fanfares are shortened
     dex_area_beep: off/on - Sets whether the Pokedex beeps for land and Surf encounters in the current area
     """
     display_name = "Game Options"

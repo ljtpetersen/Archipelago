@@ -268,42 +268,6 @@ class PhoneScriptData:
         self.script = script
 
 
-class PokemonCrystalData:
-    rom_version: int
-    rom_version_11: int
-    rom_addresses: dict[str, int]
-    ram_addresses: dict[str, int]
-    event_flags: dict[str, int]
-    regions: dict[str, RegionData]
-    locations: dict[str, LocationData]
-    items: dict[int, ItemData]
-    trainers: dict[str, TrainerData]
-    pokemon: dict[str, PokemonData]
-    moves: dict[str, MoveData]
-    wild: WildData
-    types: list[str]
-    type_ids: dict[str, int]
-    tmhm: dict[str, TMHMData]
-    misc: MiscData
-    music: MusicData
-    static: dict[str, StaticPokemon]
-    trades: list[TradeData]
-    fly_regions: list[FlyRegion]
-    starting_towns: list[StartingTown]
-
-    def __init__(self) -> None:
-        self.rom_addresses = {}
-        self.ram_addresses = {}
-        self.event_flags = {}
-        self.regions = {}
-        self.locations = {}
-        self.items = {}
-        self.trainers = {}
-        self.pokemon = {}
-        self.trades = []
-        self.moves = {}
-
-
 class PokemonCrystalGameSetting(NamedTuple):
     option_byte_index: int
     offset: int
@@ -329,6 +293,43 @@ class PokemonCrystalGameSetting(NamedTuple):
 
 ON_OFF = {"off": 0, "on": 1}
 INVERTED_ON_OFF = {"off": 1, "on": 0}
+
+
+class PokemonCrystalData:
+    rom_version: int
+    rom_version_11: int
+    rom_addresses: dict[str, int]
+    ram_addresses: dict[str, int]
+    event_flags: dict[str, int]
+    regions: dict[str, RegionData]
+    locations: dict[str, LocationData]
+    items: dict[int, ItemData]
+    trainers: dict[str, TrainerData]
+    pokemon: dict[str, PokemonData]
+    moves: dict[str, MoveData]
+    wild: WildData
+    types: list[str]
+    type_ids: dict[str, int]
+    tmhm: dict[str, TMHMData]
+    misc: MiscData
+    music: MusicData
+    static: dict[str, StaticPokemon]
+    trades: list[TradeData]
+    fly_regions: list[FlyRegion]
+    starting_towns: list[StartingTown]
+    game_settings: dict[str, PokemonCrystalGameSetting]
+
+    def __init__(self) -> None:
+        self.rom_addresses = {}
+        self.ram_addresses = {}
+        self.event_flags = {}
+        self.regions = {}
+        self.locations = {}
+        self.items = {}
+        self.trainers = {}
+        self.pokemon = {}
+        self.trades = []
+        self.moves = {}
 
 
 class PokemonCrystalMapSizeData(NamedTuple):
@@ -722,7 +723,7 @@ def _init() -> None:
         "time_of_day": PokemonCrystalGameSetting(3, 0, 2, {"auto": 0, "morn": 1, "day": 2, "nite": 3}, 0),
         "exp_distribution": PokemonCrystalGameSetting(3, 2, 2, {"gen2": 0, "gen6": 1, "gen8": 2, "no_exp": 3}, 0),
         "turbo_button": PokemonCrystalGameSetting(3, 4, 2, {"none": 0, "a": 1, "b": 2, "a_or_b": 3}, 0),
-        "skip_fanfares": PokemonCrystalGameSetting(3, 6, 1, ON_OFF, 0),
+        "short_fanfares": PokemonCrystalGameSetting(3, 6, 1, ON_OFF, 0),
         "dex_area_beep": PokemonCrystalGameSetting(3, 7, 1, ON_OFF, 0)
     }
 
