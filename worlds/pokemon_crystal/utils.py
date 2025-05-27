@@ -57,12 +57,15 @@ def _starting_town_valid(world: "PokemonCrystalWorld", starting_town: StartingTo
 
     if starting_town.name == "Rock Tunnel":
         return world.options.trainersanity
-
-    if starting_town.name in ["Cerulean City", "Celadon City", "Vermilion City"]:
-        return not world.options.saffron_gatehouse_tea or immediate_hiddens
-
+    if starting_town.name == "Vermilion City":
+        return "South" not in world.options.saffron_gatehouse_tea or immediate_hiddens
+    if starting_town.name == "Cerulean City":
+        return "North" not in world.options.saffron_gatehouse_tea or immediate_hiddens
+    if starting_town.name == "Celadon City":
+        return "West" not in world.options.saffron_gatehouse_tea or immediate_hiddens
     if starting_town.name in ["Lavender Town", "Fuchsia City"]:
-        return not world.options.saffron_gatehouse_tea or (immediate_hiddens and world.options.randomize_berry_trees)
+        return "East" not in world.options.saffron_gatehouse_tea or (
+                immediate_hiddens and world.options.randomize_berry_trees)
 
     return True
 
