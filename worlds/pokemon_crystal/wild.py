@@ -117,10 +117,16 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
 def randomize_static_pokemon(world: "PokemonCrystalWorld"):
     if world.options.randomize_static_pokemon:
         for static_name, pkmn_data in world.generated_static.items():
+            priority_pokemon = set()
+            if pkmn_data.level_type == "giveegg":  # Base forms only for eggs
+                priority_pokemon |= set([poke for poke, data in world.generated_pokemon.items() if data.is_base])
             world.generated_static[static_name] = replace(
                 world.generated_static[static_name],
-                pokemon=get_random_pokemon(world, exclude_unown=True)
+                pokemon=get_random_pokemon(world, exclude_unown=True, priority_pokemon=priority_pokemon),
             )
+    else:  # Still randomize the Odd Egg
+        pokemon = world.random.choice(["PICHU", "CLEFFA", "IGGLYBUFF", "SMOOCHUM", "MAGBY", "ELEKID", "TYROGUE"])
+        world.generated_static["OddEgg"] = replace(world.generated_static["OddEgg"], pokemon=pokemon)
 
     static_pokemon = set()
 

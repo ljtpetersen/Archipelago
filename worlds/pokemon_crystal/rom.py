@@ -129,17 +129,16 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
 
     world.finished_level_scaling.wait()
 
-    if world.options.randomize_static_pokemon:
-        for _static_name, pkmn_data in world.generated_static.items():
-            pokemon_id = data.pokemon[pkmn_data.pokemon].id
-            for address in pkmn_data.addresses:
-                cur_address = data.rom_addresses[address] + 1
-                write_bytes(patch, [pokemon_id], cur_address)
-            if pkmn_data.level_address is not None:
-                if pkmn_data.level_type in ["givepoke", "loadwildmon"]:
-                    write_bytes(patch, [pkmn_data.level], data.rom_addresses[pkmn_data.level_address] + 2)
-                elif pkmn_data.level_type == "custom":
-                    write_bytes(patch, [pkmn_data.level], data.rom_addresses[pkmn_data.level_address] + 1)
+    for _static_name, pkmn_data in world.generated_static.items():
+        pokemon_id = data.pokemon[pkmn_data.pokemon].id
+        for address in pkmn_data.addresses:
+            cur_address = data.rom_addresses[address] + 1
+            write_bytes(patch, [pokemon_id], cur_address)
+        if pkmn_data.level_address is not None:
+            if pkmn_data.level_type in ["givepoke", "loadwildmon"]:
+                write_bytes(patch, [pkmn_data.level], data.rom_addresses[pkmn_data.level_address] + 2)
+            elif pkmn_data.level_type == "custom":
+                write_bytes(patch, [pkmn_data.level], data.rom_addresses[pkmn_data.level_address] + 1)
 
     if world.options.randomize_trades:
         trade_table_address = data.rom_addresses["AP_Setting_TradeTable"]
