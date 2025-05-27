@@ -441,7 +441,8 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
              lambda state: state.has("EVENT_MART_ESCAPE_ROPE", world.player))
 
     set_rule(get_entrance("REGION_RUINS_OF_ALPH_OMANYTE_CHAMBER -> REGION_RUINS_OF_ALPH_OMANYTE_ITEM_ROOM"),
-             lambda state: state.has("EVENT_MART_WATER_STONE", world.player))
+             lambda state: state.has_any(["EVENT_GOLDENROD_EVOLUTION_ITEMS", "EVENT_CELADON_EVOLUTION_ITEMS"],
+                                         world.player))
 
     set_rule(get_entrance("REGION_RUINS_OF_ALPH_AERODACTYL_CHAMBER -> REGION_RUINS_OF_ALPH_AERODACTYL_ITEM_ROOM"),
              can_flash)
