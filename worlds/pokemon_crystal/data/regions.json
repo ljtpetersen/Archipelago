@@ -4032,8 +4032,15 @@
     "exits": [
       "REGION_VIOLET_CITY",
       "REGION_ROUTE_32_RUINS_OF_ALPH_GATE",
-      "REGION_ROUTE_32:SOUTH"
+      "REGION_ROUTE_32:SOUTH",
+      "REGION_ROUTE_32:MIRACLE_SEED"
     ],
+    "locations": [],
+    "events": []
+  },
+  "REGION_ROUTE_32:MIRACLE_SEED": {
+    "johto": true,
+    "exits": [],
     "locations": [
       "MIRACLE_SEED_IN_ROUTE_32"
     ],
@@ -4043,6 +4050,7 @@
     "johto": true,
     "exits": [
       "REGION_ROUTE_32:NORTH",
+      "REGION_ROUTE_32:MIRACLE_SEED",
       "REGION_ROUTE_33",
       "REGION_ROUTE_32_POKECENTER_1F",
       "REGION_UNION_CAVE_1F"
