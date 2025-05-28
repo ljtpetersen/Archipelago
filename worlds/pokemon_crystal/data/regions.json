@@ -1177,7 +1177,9 @@
       "REGION_POKECENTER_2F"
     ],
     "locations": [],
-    "events": []
+    "events": [
+      "EVENT_MET_BILL"
+    ]
   },
   "REGION_ECRUTEAK_TIN_TOWER_ENTRANCE": {
     "johto": true,
