@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from Options import Toggle, Choice, DefaultOnToggle, Range, PerGameCommonOptions, NamedRange, OptionSet, \
-    StartInventoryPool, OptionDict
+    StartInventoryPool, OptionDict, Visibility
 from .data import data
 
 
@@ -288,6 +288,7 @@ class Rematchsanity(Toggle):
     be higher level than later ones.
     """
     display_name = "Rematchsanity"
+    visibility = Visibility.none
 
 
 class TrainersanityAlerts(Choice):
