@@ -99,6 +99,26 @@ class RadioTowerBadges(Range):
     range_end = 16
 
 
+class Route44AccessRequirement(Choice):
+    """
+    Sets the requirement to pass between Mahogany Town and Route 44
+    """
+    display_name = "Route 44 Access Requirement"
+    default = 0
+    option_badges = 0
+    option_gyms = 1
+
+
+class Route44AccessCount(Range):
+    """
+    Sets the number of badges/gyms required to pass between Mahogany Town and Route 44
+    """
+    display_name = "Route 44 Access Count"
+    default = 7
+    range_start = 0
+    range_end = 16
+
+
 class RandomizeStartingTown(Toggle):
     """
     Randomly chooses a town to start in.
@@ -1077,6 +1097,8 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     mt_silver_requirement: MtSilverRequirement
     mt_silver_count: MtSilverCount
     radio_tower_badges: RadioTowerBadges
+    route_44_access_requirement: Route44AccessRequirement
+    route_44_access_count: Route44AccessCount
     vanilla_clair: VanillaClair
     randomize_starting_town: RandomizeStartingTown
     starting_town_blocklist: StartingTownBlocklist

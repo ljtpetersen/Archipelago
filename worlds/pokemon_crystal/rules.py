@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 from worlds.generic.Rules import add_rule, set_rule
-from . import HMBadgeRequirements, EliteFourRequirement, RedRequirement
+from . import HMBadgeRequirements, EliteFourRequirement, RedRequirement, Route44AccessRequirement
 from .data import data, EvolutionType, EvolutionData
 from .options import Goal, JohtoOnly, Route32Condition, UndergroundsRequirePower, Route2Access, \
     BlackthornDarkCaveAccess, \
@@ -229,6 +229,13 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
     def has_rocket_badges(state: CollectionState):
         return has_n_badges(state, world.options.radio_tower_badges.value)
+
+    if world.options.route_44_access_requirement == Route44AccessRequirement.option_badges:
+        def has_route_44_access(state: CollectionState):
+            return has_n_badges(state, world.options.route_44_access_count.value)
+    else:
+        def has_route_44_access(state: CollectionState):
+            return has_beaten_n_gyms(state, world.options.route_44_access_count.value)
 
     if world.options.elite_four_requirement.value == EliteFourRequirement.option_gyms:
         def has_elite_four_requirement(state: CollectionState):
@@ -833,7 +840,8 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     set_rule(get_entrance("REGION_MAHOGANY_TOWN -> REGION_MAHOGANY_GYM"),
              lambda state: state.has("EVENT_CLEARED_ROCKET_HIDEOUT", world.player))
 
-    set_rule(get_entrance("REGION_MAHOGANY_TOWN -> REGION_ROUTE_44"), has_rocket_badges)
+    set_rule(get_entrance("REGION_MAHOGANY_TOWN -> REGION_ROUTE_44"), has_route_44_access)
+    set_rule(get_entrance("REGION_ROUTE_44 -> REGION_MAHOGANY_TOWN"), has_route_44_access)
 
     # Route 43
     set_rule(get_entrance("REGION_ROUTE_43 -> REGION_ROUTE_43:FRUITTREE"),

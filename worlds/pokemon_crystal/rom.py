@@ -472,6 +472,14 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
 
     write_bytes(patch, [world.options.radio_tower_badges - 1], data.rom_addresses["AP_Setting_RocketBadges"] + 1)
 
+    write_bytes(patch, [world.options.route_44_access_requirement.value],
+                data.rom_addresses["AP_Setting_Route44Requirement_1"] + 1)
+    write_bytes(patch, [world.options.route_44_access_requirement.value],
+                data.rom_addresses["AP_Setting_Route44Requirement_2"] + 1)
+    for i in range(4):
+        write_bytes(patch, [world.options.route_44_access_count.value],
+                    data.rom_addresses[f"AP_Setting_Route44Count_{i + 1}"] + 1)
+
     mt_silver_text = convert_to_ingame_text("{:02d}".format(world.options.mt_silver_count.value))
     write_bytes(patch, [world.options.mt_silver_requirement.value],
                 data.rom_addresses["AP_Setting_MtSilverRequirement_Gate"] + 1)
