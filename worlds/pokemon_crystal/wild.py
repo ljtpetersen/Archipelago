@@ -51,16 +51,22 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
             elif world.options.encounter_grouping.value == EncounterGrouping.option_one_to_one:
                 distribution = defaultdict[str, list[int]](lambda: [])
                 new_encounters = [encounter for encounter in encounter_list]
+                encounter_blocklist = []
                 for i, encounter in enumerate(encounter_list):
                     distribution[encounter.pokemon].append(i)
                 for pokemon, slots in distribution.items():
-                    pokemon = get_random_pokemon(world, priority_pokemon=priority_pokemon, exclude_unown=exclude_unown)
+                    pokemon = get_random_pokemon(world, priority_pokemon=priority_pokemon, exclude_unown=exclude_unown,
+                                                 blocklist=encounter_blocklist)
+                    encounter_blocklist.append(pokemon)
                     priority_pokemon.discard(pokemon)
                     for slot in slots:
                         new_encounters[slot] = replace(new_encounters[slot], pokemon=pokemon)
             else:
+                encounter_blocklist = []
                 for encounter in encounter_list:
-                    pokemon = get_random_pokemon(world, priority_pokemon=priority_pokemon, exclude_unown=exclude_unown)
+                    pokemon = get_random_pokemon(world, priority_pokemon=priority_pokemon, exclude_unown=exclude_unown,
+                                                 blocklist=encounter_blocklist)
+                    encounter_blocklist.append(pokemon)
                     priority_pokemon.discard(pokemon)
                     new_encounters.append(replace(encounter, pokemon=pokemon))
             return new_encounters

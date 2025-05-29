@@ -218,10 +218,14 @@ def generate_evolution_data(world: "PokemonCrystalWorld"):
 
 def get_random_pokemon(world: "PokemonCrystalWorld", priority_pokemon: set[str] | None = None, types=None,
                        base_only=False, force_fully_evolved_at=None, current_level=None, starter=False,
-                       exclude_unown=False):
+                       exclude_unown=False, blocklist: list[str] | None = None):
     bst_range = world.options.starters_bst_average * .10
 
     def filter_out_pokemon(pkmn_name, pkmn_data):
+
+        if blocklist and pkmn_name in blocklist:
+            return True
+
         if exclude_unown and pkmn_name == "UNOWN":
             return True
 
