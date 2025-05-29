@@ -356,7 +356,7 @@ class PokemonCrystalWorld(World):
             kanto_badges = [item_data.item_const for item_data in crystal_data.items.values() if
                             "KantoBadge" in item_data.tags]
             self.random.shuffle(kanto_badges)
-            add_items += kanto_badges[:required_badges - 8]
+            add_items.extend(kanto_badges[:required_badges - 8])
 
         if self.options.johto_only:
             add_items.append("SUPER_ROD")
@@ -379,26 +379,26 @@ class PokemonCrystalWorld(World):
         for location in item_locations:
             item_code = location.default_item_code
             if item_code > 0 and get_item_classification(item_code) != ItemClassification.filler:
-                default_itempool += [self.create_item_by_code(item_code)]
+                default_itempool.append(self.create_item_by_code(item_code))
             elif add_items:
-                default_itempool += [self.create_item_by_const_name(add_items.pop())]
+                default_itempool.append(self.create_item_by_const_name(add_items.pop()))
             elif self.random.randint(0, 100) < total_trap_weight:
-                default_itempool += [get_random_trap()]
+                default_itempool.append(get_random_trap())
             elif item_code == 0:  # item is NO_ITEM, trainersanity checks
-                default_itempool += [self.create_item_by_const_name(get_random_filler_item(self.random))]
+                default_itempool.append(self.create_item_by_const_name(get_random_filler_item(self.random)))
             else:
-                default_itempool += [self.create_item_by_code(item_code)]
+                default_itempool.append(self.create_item_by_code(item_code))
 
         if self.options.dexsanity:
-            default_itempool += [self.create_item_by_const_name(get_random_ball(self.random)) for _ in
-                                 range(len(self.generated_dexsanity))]
+            default_itempool.extend(self.create_item_by_const_name(get_random_ball(self.random)) for _ in
+                                    range(len(self.generated_dexsanity)))
 
         if self.options.johto_only.value != JohtoOnly.option_off:
             # Replace the S.S. Ticket with the Silver Wing for Johto only seeds
             default_itempool = [item if item.name != "S.S. Ticket" else self.create_item_by_const_name("SILVER_WING")
                                 for item in default_itempool]
 
-        self.multiworld.itempool += default_itempool
+        self.multiworld.itempool.extend(default_itempool)
 
     def set_rules(self) -> None:
         set_rules(self)
