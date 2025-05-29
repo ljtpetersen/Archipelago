@@ -52,7 +52,7 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
                 distribution = defaultdict[str, list[int]](lambda: [])
                 new_encounters = [encounter for encounter in encounter_list]
                 for i, encounter in enumerate(encounter_list):
-                    distribution[encounter.pokemon] += [i]
+                    distribution[encounter.pokemon].append(i)
                 for pokemon, slots in distribution.items():
                     pokemon = get_random_pokemon(world, priority_pokemon=priority_pokemon, exclude_unown=exclude_unown)
                     priority_pokemon.discard(pokemon)
@@ -111,7 +111,7 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
                 for wild in wilds.rare:
                     wild_pokemon.add(wild.pokemon)
 
-    world.logically_available_pokemon |= wild_pokemon
+    world.logically_available_pokemon.update(wild_pokemon)
 
 
 def randomize_static_pokemon(world: "PokemonCrystalWorld"):
@@ -134,4 +134,4 @@ def randomize_static_pokemon(world: "PokemonCrystalWorld"):
         if f"Static_{static.name}" in world.available_wild_regions:
             static_pokemon.add(static.pokemon)
 
-    world.logically_available_pokemon |= static_pokemon
+    world.logically_available_pokemon.update(static_pokemon)

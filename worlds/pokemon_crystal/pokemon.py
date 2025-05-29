@@ -200,7 +200,7 @@ def generate_breeding_data(world: "PokemonCrystalWorld"):
             for second_evo in world.generated_pokemon[evolution.pokemon].evolutions:
                 process_evolution(pokemon_id, second_evo.pokemon)
 
-    world.logically_available_pokemon |= world.generated_breeding.keys()
+    world.logically_available_pokemon.update(world.generated_breeding.keys())
 
 
 def generate_evolution_data(world: "PokemonCrystalWorld"):
@@ -213,7 +213,7 @@ def generate_evolution_data(world: "PokemonCrystalWorld"):
                 for second_evo in world.generated_pokemon[evo.pokemon].evolutions:
                     evolution_pokemon.add(second_evo.pokemon)
 
-    world.logically_available_pokemon |= evolution_pokemon
+    world.logically_available_pokemon.update(evolution_pokemon)
 
 
 def get_random_pokemon(world: "PokemonCrystalWorld", priority_pokemon: set[str] | None = None, types=None,
