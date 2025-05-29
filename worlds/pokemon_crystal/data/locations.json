@@ -6499,6 +6499,16 @@
     "default_item": "NO_ITEM",
     "script": "AP_Trainer_COOLTRAINERF_KELLY"
   },
+  "ITEM_FROM_CAMPER_QUENTIN": {
+    "label": "Route 45 - Camper Quentin",
+    "flag": "EVENT_ITEM_FROM_CAMPER_QUENTIN",
+    "type": "trainer",
+    "tags": [
+      "Trainersanity"
+    ],
+    "default_item": "NO_ITEM",
+    "script": "AP_Trainer_CAMPER_QUENTIN"
+  },
   "ITEM_FROM_CAMPER_TED": {
     "label": "Route 46 - Camper Ted",
     "flag": "EVENT_ITEM_FROM_CAMPER_TED",
