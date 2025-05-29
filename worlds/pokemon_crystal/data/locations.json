@@ -3601,7 +3601,7 @@
   },
   "TM24_DRAGONBREATH_GYM": {
     "label": "Blackthorn Gym - TM24 from Clair",
-    "flag": "EVENT_GOT_TM24_DRAGONBREATH",
+    "flag": "EVENT_GOT_TM24_DRAGONBREATH_GYM",
     "type": "giveitem",
     "tags": [
       "NPCGift",
@@ -3719,7 +3719,7 @@
   },
   "RISING_BADGE_FROM_CLAIR_GYM": {
     "label": "Blackthorn Gym - Rising Badge from Clair",
-    "flag": "EVENT_RISING_BADGE_FROM_CLAIR",
+    "flag": "EVENT_RISING_BADGE_FROM_CLAIR_GYM",
     "type": "giveitem",
     "tags": [
       "Badge",
