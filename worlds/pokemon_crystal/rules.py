@@ -7,20 +7,22 @@ from . import HMBadgeRequirements, EliteFourRequirement, RedRequirement, Route44
 from .data import data, EvolutionType, EvolutionData
 from .options import Goal, JohtoOnly, Route32Condition, UndergroundsRequirePower, Route2Access, \
     BlackthornDarkCaveAccess, \
-    NationalParkAccess, KantoAccessRequirement, Route3Access, BreedingMethodsRequired, MtSilverRequirement
+    NationalParkAccess, KantoAccessRequirement, Route3Access, BreedingMethodsRequired, MtSilverRequirement, \
+    FreeFlyLocation
 from .utils import evolution_in_logic, evolution_location_name
 
 if TYPE_CHECKING:
     from . import PokemonCrystalWorld
 
 
-def can_map_card_fly(state: CollectionState, world: "PokemonCrystalWorld"):
-    if world.options.randomize_pokegear:
-        return state.has("Map Card", world.player) and state.has("Pokegear", world.player)
-    return state.has("EVENT_GOT_MAP_CARD", world.player) and state.has("EVENT_GOT_POKEGEAR", world.player)
-
-
 def set_rules(world: "PokemonCrystalWorld") -> None:
+    if world.options.randomize_pokegear:
+        def can_map_card_fly(state: CollectionState):
+            return state.has_all(["EVENT_GOT_MAP_CARD", "EVENT_GOT_POKEGEAR"], world.player)
+    else:
+        def can_map_card_fly(state: CollectionState):
+            return state.has_all(["Map Card", "Pokegear"], world.player)
+
     if (world.options.hm_badge_requirements == HMBadgeRequirements.option_vanilla
             or world.options.hm_badge_requirements == HMBadgeRequirements.option_regional):
 
@@ -326,6 +328,10 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
     # Free Fly
     set_rule(get_entrance("Fly"), can_fly)
+    if world.options.free_fly_location.value in [FreeFlyLocation.option_free_fly_and_map_card,
+                                                 FreeFlyLocation.option_map_card]:
+        map_card_fly_entrance = f"REGION_FLY -> {world.map_card_fly_location.region_id}"
+        add_rule(get_entrance(map_card_fly_entrance), can_map_card_fly)
 
     # Goal
     if world.options.goal == Goal.option_red:

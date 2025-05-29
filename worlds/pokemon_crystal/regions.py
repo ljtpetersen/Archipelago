@@ -7,7 +7,6 @@ from .data import data, RegionData, EncounterMon
 from .items import PokemonCrystalItem
 from .locations import PokemonCrystalLocation
 from .options import FreeFlyLocation, JohtoOnly, LevelScaling, BlackthornDarkCaveAccess, Goal
-from .rules import can_map_card_fly
 
 if TYPE_CHECKING:
     from . import PokemonCrystalWorld
@@ -296,6 +295,5 @@ def setup_free_fly_regions(world: "PokemonCrystalWorld"):
             f"REGION_FLY -> {map_card_fly_location.region_id}",
             fly
         )
-        connection.access_rule = lambda state: can_map_card_fly(state, world)
         fly.exits.append(connection)
         connection.connect(map_card_region)
