@@ -125,7 +125,7 @@ def randomize_static_pokemon(world: "PokemonCrystalWorld"):
         for static_name, pkmn_data in world.generated_static.items():
             priority_pokemon = set()
             if pkmn_data.level_type == "giveegg":  # Base forms only for eggs
-                priority_pokemon |= set([poke for poke, data in world.generated_pokemon.items() if data.is_base])
+                priority_pokemon.update(poke for poke, data in world.generated_pokemon.items() if data.is_base)
             world.generated_static[static_name] = replace(
                 world.generated_static[static_name],
                 pokemon=get_random_pokemon(world, exclude_unown=True, priority_pokemon=priority_pokemon),
@@ -134,10 +134,6 @@ def randomize_static_pokemon(world: "PokemonCrystalWorld"):
         pokemon = world.random.choice(["PICHU", "CLEFFA", "IGGLYBUFF", "SMOOCHUM", "MAGBY", "ELEKID", "TYROGUE"])
         world.generated_static["OddEgg"] = replace(world.generated_static["OddEgg"], pokemon=pokemon)
 
-    static_pokemon = set()
-
-    for static in world.generated_static.values():
-        if f"Static_{static.name}" in world.available_wild_regions:
-            static_pokemon.add(static.pokemon)
-
+    static_pokemon = {static.pokemon for static in world.generated_static.values() if
+                      f"Static_{static.name}" in world.available_wild_regions}
     world.logically_available_pokemon.update(static_pokemon)

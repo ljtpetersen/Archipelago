@@ -137,7 +137,7 @@ class StartingTownBlocklist(OptionSet):
     nothing.
     """
     display_name = "Starting Town Blocklist"
-    valid_keys = sorted([town.name for town in data.starting_towns])
+    valid_keys = sorted(town.name for town in data.starting_towns)
 
 
 class VanillaClair(Toggle):
@@ -340,14 +340,18 @@ class Dexsanity(NamedRange):
 class DexsanityBlocklist(OptionSet):
     """
     These Pokemon will never be Dexsanity checks, this may cause you to get less Dexsanity checks than you request
+
+    You can use "_Legendaries" as a shortcut for all legendary Pokemon
     """
     display_name = "Dexsanity Blocklist"
-    valid_keys = sorted([pokemon.friendly_name for pokemon in data.pokemon.values()])
+    valid_keys = sorted(pokemon.friendly_name for pokemon in data.pokemon.values()) + ["_Legendaries"]
 
 
 class DexsanityStarters(Choice):
     """
     Controls how Dexsanity treats starter Pokemon
+    Allow: Starter Pokemon will be allowed as Dexsanity checks
+    Block: Starter Pokemon will not be allowed as Dexsanity Checks, effectively adding them to the blocklist
     """
     display_name = "Dexsanity Starters"
     default = 0
@@ -548,6 +552,17 @@ class RandomizeTrainerParties(Choice):
     option_vanilla = 0
     option_match_types = 1
     option_completely_random = 2
+
+
+class TrainerPartyBlocklist(OptionSet):
+    """
+    These Pokemon will not appear in enemy trainer parties, this requires trainer parties to be randomized
+
+    You can use "_Legendaries" as a shortcut for all legendary Pokemon
+    """
+    display_name = "Trainer Party Blocklist"
+    default = []
+    valid_keys = sorted(pokemon.friendly_name for pokemon in data.pokemon.values()) + ["_Legendaries"]
 
 
 class LevelScaling(Choice):
@@ -994,7 +1009,7 @@ class MoveBlocklist(OptionSet):
     Does not apply to vanilla learnsets or vanilla TMs
     """
     display_name = "Move Blocklist"
-    valid_keys = sorted({move.replace("_", " ").title() for move in data.moves.keys()})
+    valid_keys = sorted(move.replace("_", " ").title() for move in data.moves.keys())
 
 
 class FlyLocationBlocklist(OptionSet):
@@ -1137,6 +1152,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     level_scaling: LevelScaling
     randomize_trades: RandomizeTrades
     randomize_trainer_parties: RandomizeTrainerParties
+    trainer_party_blocklist: TrainerPartyBlocklist
     boost_trainers: BoostTrainerPokemonLevels
     trainer_level_boost: TrainerLevelBoostValue
     randomize_learnsets: RandomizeLearnsets

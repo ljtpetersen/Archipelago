@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 from .data import data as crystal_data
 from .moves import get_random_move_from_learnset
 from .options import RandomizeTrainerParties, RandomizeLearnsets, BoostTrainerPokemonLevels
-from .pokemon import get_random_pokemon, get_random_nezumi
+from .pokemon import get_random_pokemon, get_random_nezumi, pokemon_convert_friendly_to_ids
 from .utils import get_random_filler_item
 
 if TYPE_CHECKING:
@@ -39,6 +39,8 @@ def randomize_trainers(world: "PokemonCrystalWorld"):
             vanilla_trainer_movesets(world)
         return
 
+    trainer_party_blocklist = pokemon_convert_friendly_to_ids(world, world.options.trainer_party_blocklist)
+
     for trainer_name, trainer_data in world.generated_trainers.items():
         new_party = trainer_data.pokemon
         for i, pkmn_data in enumerate(trainer_data.pokemon):
@@ -58,9 +60,13 @@ def randomize_trainers(world: "PokemonCrystalWorld"):
                 if "LASS_ALICE" in trainer_name:
                     new_pokemon = get_random_nezumi(world.random)
                 else:
-                    new_pokemon = get_random_pokemon(world, types=match_types,
-                                                     force_fully_evolved_at=world.options.force_fully_evolved,
-                                                     current_level=pkmn_data.level)
+                    new_pokemon = get_random_pokemon(
+                        world,
+                        types=match_types,
+                        force_fully_evolved_at=world.options.force_fully_evolved,
+                        current_level=pkmn_data.level,
+                        blocklist=trainer_party_blocklist
+                    )
             if pkmn_data.item is not None:
                 # If this trainer has items, add an item
                 new_item = get_random_filler_item(world.random)

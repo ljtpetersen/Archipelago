@@ -1,4 +1,3 @@
-import copy
 from dataclasses import replace
 from typing import TYPE_CHECKING
 
@@ -218,7 +217,7 @@ def generate_evolution_data(world: "PokemonCrystalWorld"):
 
 def get_random_pokemon(world: "PokemonCrystalWorld", priority_pokemon: set[str] | None = None, types=None,
                        base_only=False, force_fully_evolved_at=None, current_level=None, starter=False,
-                       exclude_unown=False, blocklist: list[str] | None = None):
+                       exclude_unown=False, blocklist: set[str] | None = None):
     bst_range = world.options.starters_bst_average * .10
 
     def filter_out_pokemon(pkmn_name, pkmn_data):
@@ -293,6 +292,19 @@ def get_random_pokemon_evolution(random, pkmn_name, pkmn_data):
         # return the same Pokemon
         return pkmn_name
     return random.choice(pkmn_data.evolutions).pokemon
+
+
+def pokemon_convert_friendly_to_ids(world: "PokemonCrystalWorld", pokemon) -> set[str]:
+    pokemon = set(pokemon)
+    if "_Legendaries" in pokemon:
+        pokemon.discard("_Legendaries")
+        pokemon.update({"Articuno", "Zapdos", "Moltres", "Mewtwo", "Mew", "Entei", "Raikou", "Suicune", "Celebi",
+                        "Lugia", "Ho-oh"})
+
+    pokemon_ids = {pokemon_id for pokemon_id, pokemon_data in world.generated_pokemon.items() if
+                   pokemon_data.friendly_name in pokemon}
+
+    return pokemon_ids
 
 
 def get_random_base_stats(random, bst=None):
