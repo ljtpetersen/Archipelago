@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 from .data import FishData, TreeMonData, EncounterMon
 from .options import RandomizeWilds, EncounterGrouping, BreedingMethodsRequired
-from .pokemon import get_random_pokemon
+from .pokemon import get_random_pokemon, pokemon_convert_friendly_to_ids
 
 if TYPE_CHECKING:
     from . import PokemonCrystalWorld
@@ -41,32 +41,35 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
         if world.options.breeding_methods_required.value == BreedingMethodsRequired.option_with_ditto:
             priority_pokemon |= {"DITTO"}  # Ensure Ditto appears in the wild at least once if required for breeding
 
+        global_blocklist = pokemon_convert_friendly_to_ids(world, world.options.wild_encounter_blocklist)
+
         def randomize_encounter_list(encounter_list: list[EncounterMon], exclude_unown=False):
             new_encounters = list[EncounterMon]()
             if world.options.encounter_grouping.value == EncounterGrouping.option_one_per_method:
-                pokemon = get_random_pokemon(world, priority_pokemon=priority_pokemon, exclude_unown=exclude_unown)
+                pokemon = get_random_pokemon(world, priority_pokemon=priority_pokemon, exclude_unown=exclude_unown,
+                                             blocklist=global_blocklist)
                 priority_pokemon.discard(pokemon)
                 for encounter in encounter_list:
                     new_encounters.append(replace(encounter, pokemon=pokemon))
             elif world.options.encounter_grouping.value == EncounterGrouping.option_one_to_one:
                 distribution = defaultdict[str, list[int]](lambda: [])
                 new_encounters = [encounter for encounter in encounter_list]
-                encounter_blocklist = []
+                encounter_blocklist = set(global_blocklist)
                 for i, encounter in enumerate(encounter_list):
                     distribution[encounter.pokemon].append(i)
                 for pokemon, slots in distribution.items():
                     pokemon = get_random_pokemon(world, priority_pokemon=priority_pokemon, exclude_unown=exclude_unown,
                                                  blocklist=encounter_blocklist)
-                    encounter_blocklist.append(pokemon)
+                    encounter_blocklist.add(pokemon)
                     priority_pokemon.discard(pokemon)
                     for slot in slots:
                         new_encounters[slot] = replace(new_encounters[slot], pokemon=pokemon)
             else:
-                encounter_blocklist = []
+                encounter_blocklist = set(global_blocklist)
                 for encounter in encounter_list:
                     pokemon = get_random_pokemon(world, priority_pokemon=priority_pokemon, exclude_unown=exclude_unown,
                                                  blocklist=encounter_blocklist)
-                    encounter_blocklist.append(pokemon)
+                    encounter_blocklist.add(pokemon)
                     priority_pokemon.discard(pokemon)
                     new_encounters.append(replace(encounter, pokemon=pokemon))
             return new_encounters
@@ -122,13 +125,15 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
 
 def randomize_static_pokemon(world: "PokemonCrystalWorld"):
     if world.options.randomize_static_pokemon:
+        blocklist = pokemon_convert_friendly_to_ids(world, world.options.static_blocklist)
         for static_name, pkmn_data in world.generated_static.items():
             priority_pokemon = set()
             if pkmn_data.level_type == "giveegg":  # Base forms only for eggs
                 priority_pokemon.update(poke for poke, data in world.generated_pokemon.items() if data.is_base)
             world.generated_static[static_name] = replace(
                 world.generated_static[static_name],
-                pokemon=get_random_pokemon(world, exclude_unown=True, priority_pokemon=priority_pokemon),
+                pokemon=get_random_pokemon(world, exclude_unown=True, priority_pokemon=priority_pokemon,
+                                           blocklist=blocklist),
             )
     else:  # Still randomize the Odd Egg
         pokemon = world.random.choice(["PICHU", "CLEFFA", "IGGLYBUFF", "SMOOCHUM", "MAGBY", "ELEKID", "TYROGUE"])

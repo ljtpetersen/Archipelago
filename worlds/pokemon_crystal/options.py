@@ -340,8 +340,8 @@ class Dexsanity(NamedRange):
 class DexsanityBlocklist(OptionSet):
     """
     These Pokemon will never be Dexsanity checks, this may cause you to get less Dexsanity checks than you request
-
     You can use "_Legendaries" as a shortcut for all legendary Pokemon
+    Blocklists are best effort, other constraints may cause them to be ignored
     """
     display_name = "Dexsanity Blocklist"
     valid_keys = sorted(pokemon.friendly_name for pokemon in data.pokemon.values()) + ["_Legendaries"]
@@ -468,6 +468,17 @@ class RandomizeWilds(Choice):
     option_catch_em_all = 4
 
 
+class WildEncounterBlocklist(OptionSet):
+    """
+    These Pokemon will not appear in the wild
+    Does nothing if wild Pokemon are not randomized
+    You can use "_Legendaries" as a shortcut for all legendary Pokemon
+    Blocklists are best effort, other constraints may cause them to be ignored
+    """
+    display_name = "Wild Encounter Blocklist"
+    valid_keys = sorted(pokemon.friendly_name for pokemon in data.pokemon.values()) + ["_Legendaries"]
+
+
 class EncounterGrouping(Choice):
     """
     Determines how randomized wild Pokemon are grouped in encounter tables.
@@ -526,9 +537,20 @@ class EncounterSlotDistribution(Choice):
 class RandomizeStaticPokemon(Toggle):
     """
     Randomizes species of static Pokemon encounters
-    This includes overworld Pokemon, Gift Pokémon and Egg Pokémon
+    This includes overworld Pokemon, gift Pokémon and egg Pokémon
     """
     display_name = "Randomize Static Pokemon"
+
+
+class StaticBlocklist(OptionSet):
+    """
+    These Pokemon will not appear as static overworld encounters, gift eggs or gift Pokemon
+    Does nothing if static Pokemon are not randomized
+    You can use "_Legendaries" as a shortcut for all legendary Pokemon
+    Blocklists are best effort, other constraints may cause them to be ignored
+    """
+    display_name = "Static Blocklist"
+    valid_keys = sorted(pokemon.friendly_name for pokemon in data.pokemon.values()) + ["_Legendaries"]
 
 
 class RandomizeTrades(Choice):
@@ -557,11 +579,11 @@ class RandomizeTrainerParties(Choice):
 class TrainerPartyBlocklist(OptionSet):
     """
     These Pokemon will not appear in enemy trainer parties, this requires trainer parties to be randomized
-
+    Does nothing if trainer parties are not randomized
     You can use "_Legendaries" as a shortcut for all legendary Pokemon
+    Blocklists are best effort, other constraints may cause them to be ignored
     """
     display_name = "Trainer Party Blocklist"
-    default = []
     valid_keys = sorted(pokemon.friendly_name for pokemon in data.pokemon.values()) + ["_Legendaries"]
 
 
@@ -1014,7 +1036,7 @@ class MoveBlocklist(OptionSet):
 
 class FlyLocationBlocklist(OptionSet):
     """
-    These locations won't be given to you as fly locations either as your free one or from receiving the map card.
+    These locations won't be given to you as fly locations, either as your free one or from receiving the map card.
     Locations should be provided in the form: "Ecruteak City"
     New Bark Town, Cherrygrove City and Indigo Plateau cannot be chosen as free fly locations and are not valid options
     If you blocklist enough locations that there aren't enough locations left for your total number of free fly locations, the blocklist will simply do nothing
@@ -1145,10 +1167,12 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     randomize_starters: RandomizeStarters
     starters_bst_average: StarterBST
     randomize_wilds: RandomizeWilds
+    wild_encounter_blocklist: WildEncounterBlocklist
     encounter_grouping: EncounterGrouping
     force_fully_evolved: ForceFullyEvolved
     encounter_slot_distribution: EncounterSlotDistribution
     randomize_static_pokemon: RandomizeStaticPokemon
+    static_blocklist: StaticBlocklist
     level_scaling: LevelScaling
     randomize_trades: RandomizeTrades
     randomize_trainer_parties: RandomizeTrainerParties
