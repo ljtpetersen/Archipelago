@@ -305,7 +305,7 @@ ON_OFF = {"off": 0, "on": 1}
 INVERTED_ON_OFF = {"off": 1, "on": 0}
 
 
-@dataclass
+@dataclass(frozen=True)
 class PokemonCrystalMapSizeData:
     width: int
     height: int
@@ -508,9 +508,8 @@ def _init() -> None:
             pokemon_data["gender_ratio"]
         )
 
-    moves = {}
-    for move_name, move_attributes in move_data.items():
-        moves[move_name] = MoveData(
+    moves = {
+        move_name: MoveData(
             move_name,
             move_attributes["id"],
             move_attributes["type"],
@@ -519,7 +518,8 @@ def _init() -> None:
             move_attributes["pp"],
             move_attributes["is_hm"],
             move_attributes["name"],
-        )
+        ) for move_name, move_attributes in move_data.items()
+    }
 
     grass_dict = {}
     for grass_name, grass_data in wild_data["grass"].items():
@@ -573,9 +573,8 @@ def _init() -> None:
 
     wild = WildData(grass_dict, water_dict, fish_dict, tree_dict)
 
-    saffron_warps = {}
-    for warp_name, warp_data in saffron_data["warps"].items():
-        saffron_warps[warp_name] = MiscWarp(warp_data["coords"], warp_data["id"])
+    saffron_warps = {warp_name: MiscWarp(warp_data["coords"], warp_data["id"]) for warp_name, warp_data in
+                     saffron_data["warps"].items()}
 
     radio_tower_data = ["Y", "Y", "N", "Y", "N"]
 
@@ -587,37 +586,31 @@ def _init() -> None:
     types = type_data["types"]
     type_ids = type_data["ids"]
 
-    tmhm = {}
-    for tm_name, tm_data in tmhm_data.items():
-        tmhm[tm_name] = TMHMData(
-            tm_name,
-            tm_data["tm_num"],
-            tm_data["type"],
-            tm_data["is_hm"],
-            move_data[tm_name]["id"]
-        )
+    tmhm = {tm_name: TMHMData(
+        tm_name,
+        tm_data["tm_num"],
+        tm_data["type"],
+        tm_data["is_hm"],
+        move_data[tm_name]["id"]
+    ) for tm_name, tm_data in tmhm_data.items()}
 
-    music_consts = {}
-    for music_name, music_data in data_json["music"]["consts"].items():
-        music_consts[music_name] = MusicConst(music_data["id"], music_data["loop"])
+    music_consts = {music_name: MusicConst(music_data["id"], music_data["loop"]) for music_name, music_data in
+                    data_json["music"]["consts"].items()}
 
-    music_maps = {}
-    for map_name in data_json["music"]["maps"]:
-        music_maps[map_name] = ""
+    music_maps = {map_name: "" for map_name in data_json["music"]["maps"]}
 
     music = MusicData(music_consts,
                       music_maps,
                       data_json["music"]["encounters"],
                       data_json["music"]["scripts"])
 
-    trades = []
-    for trade_data in data_json["trade"]:
-        trades.append(
-            TradeData(trade_data["index"],
-                      trade_data["requested_pokemon"],
-                      trade_data["received_pokemon"],
-                      trade_data["requested_gender"],
-                      trade_data["held_item"]))
+    trades = [TradeData(
+        trade_data["index"],
+        trade_data["requested_pokemon"],
+        trade_data["received_pokemon"],
+        trade_data["requested_gender"],
+        trade_data["held_item"]
+    ) for trade_data in data_json["trade"]]
 
     starting_towns = [
         StartingTown(2, "Pallet Town", "REGION_PALLET_TOWN", False),
@@ -705,10 +698,8 @@ def _init() -> None:
         "blind_trainers": PokemonCrystalGameSetting(4, 1, 1, ON_OFF, 0)
     }
 
-    map_sizes = {}
-
-    for map_name, map_size in map_size_data.items():
-        map_sizes[map_name] = PokemonCrystalMapSizeData(map_size[0], map_size[1])
+    map_sizes = {map_name: PokemonCrystalMapSizeData(map_size[0], map_size[1]) for map_name, map_size in
+                 map_size_data.items()}
 
     phone_scripts = []
     phone_yaml = load_yaml_data("phone_data.yaml")
