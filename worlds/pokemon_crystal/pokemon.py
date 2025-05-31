@@ -171,7 +171,7 @@ def fill_wild_encounter_locations(world: "PokemonCrystalWorld"):
 
 def _fill_encounter_area(world: "PokemonCrystalWorld", area_name: str, encounters: list[EncounterMon | StaticPokemon]):
     seen_pokemon = set()
-    for (i, encounter) in enumerate(encounters):
+    for i, encounter in enumerate(encounters):
         # Not all encounter regions may be needed so we just ignore ones that don't exist
         try:
             location = world.get_location(f"{area_name}_{i + 1}")
@@ -190,7 +190,7 @@ def generate_breeding_data(world: "PokemonCrystalWorld"):
         if evolution not in world.logically_available_pokemon: return
         evolution_data = world.generated_pokemon[evolution]
         if "EGG_NONE" in evolution_data.egg_groups or evolution_data.gender_ratio == "GENDER_UNKNOWN": return
-        world.generated_breeding[base] |= {evolution}
+        world.generated_breeding[base].add(evolution)
 
     for pokemon_id, pokemon_data in world.generated_pokemon.items():
         if not pokemon_data.is_base: continue

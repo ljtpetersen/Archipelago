@@ -119,13 +119,13 @@ class PokemonCrystalWorld(World):
 
     def __init__(self, multiworld: MultiWorld, player: int):
         super().__init__(multiworld, player)
-        self.generated_moves = copy.copy(crystal_data.moves)
-        self.generated_pokemon = copy.copy(crystal_data.pokemon)
-        self.generated_trainers = copy.copy(crystal_data.trainers)
-        self.generated_tms = copy.copy(crystal_data.tmhm)
-        self.generated_wild = copy.copy(crystal_data.wild)
-        self.generated_static = copy.copy(crystal_data.static)
-        self.generated_trades = copy.copy(crystal_data.trades)
+        self.generated_moves = crystal_data.moves.copy()
+        self.generated_pokemon = copy.deepcopy(crystal_data.pokemon)
+        self.generated_trainers = copy.deepcopy(crystal_data.trainers)
+        self.generated_tms = crystal_data.tmhm.copy()
+        self.generated_wild = copy.deepcopy(crystal_data.wild)
+        self.generated_static = crystal_data.static.copy()
+        self.generated_trades = crystal_data.trades.copy()
         self.generated_dexsanity = set()
         self.generated_wooper = "WOOPER"
         self.generated_starters = (["CYNDAQUIL", "QUILAVA", "TYPHLOSION"],
@@ -134,8 +134,8 @@ class PokemonCrystalWorld(World):
         self.generated_starter_helditems = ("BERRY", "BERRY", "BERRY")
         self.generated_palettes = {}
         self.generated_breeding = defaultdict(lambda: set())
-        self.generated_music = copy.copy(crystal_data.music)
-        self.generated_misc = copy.copy(crystal_data.misc)
+        self.generated_music = copy.deepcopy(crystal_data.music)
+        self.generated_misc = copy.deepcopy(crystal_data.misc)
         self.generated_phone_traps = []
         self.generated_phone_indices = []
 

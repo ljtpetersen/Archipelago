@@ -37,11 +37,12 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
                 priority_pokemon.add(evo_line.pop())
 
         world.generated_wooper = get_random_pokemon(world, exclude_unown=True)
+        
+        global_blocklist = pokemon_convert_friendly_to_ids(world, world.options.wild_encounter_blocklist)
 
         if world.options.breeding_methods_required.value == BreedingMethodsRequired.option_with_ditto:
-            priority_pokemon |= {"DITTO"}  # Ensure Ditto appears in the wild at least once if required for breeding
-
-        global_blocklist = pokemon_convert_friendly_to_ids(world, world.options.wild_encounter_blocklist)
+            priority_pokemon.add("DITTO")  # Ensure Ditto appears in the wild at least once if required for breeding
+            global_blocklist.discard("DITTO")
 
         def randomize_encounter_list(encounter_list: list[EncounterMon], exclude_unown=False):
             new_encounters = list[EncounterMon]()

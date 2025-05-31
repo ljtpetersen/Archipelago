@@ -1217,7 +1217,7 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         if region_data.wild_encounters.surfing and "Water" in world.options.wild_encounter_methods_required:
             set_encounter_rule(f"WildWater_{region_data.wild_encounters.surfing}",
                                len(world.generated_wild.water[region_data.wild_encounters.surfing]),
-                               can_surf if region_data.johto else can_surf_kanto)
+                               can_surf if (region_data.johto or region_data.silver_cave) else can_surf_kanto)
 
         if region_data.wild_encounters.fishing and "Fishing" in world.options.wild_encounter_methods_required:
             set_encounter_rule(f"WildFish_{region_data.wild_encounters.fishing}_Old",
