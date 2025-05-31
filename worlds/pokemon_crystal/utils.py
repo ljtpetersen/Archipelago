@@ -2,9 +2,11 @@ import logging
 from random import Random
 from typing import TYPE_CHECKING
 
+from Options import Toggle
 from .data import data, EvolutionData, EvolutionType, StartingTown
 from .options import FreeFlyLocation, Route32Condition, JohtoOnly, RandomizeBadges, UndergroundsRequirePower, \
-    Route3Access
+    Route3Access, EliteFourRequirement, Goal, Route44AccessRequirement, BlackthornDarkCaveAccess, RedRequirement, \
+    MtSilverRequirement, HMBadgeRequirements, RedGyaradosAccess, EarlyFly, RadioTowerRequirement
 from ..Files import APTokenTypes
 
 if TYPE_CHECKING:
@@ -32,6 +34,161 @@ def get_random_ball(random: Random):
              "LURE_BALL", "FAST_BALL"]
     ball_weights = [50, 30, 20, 1, 1, 1, 1, 1, 1]
     return random.choices(balls, weights=ball_weights)[0]
+
+
+def adjust_options(world: "PokemonCrystalWorld"):
+    if (world.options.randomize_badges.value != RandomizeBadges.option_completely_random
+            and world.options.radio_tower_count.value > (7 if world.options.johto_only else 15)):
+        world.options.radio_tower_count.value = 7 if world.options.johto_only else 15
+        logging.warning(
+            "Pokemon Crystal: Radio Tower Count >%d incompatible with vanilla or shuffled badges. "
+            "Changing Radio Tower Count to %d for player %s.",
+            world.options.radio_tower_count.value,
+            world.options.radio_tower_count.value,
+            world.multiworld.get_player_name(world.player))
+
+    if (world.options.route_44_access_count.value > (7 if world.options.johto_only else 15)
+            and world.options.randomize_badges.value != RandomizeBadges.option_completely_random):
+        world.options.route_44_access_count.value = 7 if world.options.johto_only else 15
+        logging.warning(
+            "Pokemon Crystal: Route 44 Access Count >%d incompatible with vanilla or shuffled badges. "
+            "Changing Route 44 Access Count to %d for player %s.",
+            world.options.route_44_access_count.value,
+            world.options.route_44_access_count.value,
+            world.multiworld.get_player_name(world.player))
+
+    if (world.options.route_44_access_requirement.value == Route44AccessRequirement.option_gyms
+            and world.options.blackthorn_dark_cave_access.value == BlackthornDarkCaveAccess.option_vanilla
+            and world.options.route_44_access_count.value > (7 if world.options.johto_only else 15)):
+        world.options.route_44_access_count.value = 7 if world.options.johto_only else 15
+        logging.warning(
+            "Pokemon Crystal: Route 44 Access Gyms >%d incompatible with vanilla Dark Cave. "
+            "Changing Route 44 Access Gyms to %d for player %s.",
+            world.options.route_44_access_count.value,
+            world.options.route_44_access_count.value,
+            world.multiworld.get_player_name(world.player))
+
+    if world.options.johto_only:
+
+        if world.options.goal == Goal.option_red and world.options.johto_only == JohtoOnly.option_on:
+            world.options.goal.value = Goal.option_elite_four
+            logging.warning(
+                "Pokemon Crystal: Red goal is incompatible with Johto Only "
+                "without Silver Cave. Changing goal to Elite Four for player %s.",
+                world.multiworld.get_player_name(world.player))
+
+        if (world.options.elite_four_requirement.value == EliteFourRequirement.option_gyms
+                and world.options.elite_four_count.value > 8):
+            world.options.elite_four_count.value = 8
+            logging.warning(
+                "Pokemon Crystal: Elite Four Gyms >8 incompatible with Johto Only. "
+                "Changing Elite Four Gyms to 8 for player %s.",
+                world.multiworld.get_player_name(world.player))
+
+        if (world.options.red_requirement.value == RedRequirement.option_gyms
+                and world.options.red_count.value > 8):
+            world.options.red_count.value = 8
+            logging.warning(
+                "Pokemon Crystal: Red Gyms >8 incompatible with Johto Only. "
+                "Changing Red Gyms to 8 for player %s.",
+                world.multiworld.get_player_name(world.player))
+
+        if (world.options.mt_silver_requirement.value == MtSilverRequirement.option_gyms
+                and world.options.mt_silver_count.value > 8):
+            world.options.mt_silver_count.value = 8
+            logging.warning(
+                "Pokemon Crystal: Mt. Silver Gyms >8 incompatible with Johto Only. "
+                "Changing Mt. Silver Gyms to 8 for player %s.",
+                world.multiworld.get_player_name(world.player))
+
+        if (world.options.route_44_access_requirement.value == Route44AccessRequirement.option_gyms
+                and world.options.route_44_access_count.value > 8):
+            world.options.route_44_access_count.value = 8
+        logging.warning(
+            "Pokemon Crystal: Route 44 Access Gyms >8 incompatible with Johto Only. "
+            "Changing Route 44 Access Gyms to 8 for player %s.",
+            world.multiworld.get_player_name(world.player))
+
+        if (world.options.radio_tower_requirement.value == RadioTowerRequirement.option_gyms
+                and world.options.radio_tower_count.value > 7):
+            world.options.radio_tower_count.value = 7
+            logging.warning(
+                "Pokemon Crystal: Radio Tower Gyms >7 incompatible with Johto Only. "
+                "Changing Radio Tower Gyms to 7 for player %s.",
+                world.multiworld.get_player_name(world.player)
+            )
+
+        if world.options.evolution_gym_levels.value < 8:
+            world.options.evolution_gym_levels.value = 8
+            logging.warning(
+                "Pokemon Crystal: Evolution Gym Levels <8 incompatible with Johto Only "
+                "if badges are not completely random. Changing Evolution Gym Levels to 8 for player %s.",
+                world.multiworld.get_player_name(world.player))
+
+        if world.options.randomize_badges != RandomizeBadges.option_completely_random:
+            if world.options.red_count.value > 8 and world.options.red_requirement == RedRequirement.option_badges:
+                world.options.red_count.value = 8
+                logging.warning(
+                    "Pokemon Crystal: Red Badges >8 incompatible with Johto Only "
+                    "if badges are not completely random. Changing Red Badges to 8 for player %s.",
+                    world.multiworld.get_player_name(world.player))
+
+            if (world.options.elite_four_count.value > 8 and
+                    world.options.elite_four_requirement.value == EliteFourRequirement.option_badges):
+                world.options.elite_four_count.value = 8
+                logging.warning(
+                    "Pokemon Crystal: Elite Four Badges >8 incompatible with Johto Only "
+                    "if badges are not completely random. Changing Elite Four Badges to 8 for player %s.",
+                    world.multiworld.get_player_name(world.player))
+
+            if (world.options.radio_tower_count.value > 8
+                    and world.options.radio_tower_requirement.value == RadioTowerRequirement.option_badges):
+                world.options.radio_tower_count.value = 8
+                logging.warning(
+                    "Pokemon Crystal: Radio Tower Badges >8 incompatible with Johto Only "
+                    "if badges are not completely random. Changing Radio Tower Badges to 8 for player %s.",
+                    world.multiworld.get_player_name(world.player))
+
+            if (world.options.mt_silver_count.value > 8 and
+                    world.options.mt_silver_requirement.value == MtSilverRequirement.option_badges):
+                world.options.mt_silver_count.value = 8
+                logging.warning(
+                    "Pokemon Crystal: Mt. Silver Badges >8 incompatible with Johto Only "
+                    "if badges are not completely random. Changing Mt. Silver Badges to 8 for player %s.",
+                    world.multiworld.get_player_name(world.player))
+
+            if (world.options.route_44_access_count.value > 8 and
+                    world.options.route_44_access_requirement.value == Route44AccessRequirement.option_badges):
+                world.options.route_44_access_count.value = 8
+                logging.warning(
+                    "Pokemon Crystal: Route 44 Access Badges >8 incompatible with Johto Only "
+                    "if badges are not completely random. Changing Route 44 Access Badges to 8 for player %s.",
+                    world.multiworld.get_player_name(world.player))
+
+    if (world.options.red_gyarados_access
+            and world.options.randomize_badges.value == RandomizeBadges.option_vanilla
+            and "Whirlpool" and not world.options.hm_badge_requirements == HMBadgeRequirements.option_no_badges
+            and "Whirlpool" not in world.options.remove_badge_requirement):
+        world.options.red_gyarados_access.value = RedGyaradosAccess.option_vanilla
+        logging.warning("Pokemon Crystal: Red Gyarados access requires Whirlpool and Vanilla Badges are not "
+                        "compatible, setting Red Gyarados access to vanilla for player %s.",
+                        world.multiworld.get_player_name(world.player))
+
+    if (world.options.early_fly
+            and world.options.randomize_starting_town
+            and world.options.randomize_badges.value != RandomizeBadges.option_completely_random
+            and "Fly" not in world.options.remove_badge_requirement
+            and world.options.hm_badge_requirements != HMBadgeRequirements.option_no_badges):
+        world.options.early_fly.value = EarlyFly.option_false
+        logging.warning("Pokemon Crystal: Early fly is not compatible with Random Starting Town if Badges are "
+                        "not completely random. Disabling Early Fly for player %s",
+                        world.multiworld.get_player_name(world.player))
+
+    # In race mode we don't patch any item location information into the ROM
+    if world.multiworld.is_race and not world.options.remote_items:
+        logging.warning("Pokemon Crystal: Forcing Player %s (%s) to use remote items due to race mode.",
+                        world.player, world.player_name)
+        world.options.remote_items.value = Toggle.option_true
 
 
 def get_random_starting_town(world: "PokemonCrystalWorld"):

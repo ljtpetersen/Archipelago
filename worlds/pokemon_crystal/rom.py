@@ -321,7 +321,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
             write_bytes(patch, pokemon_data, address)
             address += len(pokemon_data)
 
-    if world.options.randomize_tm_moves.value:
+    if world.options.randomize_tm_moves.value or world.options.metronome_only.value:
         tm_moves = [tm_data.move_id for _name, tm_data in world.generated_tms.items()]
         address = data.rom_addresses["AP_Setting_TMMoves"]
         write_bytes(patch, tm_moves, address)
@@ -464,7 +464,9 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
     write_bytes(patch, [world.options.elite_four_count.value], data.rom_addresses["AP_Setting_VictoryRoadCount_1"] + 1)
     write_bytes(patch, [world.options.elite_four_count.value], data.rom_addresses["AP_Setting_VictoryRoadCount_2"] + 1)
 
-    write_bytes(patch, [world.options.radio_tower_badges - 1], data.rom_addresses["AP_Setting_RocketBadges"] + 1)
+    write_bytes(patch, [world.options.radio_tower_requirement.value],
+                data.rom_addresses["AP_Setting_RocketsRequirement"] + 1)
+    write_bytes(patch, [world.options.radio_tower_count.value], data.rom_addresses["AP_Setting_RocketsCount"] + 1)
 
     write_bytes(patch, [world.options.route_44_access_requirement.value],
                 data.rom_addresses["AP_Setting_Route44Requirement_1"] + 1)

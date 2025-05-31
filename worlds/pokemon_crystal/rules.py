@@ -3,7 +3,8 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 from worlds.generic.Rules import add_rule, set_rule
-from . import HMBadgeRequirements, EliteFourRequirement, RedRequirement, Route44AccessRequirement, RandomizeBadges
+from . import HMBadgeRequirements, EliteFourRequirement, RedRequirement, Route44AccessRequirement, RandomizeBadges, \
+    RadioTowerRequirement
 from .data import data, EvolutionType, EvolutionData
 from .options import Goal, JohtoOnly, Route32Condition, UndergroundsRequirePower, Route2Access, \
     BlackthornDarkCaveAccess, \
@@ -229,10 +230,14 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     def has_n_badges(state: CollectionState, n: int) -> bool:
         return state.has_from_list_unique(badge_items.values(), world.player, n)
 
-    def has_rocket_badges(state: CollectionState):
-        return has_n_badges(state, world.options.radio_tower_badges.value)
+    if world.options.radio_tower_requirement.value == RadioTowerRequirement.option_badges:
+        def has_rockets_requirement(state: CollectionState):
+            return has_n_badges(state, world.options.radio_tower_count.value)
+    else:
+        def has_rockets_requirement(state: CollectionState):
+            return has_beaten_n_gyms(state, world.options.radio_tower_count.value)
 
-    if world.options.route_44_access_requirement == Route44AccessRequirement.option_badges:
+    if world.options.route_44_access_requirement.value == Route44AccessRequirement.option_badges:
         def has_route_44_access(state: CollectionState):
             return has_n_badges(state, world.options.route_44_access_count.value)
     else:
@@ -245,14 +250,15 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     else:
         def has_elite_four_requirement(state: CollectionState):
             return has_n_badges(state, world.options.elite_four_count.value)
-    if world.options.red_requirement == RedRequirement.option_gyms:
+
+    if world.options.red_requirement.value == RedRequirement.option_gyms:
         def has_red_requirement(state: CollectionState):
             return has_beaten_n_gyms(state, world.options.red_count.value)
     else:
         def has_red_requirement(state: CollectionState):
             return has_n_badges(state, world.options.red_count.value)
 
-    if world.options.mt_silver_requirement == MtSilverRequirement.option_gyms:
+    if world.options.mt_silver_requirement.value == MtSilverRequirement.option_gyms:
         def has_mt_silver_requirement(state: CollectionState):
             return has_beaten_n_gyms(state, world.options.mt_silver_count.value)
     else:
@@ -589,14 +595,14 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
              lambda state: state.has("Card Key", world.player))
 
     set_rule(get_entrance("REGION_GOLDENROD_UNDERGROUND_WAREHOUSE -> REGION_GOLDENROD_UNDERGROUND_WAREHOUSE:TAKEOVER"),
-             has_rocket_badges)
+             has_rockets_requirement)
 
     set_rule(get_entrance(
         "REGION_GOLDENROD_UNDERGROUND_SWITCH_ROOM_ENTRANCES -> REGION_GOLDENROD_UNDERGROUND_SWITCH_ROOM_ENTRANCES:TAKEOVER"),
-        has_rocket_badges)
+        has_rockets_requirement)
 
     # Radio Tower
-    set_rule(get_entrance("REGION_RADIO_TOWER_2F -> REGION_RADIO_TOWER_2F:TAKEOVER"), has_rocket_badges)
+    set_rule(get_entrance("REGION_RADIO_TOWER_2F -> REGION_RADIO_TOWER_2F:TAKEOVER"), has_rockets_requirement)
 
     set_rule(get_entrance("REGION_RADIO_TOWER_3F:NOCARDKEY -> REGION_RADIO_TOWER_3F:CARDKEY"),
              lambda state: state.has("Card Key", world.player))
@@ -607,10 +613,10 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     set_rule(get_location("Radio Tower 4F - Pink Bow from Mary"),
              lambda state: state.has("EVENT_CLEARED_RADIO_TOWER", world.player))
 
-    set_rule(get_location("GRUNTM_3"), has_rocket_badges)
+    set_rule(get_location("GRUNTM_3"), has_rockets_requirement)
 
     if trainersanity():
-        set_rule(get_location("Radio Tower 1F - Grunt"), has_rocket_badges)
+        set_rule(get_location("Radio Tower 1F - Grunt"), has_rockets_requirement)
 
     # Route 35
     set_rule(get_location("Route 35 - HP Up after delivering Kenya"),
