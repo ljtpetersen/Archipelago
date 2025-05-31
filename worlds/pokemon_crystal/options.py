@@ -1002,14 +1002,6 @@ class ParalysisTrapWeight(Range):
     range_end = 8
 
 
-class ItemReceiveSound(DefaultOnToggle):
-    """
-    Play item received sound on receiving a remote item
-    All items will be considered remote when Remote Items is enabled
-    """
-    display_name = "Item Receive Sound"
-
-
 class EnableMischief(Toggle):
     """
     If I told you what this does, it would ruin the surprises :)
@@ -1087,6 +1079,7 @@ class GameOptions(OptionDict):
     skip_dex_registration: off/on - Sets whether the Pokedex registration screen is skipped
     blind_trainers: off/on - Sets whether trainers will see you without talking to them directly
     guaranteed_catch: off/on - Sets whether balls have a 100% success rate
+    ap_item_sound: on/off - Sets whether a sound is played when a remote item is received
     """
     display_name = "Game Options"
     default = {
@@ -1115,7 +1108,8 @@ class GameOptions(OptionDict):
         "dex_area_beep": "off",
         "skip_dex_registration": "off",
         "blind_trainers": "off",
-        "guaranteed_catch": "off"
+        "guaranteed_catch": "off",
+        "ap_item_sound": "on"
     }
 
 
@@ -1210,7 +1204,6 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     freeze_trap_weight: FreezeTrapWeight
     paralysis_trap_weight: ParalysisTrapWeight
     remote_items: RemoteItems
-    item_receive_sound: ItemReceiveSound
     game_options: GameOptions
     enable_mischief: EnableMischief
     start_inventory_from_pool: StartInventoryPool
