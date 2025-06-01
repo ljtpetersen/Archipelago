@@ -22,13 +22,18 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
                      "ENGINE_UNLOCKED_UNOWNS_L_TO_R",
                      "ENGINE_UNLOCKED_UNOWNS_S_TO_W",
                      "ENGINE_UNLOCKED_UNOWNS_X_TO_Z"]
+    evolution_item_unlocks = ["EVENT_GOLDENROD_EVOLUTION_ITEMS", "EVENT_CELADON_EVOLUTION_ITEMS"]
+    happiness_unlocks = ["EVENT_DAISY_GROOMING", "EVENT_HAIRCUT_BROTHERS"]
 
     if world.options.randomize_pokegear:
-        def can_map_card_fly(state: CollectionState):
-            return state.has_all(["EVENT_GOT_MAP_CARD", "EVENT_GOT_POKEGEAR"], world.player)
+        map_card_fly_unlocks = ["Map Card", "Pokegear"]
+        expn_components = ["Pokegear", "Radio Card", "EXPN Card"]
     else:
-        def can_map_card_fly(state: CollectionState):
-            return state.has_all(["Map Card", "Pokegear"], world.player)
+        map_card_fly_unlocks = ["EVENT_GOT_MAP_CARD", "EVENT_GOT_POKEGEAR"]
+        expn_components = ["EVENT_GOT_POKEGEAR", "EVENT_GOT_RADIO_CARD", "EVENT_GOT_EXPN_CARD"]
+
+    def can_map_card_fly(state: CollectionState):
+        return state.has_all(map_card_fly_unlocks, world.player)
 
     if (world.options.hm_badge_requirements == HMBadgeRequirements.option_vanilla
             or world.options.hm_badge_requirements == HMBadgeRequirements.option_regional):
@@ -332,12 +337,8 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     else:
         route_32_access_rule = None
 
-    if world.options.randomize_pokegear:
-        def expn(state: CollectionState):
-            return state.has_all(["Pokegear", "Radio Card", "EXPN Card"], world.player)
-    else:
-        def expn(state: CollectionState):
-            return state.has_all(["EVENT_GOT_POKEGEAR", "EVENT_GOT_RADIO_CARD", "EVENT_GOT_EXPN_CARD"], world.player)
+    def expn(state: CollectionState):
+        return state.has_all(expn_components, world.player)
 
     # Free Fly
     set_rule(get_entrance("Fly"), can_fly)
@@ -1275,10 +1276,10 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
                 required_gyms = max(1, evo.level // world.options.evolution_gym_levels)
                 if has_beaten_n_gyms(state, required_gyms): return True
             if evo.evo_type is EvolutionType.Item:
-                if state.has_any(["EVENT_GOLDENROD_EVOLUTION_ITEMS", "EVENT_CELADON_EVOLUTION_ITEMS"], world.player):
+                if state.has_any(evolution_item_unlocks, world.player):
                     return True
             if evo.evo_type is EvolutionType.Happiness:
-                if state.has_any(["EVENT_DAISY_GROOMING", "EVENT_HAIRCUT_BROTHERS"], world.player): return True
+                if state.has_any(happiness_unlocks, world.player): return True
 
         return False
 
