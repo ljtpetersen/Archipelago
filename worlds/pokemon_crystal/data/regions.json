@@ -5079,7 +5079,9 @@
       "REGION_RUINS_OF_ALPH_AERODACTYL_ITEM_ROOM"
     ],
     "locations": [],
-    "events": []
+    "events": [
+      "ENGINE_UNLOCKED_UNOWNS_S_TO_W"
+    ]
   },
   "REGION_RUINS_OF_ALPH_AERODACTYL_ITEM_ROOM": {
     "johto": true,
@@ -5111,7 +5113,9 @@
       "REGION_RUINS_OF_ALPH_HO_OH_ITEM_ROOM"
     ],
     "locations": [],
-    "events": []
+    "events": [
+      "ENGINE_UNLOCKED_UNOWNS_X_TO_Z"
+    ]
   },
   "REGION_RUINS_OF_ALPH_HO_OH_ITEM_ROOM": {
     "johto": true,
@@ -5154,7 +5158,9 @@
       "REGION_RUINS_OF_ALPH_KABUTO_ITEM_ROOM"
     ],
     "locations": [],
-    "events": []
+    "events": [
+      "ENGINE_UNLOCKED_UNOWNS_A_TO_K"
+    ]
   },
   "REGION_RUINS_OF_ALPH_KABUTO_ITEM_ROOM": {
     "johto": true,
@@ -5186,7 +5192,9 @@
       "REGION_RUINS_OF_ALPH_OMANYTE_ITEM_ROOM"
     ],
     "locations": [],
-    "events": []
+    "events": [
+      "ENGINE_UNLOCKED_UNOWNS_L_TO_R"
+    ]
   },
   "REGION_RUINS_OF_ALPH_OMANYTE_ITEM_ROOM": {
     "johto": true,

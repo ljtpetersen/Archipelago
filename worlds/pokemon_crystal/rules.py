@@ -5,7 +5,7 @@ from BaseClasses import CollectionState
 from worlds.generic.Rules import add_rule, set_rule
 from . import HMBadgeRequirements, EliteFourRequirement, RedRequirement, Route44AccessRequirement, RandomizeBadges, \
     RadioTowerRequirement
-from .data import data, EvolutionType, EvolutionData
+from .data import data, EvolutionType, EvolutionData, EncounterMon
 from .options import Goal, JohtoOnly, Route32Condition, UndergroundsRequirePower, Route2Access, \
     BlackthornDarkCaveAccess, \
     NationalParkAccess, KantoAccessRequirement, Route3Access, BreedingMethodsRequired, MtSilverRequirement, \
@@ -18,6 +18,10 @@ if TYPE_CHECKING:
 
 def set_rules(world: "PokemonCrystalWorld") -> None:
     all_pokemon = world.generated_pokemon.keys()
+    unown_unlocks = ["ENGINE_UNLOCKED_UNOWNS_A_TO_K",
+                     "ENGINE_UNLOCKED_UNOWNS_L_TO_R",
+                     "ENGINE_UNLOCKED_UNOWNS_S_TO_W",
+                     "ENGINE_UNLOCKED_UNOWNS_X_TO_Z"]
 
     if world.options.randomize_pokegear:
         def can_map_card_fly(state: CollectionState):
@@ -1220,16 +1224,19 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     for dexcountsanity_count in world.generated_dexcountsanity[:-1]:
         logical_count = min(logically_available_pokemon, dexcountsanity_count + world.options.dexcountsanity_leniency)
         set_rule(get_location(f"Pokedex - Catch {dexcountsanity_count} Pokemon"),
-                 lambda state: has_n_pokemon(state, logical_count))
+                 lambda state, count=logical_count: has_n_pokemon(state, count))
 
     if world.generated_dexcountsanity:
         logical_count = min(logically_available_pokemon,
                             world.generated_dexcountsanity[-1] + world.options.dexcountsanity_leniency)
-        set_rule(get_location("Pokedex - Final Catch"), lambda state: has_n_pokemon(state, logical_count))
+        set_rule(get_location("Pokedex - Final Catch"),
+                 lambda state, count=logical_count: has_n_pokemon(state, logical_count))
 
-    def set_encounter_rule(region_id: str, count: int, rule):
-        for i in range(count):
-            set_rule(get_location(f"{region_id}_{i + 1}"), rule)
+    def set_encounter_rule(region_id: str, encounters: list[EncounterMon], rule):
+        for i, encounter in enumerate(encounters):
+            set_rule(get_location(f"{region_id}_{i + 1}"),
+                     rule if encounter.pokemon != "UNOWN" else
+                     lambda state: state.has_any(unown_unlocks, world.player) and rule(state))
 
     for region_id, region_data in data.regions.items():
         if world.options.johto_only and not region_data.johto: return
@@ -1239,27 +1246,27 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
         if region_data.wild_encounters.surfing and "Water" in world.options.wild_encounter_methods_required:
             set_encounter_rule(f"WildWater_{region_data.wild_encounters.surfing}",
-                               len(world.generated_wild.water[region_data.wild_encounters.surfing]),
+                               world.generated_wild.water[region_data.wild_encounters.surfing],
                                can_surf if (region_data.johto or region_data.silver_cave) else can_surf_kanto)
 
         if region_data.wild_encounters.fishing and "Fishing" in world.options.wild_encounter_methods_required:
             set_encounter_rule(f"WildFish_{region_data.wild_encounters.fishing}_Old",
-                               len(world.generated_wild.fish[region_data.wild_encounters.fishing].old), has_old_rod)
+                               world.generated_wild.fish[region_data.wild_encounters.fishing].old, has_old_rod)
             set_encounter_rule(f"WildFish_{region_data.wild_encounters.fishing}_Good",
-                               len(world.generated_wild.fish[region_data.wild_encounters.fishing].good), has_good_rod)
+                               world.generated_wild.fish[region_data.wild_encounters.fishing].good, has_good_rod)
             set_encounter_rule(f"WildFish_{region_data.wild_encounters.fishing}_Super",
-                               len(world.generated_wild.fish[region_data.wild_encounters.fishing].super), has_super_rod)
+                               world.generated_wild.fish[region_data.wild_encounters.fishing].super, has_super_rod)
 
         if region_data.wild_encounters.headbutt and "Headbutt" in world.options.wild_encounter_methods_required:
             set_encounter_rule(f"WildTree_{region_data.wild_encounters.headbutt}_Common",
-                               len(world.generated_wild.tree[region_data.wild_encounters.headbutt].common),
+                               world.generated_wild.tree[region_data.wild_encounters.headbutt].common,
                                can_headbutt)
             set_encounter_rule(f"WildTree_{region_data.wild_encounters.headbutt}_Rare",
-                               len(world.generated_wild.tree[region_data.wild_encounters.headbutt].rare),
+                               world.generated_wild.tree[region_data.wild_encounters.headbutt].rare,
                                can_headbutt)
 
         if region_data.wild_encounters.rock_smash and "Rock Smash" in world.options.wild_encounter_methods_required:
-            set_encounter_rule(f"WildRockSmash", len(world.generated_wild.tree["Rock"].common), can_rocksmash)
+            set_encounter_rule(f"WildRockSmash", world.generated_wild.tree["Rock"].common, can_rocksmash)
 
     def evolution_logic(state: CollectionState, evolved_from: str, evolutions: list[EvolutionData]) -> bool:
         if not state.has(evolved_from, world.player): return False

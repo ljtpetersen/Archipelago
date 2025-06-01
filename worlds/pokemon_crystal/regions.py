@@ -155,7 +155,7 @@ def create_regions(world: "PokemonCrystalWorld") -> dict[str, Region]:
                 region_id = f"Static_{static_encounter.name}"
                 if static_encounter.name not in LOGIC_EXCLUDE_STATICS:
                     world.available_wild_regions.add(region_id)
-                create_wild_region(parent_region, region_id, [static_encounter])
+                    create_wild_region(parent_region, region_id, [static_encounter])
 
     for region_name, region_data in data.regions.items():
         if should_include_region(region_data):
