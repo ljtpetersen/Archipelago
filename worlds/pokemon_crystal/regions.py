@@ -122,7 +122,7 @@ def create_regions(world: "PokemonCrystalWorld") -> dict[str, Region]:
                 region_id = f"WildGrass_{wild_region_data.wild_encounters.grass}"
                 world.available_wild_regions.add(region_id)
                 create_wild_region(parent_region, region_id,
-                                   world.generated_wild.grass[wild_region_data.wild_encounters.grass])
+                                   world.generated_wild.grass[wild_region_data.wild_encounters.grass].day)
 
             if wild_region_data.wild_encounters.surfing and "Water" in world.options.wild_encounter_methods_required:
                 region_id = f"WildWater_{wild_region_data.wild_encounters.surfing}"

@@ -182,65 +182,74 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
                 cur_address = data.rom_addresses["AP_Starter_" + pokemon + str(i)]
                 write_bytes(patch, starter_text + [0x7f] * (10 - len(starter_text)), cur_address)
 
-    if world.options.randomize_wilds:
-        for grass_name, grass_encounters in world.generated_wild.grass.items():
-            cur_address = data.rom_addresses["AP_WildGrass_" + grass_name] + 3
-            for i in range(3):  # morn, day, nite
-                for encounter in grass_encounters:
-                    pokemon_id = data.pokemon[encounter.pokemon].id
-                    write_bytes(patch, [encounter.level, pokemon_id], cur_address)
-                    cur_address += 2
+    for grass_name, grass_encounters in world.generated_wild.grass.items():
+        cur_address = data.rom_addresses["AP_WildGrass_" + grass_name] + 3
 
-        for water_name, water_encounters in world.generated_wild.water.items():
-            cur_address = data.rom_addresses["AP_WildWater_" + water_name] + 1
-            for encounter in water_encounters:
+        for encounter in grass_encounters.morn:
+            pokemon_id = data.pokemon[encounter.pokemon].id
+            write_bytes(patch, [encounter.level, pokemon_id], cur_address)
+            cur_address += 2
+
+        for encounter in grass_encounters.day:
+            pokemon_id = data.pokemon[encounter.pokemon].id
+            write_bytes(patch, [encounter.level, pokemon_id], cur_address)
+            cur_address += 2
+
+        for encounter in grass_encounters.nite:
+            pokemon_id = data.pokemon[encounter.pokemon].id
+            write_bytes(patch, [encounter.level, pokemon_id], cur_address)
+            cur_address += 2
+
+    for water_name, water_encounters in world.generated_wild.water.items():
+        cur_address = data.rom_addresses["AP_WildWater_" + water_name] + 1
+        for encounter in water_encounters:
+            pokemon_id = data.pokemon[encounter.pokemon].id
+            write_bytes(patch, [encounter.level, pokemon_id], cur_address)
+            cur_address += 2
+
+    for fish_name, fish_data in world.generated_wild.fish.items():
+        cur_address = data.rom_addresses["AP_FishMons_" + fish_name]
+        for rod_type in [fish_data.old, fish_data.good, fish_data.super]:
+            for i, encounter in enumerate(rod_type):
+                if world.options.encounter_slot_distribution.value == EncounterSlotDistribution.option_equal:
+                    # fishing encounter rates are stored as an increasing fraction of 255
+                    encounter_rate = int(((i + 1) / len(rod_type)) * 255)
+                    write_bytes(patch, [encounter_rate], cur_address)
+                cur_address += 1
                 pokemon_id = data.pokemon[encounter.pokemon].id
-                write_bytes(patch, [encounter.level, pokemon_id], cur_address)
+                write_bytes(patch, [pokemon_id, encounter.level], cur_address)
                 cur_address += 2
 
-        for fish_name, fish_data in world.generated_wild.fish.items():
-            cur_address = data.rom_addresses["AP_FishMons_" + fish_name]
-            for rod_type in [fish_data.old, fish_data.good, fish_data.super]:
-                for i, encounter in enumerate(rod_type):
-                    if world.options.encounter_slot_distribution.value == EncounterSlotDistribution.option_equal:
-                        # fishing encounter rates are stored as an increasing fraction of 255
-                        encounter_rate = int(((i + 1) / len(rod_type)) * 255)
-                        write_bytes(patch, [encounter_rate], cur_address)
-                    cur_address += 1
-                    pokemon_id = data.pokemon[encounter.pokemon].id
-                    write_bytes(patch, [pokemon_id, encounter.level], cur_address)
-                    cur_address += 2
+    tree_encounter_rates = []
+    rock_encounter_rates = []
+    if world.options.encounter_slot_distribution.value == EncounterSlotDistribution.option_balanced:
+        tree_encounter_rates = [20, 20, 20, 15, 15, 10]
+        rock_encounter_rates = [70, 30]
+    elif world.options.encounter_slot_distribution.value == EncounterSlotDistribution.option_equal:
+        tree_encounter_rates = [16, 16, 17, 17, 17, 17]
+        rock_encounter_rates = [50, 50]
 
-        tree_encounter_rates = []
-        rock_encounter_rates = []
-        if world.options.encounter_slot_distribution.value == EncounterSlotDistribution.option_balanced:
-            tree_encounter_rates = [20, 20, 20, 15, 15, 10]
-            rock_encounter_rates = [70, 30]
-        elif world.options.encounter_slot_distribution.value == EncounterSlotDistribution.option_equal:
-            tree_encounter_rates = [16, 16, 17, 17, 17, 17]
-            rock_encounter_rates = [50, 50]
+    for tree_name, tree_data in world.generated_wild.tree.items():
+        cur_address = data.rom_addresses["TreeMonSet_" + tree_name]
+        for rarity in [tree_data.common, tree_data.rare]:
+            for i, encounter in enumerate(rarity):
+                encounter_rate = None
+                if len(rarity) == 2 and rock_encounter_rates:
+                    encounter_rate = rock_encounter_rates[i]
+                elif tree_encounter_rates:
+                    encounter_rate = tree_encounter_rates[i]
+                if encounter_rate:
+                    write_bytes(patch, [encounter_rate], cur_address)
+                cur_address += 1
+                pokemon_id = data.pokemon[encounter.pokemon].id
+                write_bytes(patch, [pokemon_id, encounter.level], cur_address)
+                cur_address += 2
 
-        for tree_name, tree_data in world.generated_wild.tree.items():
-            cur_address = data.rom_addresses["TreeMonSet_" + tree_name]
-            for rarity in [tree_data.common, tree_data.rare]:
-                for i, encounter in enumerate(rarity):
-                    encounter_rate = None
-                    if len(rarity) == 2 and rock_encounter_rates:
-                        encounter_rate = rock_encounter_rates[i]
-                    elif tree_encounter_rates:
-                        encounter_rate = tree_encounter_rates[i]
-                    if encounter_rate:
-                        write_bytes(patch, [encounter_rate], cur_address)
-                    cur_address += 1
-                    pokemon_id = data.pokemon[encounter.pokemon].id
-                    write_bytes(patch, [pokemon_id, encounter.level], cur_address)
-                    cur_address += 2
-
-        wooper_sprite_address = data.rom_addresses["AP_Setting_Intro_Wooper_1"] + 1
-        wooper_cry_address = data.rom_addresses["AP_Setting_Intro_Wooper_2"] + 1
-        wooper_id = data.pokemon[world.generated_wooper].id
-        write_bytes(patch, [wooper_id], wooper_sprite_address)
-        write_bytes(patch, [wooper_id], wooper_cry_address)
+    wooper_sprite_address = data.rom_addresses["AP_Setting_Intro_Wooper_1"] + 1
+    wooper_cry_address = data.rom_addresses["AP_Setting_Intro_Wooper_2"] + 1
+    wooper_id = data.pokemon[world.generated_wooper].id
+    write_bytes(patch, [wooper_id], wooper_sprite_address)
+    write_bytes(patch, [wooper_id], wooper_cry_address)
 
     grass_probs = []
     water_probs = []

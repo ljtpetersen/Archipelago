@@ -152,7 +152,7 @@ def randomize_traded_pokemon(world: "PokemonCrystalWorld"):
 
 def fill_wild_encounter_locations(world: "PokemonCrystalWorld"):
     for (name, encounters) in world.generated_wild.grass.items():
-        _fill_encounter_area(world, f"WildGrass_{name}", encounters)
+        _fill_encounter_area(world, f"WildGrass_{name}", encounters.day)
     for (name, encounters) in world.generated_wild.water.items():
         _fill_encounter_area(world, f"WildWater_{name}", encounters)
     for (name, encounters) in world.generated_wild.fish.items():

@@ -205,8 +205,15 @@ class TreeMonData:
 
 
 @dataclass(frozen=True)
+class RouteEncounterData:
+    morn: list[EncounterMon]
+    day: list[EncounterMon]
+    nite: list[EncounterMon]
+
+
+@dataclass(frozen=True)
 class WildData:
-    grass: dict[str, list[EncounterMon]]
+    grass: dict[str, RouteEncounterData]
     water: dict[str, list[EncounterMon]]
     fish: dict[str, FishData]
     tree: dict[str, TreeMonData]
@@ -525,11 +532,12 @@ def _init() -> None:
 
     grass_dict = {}
     for grass_name, grass_data in wild_data["grass"].items():
-        encounter_list = []
-        for pkmn in grass_data:
-            grass_encounter = EncounterMon(int(pkmn["level"]), pkmn["pokemon"])
-            encounter_list.append(grass_encounter)
-        grass_dict[grass_name] = encounter_list
+        grass_dict[grass_name] = RouteEncounterData(
+            # We currently only operate on the daytime encounters
+            morn=[EncounterMon(int(pkmn["level"]), pkmn["pokemon"]) for pkmn in grass_data["day"]],
+            day=[EncounterMon(int(pkmn["level"]), pkmn["pokemon"]) for pkmn in grass_data["day"]],
+            nite=[EncounterMon(int(pkmn["level"]), pkmn["pokemon"]) for pkmn in grass_data["day"]],
+        )
 
     water_dict = {}
     for water_name, water_data in wild_data["water"].items():

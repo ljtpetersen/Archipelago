@@ -37,7 +37,7 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
                 priority_pokemon.add(evo_line.pop())
 
         world.generated_wooper = get_random_pokemon(world, exclude_unown=True)
-        
+
         global_blocklist = pokemon_convert_friendly_to_ids(world, world.options.wild_encounter_blocklist)
 
         if world.options.breeding_methods_required.value == BreedingMethodsRequired.option_with_ditto:
@@ -76,7 +76,13 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
             return new_encounters
 
         for grass_name, grass_encounters in world.generated_wild.grass.items():
-            world.generated_wild.grass[grass_name] = randomize_encounter_list(grass_encounters)
+            encounters = randomize_encounter_list(grass_encounters.morn)
+            world.generated_wild.grass[grass_name] = replace(
+                world.generated_wild.grass[grass_name],
+                morn=encounters,
+                day=encounters,
+                nite=encounters
+            )
 
         for water_name, water_encounters in world.generated_wild.water.items():
             world.generated_wild.water[water_name] = randomize_encounter_list(water_encounters)
@@ -98,7 +104,7 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
 
     for region, wilds in world.generated_wild.grass.items():
         if f"WildGrass_{region}" in world.available_wild_regions:
-            for wild in wilds:
+            for wild in wilds.day:
                 wild_pokemon.add(wild.pokemon)
     for region, wilds in world.generated_wild.water.items():
         if f"WildWater_{region}" in world.available_wild_regions:
