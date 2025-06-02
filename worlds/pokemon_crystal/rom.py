@@ -16,6 +16,9 @@ from .utils import convert_to_ingame_text, write_bytes, replace_map_tiles
 if TYPE_CHECKING:
     from . import PokemonCrystalWorld
 
+CRYSTAL_1_0_HASH = "9f2922b235a5eeb78d65594e82ef5dde"
+CRYSTAL_1_1_HASH = "301899b8087289a6436b0a241fbbb474"
+
 
 class PokemonCrystalAPPatchExtension(APPatchExtension):
     game = "Pokemon Crystal"
@@ -34,7 +37,7 @@ class PokemonCrystalAPPatchExtension(APPatchExtension):
 
 class PokemonCrystalProcedurePatch(APProcedurePatch, APTokenMixin):
     game = "Pokemon Crystal"
-    hash = "9f2922b235a5eeb78d65594e82ef5dde"
+    hash = [CRYSTAL_1_0_HASH, CRYSTAL_1_1_HASH]
     patch_file_ending = ".apcrystal"
     result_file_ending = ".gbc"
 

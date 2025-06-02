@@ -445,7 +445,7 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
     if world.options.blackthorn_dark_cave_access.value == BlackthornDarkCaveAccess.option_waterfall:
         set_rule(get_entrance("REGION_DARK_CAVE_VIOLET_ENTRANCE:WEST -> REGION_DARK_CAVE_VIOLET_ENTRANCE:WATER"),
-                 lambda state: can_surf(state) and can_waterfall(state))
+                 can_waterfall)
     else:
         set_rule(get_entrance("REGION_DARK_CAVE_VIOLET_ENTRANCE:WEST -> REGION_DARK_CAVE_VIOLET_ENTRANCE:WATER"),
                  can_surf)
