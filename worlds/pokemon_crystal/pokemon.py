@@ -8,7 +8,7 @@ from BaseClasses import ItemClassification
 from .data import data as crystal_data, EncounterMon, StaticPokemon, WildRegionType, PokemonData
 from .moves import get_tmhm_compatibility, randomize_learnset
 from .options import RandomizeTypes, RandomizePalettes, RandomizeBaseStats, RandomizeStarters, RandomizeTrades, \
-    DexsanityStarters, EncounterGrouping
+    DexsanityStarters, EncounterGrouping, BreedingMethodsRequired
 from .utils import get_random_filler_item, evolution_in_logic, get_encounters_for_wild_region, \
     set_encounters_for_wild_region
 
@@ -260,6 +260,8 @@ def generate_breeding_data(world: "PokemonCrystalWorld"):
         if evolution not in world.logically_available_pokemon: return
         evolution_data = world.generated_pokemon[evolution]
         if "EGG_NONE" in evolution_data.egg_groups or evolution_data.gender_ratio == "GENDER_UNKNOWN": return
+        if (world.options.breeding_methods_required.value == BreedingMethodsRequired.option_any
+                and evolution_data.gender_ratio in ["GENDER_F100", "GENDER_F0"]): return
         world.generated_breeding[base].add(evolution)
 
     for pokemon_id, pokemon_data in world.generated_pokemon.items():
