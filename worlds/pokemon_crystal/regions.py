@@ -100,11 +100,10 @@ def create_regions(world: "PokemonCrystalWorld") -> dict[str, Region]:
             regions[region_id] = wild_region
 
             # We place a slot for each encounter here, but we don't care about what they are yet
-            for i, _ in enumerate(wilds):
-                location_name = f"{region_id}_{i + 1}"
+            for i in range(len(wilds)):
                 location = PokemonCrystalLocation(
                     world.player,
-                    location_name,
+                    f"{region_id}_{i + 1}",
                     wild_region,
                     tags=frozenset(tags | {"wild encounter"} if tags else {"wild encounter"})
                 )

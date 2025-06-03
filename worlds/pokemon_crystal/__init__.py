@@ -274,18 +274,16 @@ class PokemonCrystalWorld(World):
             badge_locs = [loc for loc in self.multiworld.get_locations(self.player) if "Badge" in loc.tags]
             badge_items = [self.create_item_by_code(loc.default_item_code) for loc in badge_locs]
             if self.options.early_fly and "Fly" not in self.options.remove_badge_requirement.value:
+                early_badge_locs = [loc for loc in
+                                    self.multiworld.get_reachable_locations(self.multiworld.state, self.player) if
+                                    "Badge" in loc.tags]
                 # take one of the early badge locations, set it to storm badge
-                if self.options.route_32_condition.value == Route32Condition.option_any_badge:
-                    early_badge_tag = "EarlyBadge_Route32RequiresBadge"
-                elif self.options.remove_ilex_cut_tree:
-                    early_badge_tag = "EarlyBadge_RemovedIlexCutTree"
-                else:
-                    early_badge_tag = "EarlyBadge"
-                storm_loc = self.random.choice([loc for loc in badge_locs if early_badge_tag in loc.tags])
-                storm_badge = next(item for item in badge_items if item.name == "Storm Badge")
-                storm_loc.place_locked_item(storm_badge)
-                badge_locs.remove(storm_loc)
-                badge_items.remove(storm_badge)
+                if early_badge_locs:
+                    storm_loc = self.random.choice(early_badge_locs)
+                    storm_badge = next(item for item in badge_items if item.name == "Storm Badge")
+                    storm_loc.place_locked_item(storm_badge)
+                    badge_locs.remove(storm_loc)
+                    badge_items.remove(storm_badge)
 
             collection_state = self.multiworld.get_all_state(False)
 

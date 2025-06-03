@@ -3646,10 +3646,7 @@
     "flag": "EVENT_ZEPHYR_BADGE_FROM_FALKNER",
     "type": "giveitem",
     "tags": [
-      "Badge",
-      "EarlyBadge",
-      "EarlyBadge_RemovedIlexCutTree",
-      "EarlyBadge_Route32RequiresBadge"
+      "Badge"
     ],
     "default_item": "ZEPHYR_BADGE",
     "script": "AP_Badge_VioletGym_ZEPHYR_BADGE"
@@ -3659,9 +3656,7 @@
     "flag": "EVENT_HIVE_BADGE_FROM_BUGSY",
     "type": "giveitem",
     "tags": [
-      "Badge",
-      "EarlyBadge",
-      "EarlyBadge_RemovedIlexCutTree"
+      "Badge"
     ],
     "default_item": "HIVE_BADGE",
     "script": "AP_Badge_AzaleaGym_HIVE_BADGE"
@@ -3671,8 +3666,7 @@
     "flag": "EVENT_PLAIN_BADGE_FROM_WHITNEY",
     "type": "giveitem",
     "tags": [
-      "Badge",
-      "EarlyBadge_RemovedIlexCutTree"
+      "Badge"
     ],
     "default_item": "PLAIN_BADGE",
     "script": "AP_Badge_GoldenrodGym_PLAIN_BADGE"

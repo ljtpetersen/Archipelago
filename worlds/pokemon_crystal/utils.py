@@ -70,14 +70,13 @@ def adjust_options(world: "PokemonCrystalWorld"):
             world.multiworld.get_player_name(world.player))
 
     if (world.options.radio_tower_requirement.value == RadioTowerRequirement.option_gyms
-            and world.options.blackthorn_dark_cave_access.value == BlackthornDarkCaveAccess.option_vanilla
             and world.options.radio_tower_count.value > (7 if world.options.johto_only else 15)):
         world.options.radio_tower_count.value = 7 if world.options.johto_only else 15
         logging.warning(
-            "Pokemon Crystal: Radio Tower Gyms >%d incompatible with vanilla Dark Cave. "
+            "Pokemon Crystal: Radio Tower Gyms >%d is impossible. "
             "Changing Radio Tower Gyms to %d for player %s.",
-            world.options.route_44_access_count.value,
-            world.options.route_44_access_count.value,
+            world.options.radio_tower_count.value,
+            world.options.radio_tower_count.value,
             world.multiworld.get_player_name(world.player))
 
     if world.options.johto_only:
@@ -133,8 +132,8 @@ def adjust_options(world: "PokemonCrystalWorld"):
         if world.options.evolution_gym_levels.value < 8:
             world.options.evolution_gym_levels.value = 8
             logging.warning(
-                "Pokemon Crystal: Evolution Gym Levels <8 incompatible with Johto Only "
-                "if badges are not completely random. Changing Evolution Gym Levels to 8 for player %s.",
+                "Pokemon Crystal: Evolution Gym Levels <8 incompatible with Johto Only. "
+                "Changing Evolution Gym Levels to 8 for player %s.",
                 world.multiworld.get_player_name(world.player))
 
         if world.options.randomize_badges != RandomizeBadges.option_completely_random:
