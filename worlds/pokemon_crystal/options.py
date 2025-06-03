@@ -378,7 +378,7 @@ class DexcountsanityLeniency(Range):
     """
     If Dexcountsanity is enabled, specifies the logic leniency for checks.
     For example, if you set Dexcountsanity Leniency to 5 and have a Dexcountsanity check at 10, you will not be
-    logically required to obtain this check until 15 pokemon are logically obtainable
+    logically required to obtain this check until you can obtain 15 Pokemon
 
     Checks that would go over the total number of logically available Pokemon will be clamped to that limit
     """
@@ -392,12 +392,15 @@ class DexsanityStarters(Choice):
     """
     Controls how Dexsanity treats starter Pokemon
     Allow: Starter Pokemon will be allowed as Dexsanity checks
-    Block: Starter Pokemon will not be allowed as Dexsanity Checks, effectively adding them to the blocklist
+    Block: Starter Pokemon will not be allowed as Dexsanity Checks
+    Available Early: Starter Pokemon will all be obtainable immediately, unless there is nowhere to obtain wild Pokemon
+    immedately
     """
     display_name = "Dexsanity Starters"
     default = 0
     option_allow = 0
     option_block = 1
+    option_available_early = 2
 
 
 class WildEncounterMethodsRequired(OptionSet):

@@ -1,3 +1,4 @@
+import logging
 from collections.abc import Iterable
 from dataclasses import replace
 from random import Random
@@ -6,8 +7,10 @@ from typing import TYPE_CHECKING
 from BaseClasses import ItemClassification
 from .data import data as crystal_data, EncounterMon, StaticPokemon, WildRegionType, PokemonData
 from .moves import get_tmhm_compatibility, randomize_learnset
-from .options import RandomizeTypes, RandomizePalettes, RandomizeBaseStats, RandomizeStarters, RandomizeTrades
-from .utils import get_random_filler_item, evolution_in_logic
+from .options import RandomizeTypes, RandomizePalettes, RandomizeBaseStats, RandomizeStarters, RandomizeTrades, \
+    DexsanityStarters, EncounterGrouping
+from .utils import get_random_filler_item, evolution_in_logic, get_encounters_for_wild_region, \
+    set_encounters_for_wild_region
 
 if TYPE_CHECKING:
     from . import PokemonCrystalWorld
@@ -152,6 +155,67 @@ def randomize_traded_pokemon(world: "PokemonCrystalWorld"):
 
 
 def fill_wild_encounter_locations(world: "PokemonCrystalWorld"):
+    if world.options.dexsanity_starters.value == DexsanityStarters.option_available_early:
+
+        locations = world.multiworld.get_reachable_locations(world.multiworld.state, world.player)
+        locations = [loc for loc in locations if "wild encounter" in loc.tags]
+        early_wild_regions = {"_".join(loc.name.split("_")[:-1]) for loc in locations}
+        early_wild_regions = {region for region in early_wild_regions if
+                              world.generated_wild_region_types[region] is WildRegionType.InLogic}
+
+        other_wild_regions = {loc.parent_region.name for loc in world.multiworld.get_locations(world.player) if
+                              "wild encounter" in loc.tags}
+
+        if early_wild_regions and other_wild_regions:
+
+            for evo_line in world.generated_starters:
+
+                if not early_wild_regions: continue
+                starter = evo_line[0]
+                source_region = None
+                source_encounters = None
+
+                for region in other_wild_regions:
+                    source_encounters = get_encounters_for_wild_region(world, region)
+                    if starter in [encounter.pokemon for encounter in source_encounters]:
+                        source_region = region
+                        break
+
+                if not source_region:  continue
+                target_region = None
+                target_encounters = None
+                while not target_encounters:
+                    if not early_wild_regions: break
+                    target_region = early_wild_regions.pop()
+                    target_encounters = get_encounters_for_wild_region(world, target_region)
+
+                if not target_encounters: continue
+
+                if world.options.encounter_grouping.value == EncounterGrouping.option_one_per_method:
+                    pokemon_to_swap = target_encounters[0].pokemon
+                    target_encounters = [replace(mon, pokemon=starter) for mon in target_encounters]
+                    source_encounters = [replace(mon, pokemon=pokemon_to_swap) for mon in source_encounters]
+                elif world.options.encounter_grouping.value == EncounterGrouping.option_all_split:
+                    source_encounters[0] = replace(source_encounters[0], pokemon=target_encounters[0].pokemon)
+                    target_encounters[0] = replace(target_encounters[0], pokemon=starter)
+                else:
+                    pokemon_to_swap = target_encounters[0].pokemon
+                    target_indexes = [i for i, enc in enumerate(target_encounters) if enc.pokemon == pokemon_to_swap]
+                    source_indexes = [i for i, enc in enumerate(source_encounters) if enc.pokemon == starter]
+
+                    for i in target_indexes:
+                        target_encounters[i] = replace(target_encounters[i], pokemon=starter)
+                    for i in source_indexes:
+                        source_encounters[i] = replace(source_encounters[i], pokemon=pokemon_to_swap)
+                logging.debug(
+                    source_encounters
+                )
+                logging.debug(
+                    target_encounters
+                )
+                set_encounters_for_wild_region(world, source_region, source_encounters)
+                set_encounters_for_wild_region(world, target_region, target_encounters)
+
     for (name, encounters) in world.generated_wild.grass.items():
         region_id = f"WildGrass_{name}"
         if world.generated_wild_region_types[region_id] is not WildRegionType.InLogic: continue

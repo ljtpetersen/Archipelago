@@ -175,6 +175,7 @@ class PokemonCrystalWorld(World):
 
         randomize_wild_pokemon(self)
         randomize_static_pokemon(self)
+        randomize_pokemon_data(self)
         randomize_starters(self)
         generate_evolution_data(self)
         generate_breeding_data(self)
@@ -327,7 +328,6 @@ class PokemonCrystalWorld(World):
         randomize_music(self)
         randomize_mischief(self)
         randomize_tms(self)
-        randomize_pokemon_data(self)
 
         generate_phone_traps(self)
 
@@ -379,8 +379,7 @@ class PokemonCrystalWorld(World):
             "static_pokemon_required",
             "breeding_methods_required",
             "evolution_gym_levels",
-            "rematchsanity",
-            "death_link"
+            "rematchsanity"
         )
         slot_data["apworld_version"] = self.apworld_version
         slot_data["tea_north"] = 1 if "North" in self.options.saffron_gatehouse_tea.value else 0
