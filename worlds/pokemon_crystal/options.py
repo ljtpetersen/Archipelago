@@ -489,6 +489,17 @@ class RandomizeStarters(Choice):
     option_base_stat_mode = 4
 
 
+class StarterBlocklist(OptionSet):
+    """
+    These Pokemon will not be chosen as starter Pokemon
+    Does nothing if starter Pokemon are not randomized
+    You can use "_Legendaries" as a shortcut for all legendary Pokemon
+    Blocklists are best effort, other constraints may cause them to be ignored
+    """
+    display_name = "Starter Blocklist"
+    valid_keys = sorted(pokemon.friendly_name for pokemon in data.pokemon.values()) + ["_Legendaries"]
+
+
 class StarterBST(NamedRange):
     """
     If you chose Base Stat Mode for your starters, what is the average base stat total you want your available starters to be?
@@ -1221,6 +1232,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     randomize_pokegear: RandomizePokegear
     randomize_berry_trees: RandomizeBerryTrees
     randomize_starters: RandomizeStarters
+    starter_blocklist: StarterBlocklist
     starters_bst_average: StarterBST
     randomize_wilds: RandomizeWilds
     wild_encounter_blocklist: WildEncounterBlocklist
