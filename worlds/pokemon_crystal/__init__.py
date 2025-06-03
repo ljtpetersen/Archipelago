@@ -11,7 +11,7 @@ from Fill import fill_restrictive, FillError
 from worlds.AutoWorld import World, WebWorld
 from .client import PokemonCrystalClient
 from .data import PokemonData, TrainerData, MiscData, TMHMData, data as crystal_data, WildData, StaticPokemon, \
-    MusicData, MoveData, FlyRegion, TradeData, MiscOption, APWORLD_VERSION, POKEDEX_OFFSET, StartingTown
+    MusicData, MoveData, FlyRegion, TradeData, MiscOption, APWORLD_VERSION, POKEDEX_OFFSET, StartingTown, WildRegionType
 from .items import PokemonCrystalItem, create_item_label_to_code_map, get_item_classification, ITEM_GROUPS, \
     item_const_name_to_id, item_const_name_to_label
 from .level_scaling import perform_level_scaling
@@ -91,6 +91,7 @@ class PokemonCrystalWorld(World):
 
     generated_tms: dict[str, TMHMData]
     generated_wild: WildData
+    generated_wild_region_types: dict[str, WildRegionType]
     generated_static: dict[str, StaticPokemon]
     generated_trades: list[TradeData]
 
@@ -125,6 +126,7 @@ class PokemonCrystalWorld(World):
         self.generated_trainers = copy.deepcopy(crystal_data.trainers)
         self.generated_tms = crystal_data.tmhm.copy()
         self.generated_wild = copy.deepcopy(crystal_data.wild)
+        self.generated_wild_region_types = defaultdict(lambda: WildRegionType.Inaccessible)
         self.generated_static = crystal_data.static.copy()
         self.generated_trades = crystal_data.trades.copy()
         self.generated_dexsanity = set()
@@ -150,7 +152,6 @@ class PokemonCrystalWorld(World):
         self.blocklisted_moves = set()
 
         self.logically_available_pokemon = set()
-        self.available_wild_regions = set()
 
         self.finished_level_scaling = Event()
 

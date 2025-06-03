@@ -2,7 +2,7 @@ from dataclasses import replace
 from typing import TYPE_CHECKING
 
 from BaseClasses import ItemClassification
-from . import StaticPokemon
+from . import StaticPokemon, WildRegionType
 from .data import data as crystal_data, EncounterMon
 from .moves import get_tmhm_compatibility, randomize_learnset
 from .options import RandomizeTypes, RandomizePalettes, RandomizeBaseStats, RandomizeStarters, RandomizeTrades
@@ -152,35 +152,40 @@ def randomize_traded_pokemon(world: "PokemonCrystalWorld"):
 
 def fill_wild_encounter_locations(world: "PokemonCrystalWorld"):
     for (name, encounters) in world.generated_wild.grass.items():
-        _fill_encounter_area(world, f"WildGrass_{name}", encounters.day)
+        region_id = f"WildGrass_{name}"
+        if world.generated_wild_region_types[region_id] is not WildRegionType.InLogic: continue
+        _fill_encounter_area(world, region_id, encounters.day)
     for (name, encounters) in world.generated_wild.water.items():
-        _fill_encounter_area(world, f"WildWater_{name}", encounters)
+        region_id = f"WildWater_{name}"
+        if world.generated_wild_region_types[region_id] is not WildRegionType.InLogic: continue
+        _fill_encounter_area(world, region_id, encounters)
     for (name, encounters) in world.generated_wild.fish.items():
-        _fill_encounter_area(world, f"WildFish_{name}_Old", encounters.old)
-        _fill_encounter_area(world, f"WildFish_{name}_Good", encounters.good)
-        _fill_encounter_area(world, f"WildFish_{name}_Super", encounters.super)
+        base_id = f"WildFish_{name}"
+        if world.generated_wild_region_types[base_id] is not WildRegionType.InLogic: continue
+        _fill_encounter_area(world, f"{base_id}_Old", encounters.old)
+        _fill_encounter_area(world, f"{base_id}_Good", encounters.good)
+        _fill_encounter_area(world, f"{base_id}_Super", encounters.super)
     for (name, encounters) in world.generated_wild.tree.items():
-        if name == "Rock":
-            _fill_encounter_area(world, f"WildRockSmash", encounters.common)
-        else:
-            _fill_encounter_area(world, f"WildTree_{name}_Common", encounters.common)
-            _fill_encounter_area(world, f"WildTree_{name}_Rare", encounters.rare)
+        base_id = f"WildTree_{name}"
+        if world.generated_wild_region_types[base_id] is not WildRegionType.InLogic: continue
+        _fill_encounter_area(world, f"{base_id}_Common", encounters.common)
+        _fill_encounter_area(world, f"{base_id}_Rare", encounters.rare)
+    if world.generated_wild_region_types["WildRockSmash"] is WildRegionType.InLogic:
+        _fill_encounter_area(world, "WildRockSmash", world.generated_wild.rock.encounters)
     for encounter in world.generated_static.values():
-        _fill_encounter_area(world, f"Static_{encounter.name}", [encounter])
+        region_id = f"Static_{encounter.name}"
+        if world.generated_wild_region_types[region_id] is not WildRegionType.InLogic: continue
+        _fill_encounter_area(world, region_id, [encounter])
 
 
 def _fill_encounter_area(world: "PokemonCrystalWorld", area_name: str, encounters: list[EncounterMon | StaticPokemon]):
     seen_pokemon = set()
     for i, encounter in enumerate(encounters):
-        # Not all encounter regions may be needed so we just ignore ones that don't exist
-        try:
-            location = world.get_location(f"{area_name}_{i + 1}")
-            location.place_locked_item(world.create_event(encounter.pokemon))
-            if encounter.pokemon in seen_pokemon:
-                location.item.classification = ItemClassification.useful
-            seen_pokemon.add(encounter.pokemon)
-        except KeyError:
-            pass
+        location = world.get_location(f"{area_name}_{i + 1}")
+        location.place_locked_item(world.create_event(encounter.pokemon))
+        if encounter.pokemon in seen_pokemon:
+            location.item.classification = ItemClassification.useful
+        seen_pokemon.add(encounter.pokemon)
 
 
 def generate_breeding_data(world: "PokemonCrystalWorld"):

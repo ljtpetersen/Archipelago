@@ -1267,7 +1267,7 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
                                can_headbutt)
 
         if region_data.wild_encounters.rock_smash and "Rock Smash" in world.options.wild_encounter_methods_required:
-            set_encounter_rule(f"WildRockSmash", world.generated_wild.tree["Rock"].common, can_rocksmash)
+            set_encounter_rule(f"WildRockSmash", world.generated_wild.rock.encounters, can_rocksmash)
 
     def evolution_logic(state: CollectionState, evolved_from: str, evolutions: list[EvolutionData]) -> bool:
         if not state.has(evolved_from, world.player): return False

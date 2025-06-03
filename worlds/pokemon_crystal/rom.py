@@ -233,17 +233,21 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         cur_address = data.rom_addresses["TreeMonSet_" + tree_name]
         for rarity in [tree_data.common, tree_data.rare]:
             for i, encounter in enumerate(rarity):
-                encounter_rate = None
-                if len(rarity) == 2 and rock_encounter_rates:
-                    encounter_rate = rock_encounter_rates[i]
-                elif tree_encounter_rates:
-                    encounter_rate = tree_encounter_rates[i]
-                if encounter_rate:
-                    write_bytes(patch, [encounter_rate], cur_address)
+                if tree_encounter_rates:
+                    write_bytes(patch, [tree_encounter_rates[i]], cur_address)
                 cur_address += 1
                 pokemon_id = data.pokemon[encounter.pokemon].id
                 write_bytes(patch, [pokemon_id, encounter.level], cur_address)
                 cur_address += 2
+
+    cur_address = data.rom_addresses["TreeMonSet_Rock"]
+    for i, encounter in enumerate(world.generated_wild.rock.encounters):
+        if rock_encounter_rates:
+            write_bytes(patch, [rock_encounter_rates[i]], cur_address)
+        cur_address += 1
+        pokemon_id = data.pokemon[encounter.pokemon].id
+        write_bytes(patch, [pokemon_id, encounter.level], cur_address)
+        cur_address += 2
 
     wooper_sprite_address = data.rom_addresses["AP_Setting_Intro_Wooper_1"] + 1
     wooper_cry_address = data.rom_addresses["AP_Setting_Intro_Wooper_2"] + 1

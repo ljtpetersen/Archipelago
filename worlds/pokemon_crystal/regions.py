@@ -2,7 +2,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from BaseClasses import Region, ItemClassification, Entrance
-from . import StaticPokemon
+from . import StaticPokemon, WildRegionType
 from .data import data, RegionData, EncounterMon
 from .items import PokemonCrystalItem
 from .locations import PokemonCrystalLocation
@@ -101,13 +101,13 @@ def create_regions(world: "PokemonCrystalWorld") -> dict[str, Region]:
             regions[region_id] = wild_region
 
             # We place a slot for each encounter here, but we don't care about what they are yet
-            for i, wild in enumerate(wilds):
+            for i, _ in enumerate(wilds):
                 location_name = f"{region_id}_{i + 1}"
                 location = PokemonCrystalLocation(
                     world.player,
                     location_name,
                     wild_region,
-                    tags=frozenset({"wild encounter"} | (tags if tags else set()))
+                    tags=frozenset(tags | {"wild encounter"} if tags else {"wild encounter"})
                 )
                 location.show_in_spoiler = False
                 wild_region.locations.append(location)
@@ -118,44 +118,62 @@ def create_regions(world: "PokemonCrystalWorld") -> dict[str, Region]:
     def setup_wild_regions(parent_region: Region, wild_region_data: RegionData):
 
         if wild_region_data.wild_encounters:
-            if wild_region_data.wild_encounters.grass and "Land" in world.options.wild_encounter_methods_required:
+
+            if wild_region_data.wild_encounters.grass:
                 region_id = f"WildGrass_{wild_region_data.wild_encounters.grass}"
-                world.available_wild_regions.add(region_id)
-                create_wild_region(parent_region, region_id,
-                                   world.generated_wild.grass[wild_region_data.wild_encounters.grass].day)
+                if "Land" in world.options.wild_encounter_methods_required:
+                    world.generated_wild_region_types[region_id] = WildRegionType.InLogic
+                    create_wild_region(parent_region, region_id,
+                                       world.generated_wild.grass[wild_region_data.wild_encounters.grass].day)
+                else:
+                    world.generated_wild_region_types[region_id] = WildRegionType.OutOfLogic
 
-            if wild_region_data.wild_encounters.surfing and "Water" in world.options.wild_encounter_methods_required:
+            if wild_region_data.wild_encounters.surfing:
                 region_id = f"WildWater_{wild_region_data.wild_encounters.surfing}"
-                world.available_wild_regions.add(region_id)
-                create_wild_region(parent_region, region_id,
-                                   world.generated_wild.water[wild_region_data.wild_encounters.surfing])
+                if "Water" in world.options.wild_encounter_methods_required:
+                    world.generated_wild_region_types[region_id] = WildRegionType.InLogic
+                    create_wild_region(parent_region, region_id,
+                                       world.generated_wild.water[wild_region_data.wild_encounters.surfing])
+                else:
+                    world.generated_wild_region_types[region_id] = WildRegionType.OutOfLogic
 
-            if wild_region_data.wild_encounters.fishing and "Fishing" in world.options.wild_encounter_methods_required:
+            if wild_region_data.wild_encounters.fishing:
                 base_id = f"WildFish_{wild_region_data.wild_encounters.fishing}"
-                world.available_wild_regions.add(base_id)
-                fish_data = world.generated_wild.fish[wild_region_data.wild_encounters.fishing]
-                create_wild_region(parent_region, f"{base_id}_Old", fish_data.old)
-                create_wild_region(parent_region, f"{base_id}_Good", fish_data.good)
-                create_wild_region(parent_region, f"{base_id}_Super", fish_data.super)
+                if "Fishing" in world.options.wild_encounter_methods_required:
+                    world.generated_wild_region_types[base_id] = WildRegionType.InLogic
+                    fish_data = world.generated_wild.fish[wild_region_data.wild_encounters.fishing]
+                    create_wild_region(parent_region, f"{base_id}_Old", fish_data.old)
+                    create_wild_region(parent_region, f"{base_id}_Good", fish_data.good)
+                    create_wild_region(parent_region, f"{base_id}_Super", fish_data.super)
+                else:
+                    world.generated_wild_region_types[base_id] = WildRegionType.OutOfLogic
 
-            if wild_region_data.wild_encounters.headbutt and "Headbutt" in world.options.wild_encounter_methods_required:
+            if wild_region_data.wild_encounters.headbutt:
                 base_id = f"WildTree_{wild_region_data.wild_encounters.headbutt}"
-                world.available_wild_regions.add(base_id)
-                tree_data = world.generated_wild.tree[wild_region_data.wild_encounters.headbutt]
-                create_wild_region(parent_region, f"{base_id}_Common", tree_data.common)
-                create_wild_region(parent_region, f"{base_id}_Rare", tree_data.rare)
+                if "Headbutt" in world.options.wild_encounter_methods_required:
+                    world.generated_wild_region_types[base_id] = WildRegionType.InLogic
+                    tree_data = world.generated_wild.tree[wild_region_data.wild_encounters.headbutt]
+                    create_wild_region(parent_region, f"{base_id}_Common", tree_data.common)
+                    create_wild_region(parent_region, f"{base_id}_Rare", tree_data.rare)
+                else:
+                    world.generated_wild_region_types[base_id] = WildRegionType.OutOfLogic
 
-            if wild_region_data.wild_encounters.rock_smash and "Rock Smash" in world.options.wild_encounter_methods_required:
+            if wild_region_data.wild_encounters.rock_smash:
                 region_id = "WildRockSmash"
-                world.available_wild_regions.add(region_id)
-                create_wild_region(parent_region, region_id, world.generated_wild.tree["Rock"].common)
+                if "Rock Smash" in world.options.wild_encounter_methods_required:
+                    world.generated_wild_region_types[region_id] = WildRegionType.InLogic
+                    create_wild_region(parent_region, region_id, world.generated_wild.rock.encounters)
+                else:
+                    world.generated_wild_region_types[region_id] = WildRegionType.OutOfLogic
 
-        if wild_region_data.statics and world.options.static_pokemon_required:
-            for static_encounter in wild_region_data.statics:
-                region_id = f"Static_{static_encounter.name}"
-                if static_encounter.name not in LOGIC_EXCLUDE_STATICS:
-                    world.available_wild_regions.add(region_id)
-                    create_wild_region(parent_region, region_id, [static_encounter])
+        for static_encounter in wild_region_data.statics:
+            region_id = f"Static_{static_encounter.name}"
+            if (world.options.static_pokemon_required
+                    and static_encounter.name not in LOGIC_EXCLUDE_STATICS):
+                world.generated_wild_region_types[region_id] = WildRegionType.InLogic
+                create_wild_region(parent_region, region_id, [static_encounter])
+            else:
+                world.generated_wild_region_types[region_id] = WildRegionType.OutOfLogic
 
     for region_name, region_data in data.regions.items():
         if should_include_region(region_data):

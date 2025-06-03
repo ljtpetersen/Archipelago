@@ -6,7 +6,8 @@ from Options import Toggle
 from .data import data, EvolutionData, EvolutionType, StartingTown
 from .options import FreeFlyLocation, Route32Condition, JohtoOnly, RandomizeBadges, UndergroundsRequirePower, \
     Route3Access, EliteFourRequirement, Goal, Route44AccessRequirement, BlackthornDarkCaveAccess, RedRequirement, \
-    MtSilverRequirement, HMBadgeRequirements, RedGyaradosAccess, EarlyFly, RadioTowerRequirement
+    MtSilverRequirement, HMBadgeRequirements, RedGyaradosAccess, EarlyFly, RadioTowerRequirement, \
+    BreedingMethodsRequired
 from ..Files import APTokenTypes
 
 if TYPE_CHECKING:
@@ -68,6 +69,17 @@ def adjust_options(world: "PokemonCrystalWorld"):
             world.options.route_44_access_count.value,
             world.multiworld.get_player_name(world.player))
 
+    if (world.options.radio_tower_requirement.value == RadioTowerRequirement.option_gyms
+            and world.options.blackthorn_dark_cave_access.value == BlackthornDarkCaveAccess.option_vanilla
+            and world.options.radio_tower_count.value > (7 if world.options.johto_only else 15)):
+        world.options.radio_tower_count.value = 7 if world.options.johto_only else 15
+        logging.warning(
+            "Pokemon Crystal: Radio Tower Gyms >%d incompatible with vanilla Dark Cave. "
+            "Changing Radio Tower Gyms to %d for player %s.",
+            world.options.route_44_access_count.value,
+            world.options.route_44_access_count.value,
+            world.multiworld.get_player_name(world.player))
+
     if world.options.johto_only:
 
         if world.options.goal == Goal.option_red and world.options.johto_only == JohtoOnly.option_on:
@@ -104,10 +116,10 @@ def adjust_options(world: "PokemonCrystalWorld"):
         if (world.options.route_44_access_requirement.value == Route44AccessRequirement.option_gyms
                 and world.options.route_44_access_count.value > 8):
             world.options.route_44_access_count.value = 8
-        logging.warning(
-            "Pokemon Crystal: Route 44 Access Gyms >8 incompatible with Johto Only. "
-            "Changing Route 44 Access Gyms to 8 for player %s.",
-            world.multiworld.get_player_name(world.player))
+            logging.warning(
+                "Pokemon Crystal: Route 44 Access Gyms >8 incompatible with Johto Only. "
+                "Changing Route 44 Access Gyms to 8 for player %s.",
+                world.multiworld.get_player_name(world.player))
 
         if (world.options.radio_tower_requirement.value == RadioTowerRequirement.option_gyms
                 and world.options.radio_tower_count.value > 7):
@@ -183,6 +195,21 @@ def adjust_options(world: "PokemonCrystalWorld"):
         logging.warning("Pokemon Crystal: Early fly is not compatible with Random Starting Town if Badges are "
                         "not completely random. Disabling Early Fly for player %s",
                         world.multiworld.get_player_name(world.player))
+
+    if (world.options.breeding_methods_required == BreedingMethodsRequired.option_with_ditto
+            and "Ditto" in world.options.wild_encounter_blocklist):
+        world.options.breeding_methods_required.value = BreedingMethodsRequired.option_none
+        logging.warning(
+            "Ditto cannot be blocklisted while Ditto only breeding is enabled. Disabling breeding logic for player %s.",
+            world.multiworld.get_player_name(world.player))
+
+    if (world.options.breeding_methods_required == BreedingMethodsRequired.option_with_ditto
+            and not world.options.wild_encounter_methods_required):
+        world.options.breeding_methods_required.value = BreedingMethodsRequired.option_none
+        logging.warning(
+            "At least one wild encounter type must be available for Ditto only breeding. "
+            "Disabling breeding logic for player %s.",
+            world.multiworld.get_player_name(world.player))
 
     # In race mode we don't patch any item location information into the ROM
     if world.multiworld.is_race and not world.options.remote_items:

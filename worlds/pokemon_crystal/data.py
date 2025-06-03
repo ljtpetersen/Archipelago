@@ -205,6 +205,11 @@ class TreeMonData:
 
 
 @dataclass(frozen=True)
+class RockMonData:
+    encounters: list[EncounterMon]
+
+
+@dataclass(frozen=True)
 class RouteEncounterData:
     morn: list[EncounterMon]
     day: list[EncounterMon]
@@ -217,6 +222,13 @@ class WildData:
     water: dict[str, list[EncounterMon]]
     fish: dict[str, FishData]
     tree: dict[str, TreeMonData]
+    rock: RockMonData
+
+
+class WildRegionType(Enum):
+    InLogic = 0
+    OutOfLogic = 1
+    Inaccessible = 2
 
 
 @dataclass(frozen=True)
@@ -579,9 +591,11 @@ def _init() -> None:
             for pkmn in tree_data["rare"]:
                 tree_encounter = EncounterMon(int(pkmn["level"]), pkmn["pokemon"])
                 rare_list.append(tree_encounter)
-        tree_dict[tree_name] = TreeMonData(common_list, rare_list)
+            tree_dict[tree_name] = TreeMonData(common_list, rare_list)
+        else:
+            rock_data = RockMonData(common_list)
 
-    wild = WildData(grass_dict, water_dict, fish_dict, tree_dict)
+    wild = WildData(grass_dict, water_dict, fish_dict, tree_dict, rock_data)
 
     saffron_warps = {warp_name: MiscWarp(warp_data["coords"], warp_data["id"]) for warp_name, warp_data in
                      saffron_data["warps"].items()}
