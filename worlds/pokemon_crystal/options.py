@@ -1009,7 +1009,7 @@ class AllPokemonSeen(Toggle):
 class PhoneTrapWeight(Range):
     """
     Adds random Pokegear calls that acts as traps
-    Weight is a percentage of filler items to replace
+    Weight is the percentage chance each filler item is replaced with a trap
     """
     display_name = "Phone Trap Weight"
     default = 0
@@ -1020,7 +1020,7 @@ class PhoneTrapWeight(Range):
 class SleepTrapWeight(Range):
     """
     Trap that causes Sleep status on your party
-    Weight is a percentage of filler items to replace
+    Weight is the percentage chance each filler item is replaced with a trap
     """
     display_name = "Sleep Trap Weight"
     default = 0
@@ -1031,7 +1031,7 @@ class SleepTrapWeight(Range):
 class PoisonTrapWeight(Range):
     """
     Trap that causes Poison status on your party
-    Weight is a percentage of filler items to replace
+    Weight is the percentage chance each filler item is replaced with a trap
     """
     display_name = "Poison Trap Weight"
     default = 0
@@ -1042,7 +1042,7 @@ class PoisonTrapWeight(Range):
 class BurnTrapWeight(Range):
     """
     Trap that causes Burn status on your party
-    Weight is a percentage of filler items to replace
+    Weight is the percentage chance each filler item is replaced with a trap
     """
     display_name = "Burn Trap Weight"
     default = 0
@@ -1053,7 +1053,7 @@ class BurnTrapWeight(Range):
 class FreezeTrapWeight(Range):
     """
     Trap that causes Freeze status on your party
-    Weight is a percentage of filler items to replace
+    Weight is the percentage chance each filler item is replaced with a trap
     """
     display_name = "Freeze Trap Weight"
     default = 0
@@ -1064,7 +1064,7 @@ class FreezeTrapWeight(Range):
 class ParalysisTrapWeight(Range):
     """
     Trap that causes Paralysis status on your party
-    Weight is a percentage of filler items to replace
+    Weight is the percentage chance each filler item is replaced with a trap
     """
     display_name = "Paralysis Trap Weight"
     default = 0
