@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from BaseClasses import Location, Region, LocationProgressType
 from .data import data, POKEDEX_OFFSET, POKEDEX_COUNT_OFFSET
 from .options import Goal, DexsanityStarters
-from .pokemon import pokemon_convert_friendly_to_ids
+from .pokemon import get_priority_dexsanity, get_excluded_dexsanity
 from .utils import evolution_in_logic, evolution_location_name
 
 if TYPE_CHECKING:
@@ -80,13 +80,20 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
 
     if world.options.dexsanity:
         pokemon_items = list(world.logically_available_pokemon)
-        blocklist = pokemon_convert_friendly_to_ids(world, world.options.dexsanity_blocklist)
+        priority_pokemon = get_priority_dexsanity(world)
+        excluded_pokemon = get_excluded_dexsanity(world)
+
         if world.options.dexsanity_starters.value == DexsanityStarters.option_block:
-            blocklist.update(starter[0] for starter in world.generated_starters)
-        pokemon_items = [pokemon_id for pokemon_id in pokemon_items if pokemon_id not in blocklist]
+            excluded_pokemon.update(starter[0] for starter in world.generated_starters)
+        pokemon_items = [pokemon_id for pokemon_id in pokemon_items if pokemon_id not in excluded_pokemon]
         world.random.shuffle(pokemon_items)
         for _ in range(min(world.options.dexsanity.value, len(pokemon_items))):
-            world.generated_dexsanity.add(pokemon_items.pop())
+            if priority_pokemon:
+                pokemon = priority_pokemon.pop()
+                world.generated_dexsanity.add(pokemon)
+                pokemon_items.remove(pokemon)
+            else:
+                world.generated_dexsanity.add(pokemon_items.pop())
 
         pokedex_region = regions["Pokedex"]
 
@@ -105,7 +112,7 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
     if world.options.dexcountsanity:
         total_pokemon = len(world.logically_available_pokemon)
         dexcountsanity_total = min(world.options.dexcountsanity.value, total_pokemon)
-        dexcountsanity_step = world.options.dexcountsanity_step
+        dexcountsanity_step = world.options.dexcountsanity_step.value
 
         world.generated_dexcountsanity = [i for i in
                                           range(dexcountsanity_step, dexcountsanity_total, dexcountsanity_step)]

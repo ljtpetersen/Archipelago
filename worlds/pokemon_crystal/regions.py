@@ -2,8 +2,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from BaseClasses import Region, ItemClassification, Entrance
-from . import StaticPokemon, WildRegionType
-from .data import data, RegionData, EncounterMon
+from .data import data, RegionData, EncounterMon, StaticPokemon, WildRegionType
 from .items import PokemonCrystalItem
 from .locations import PokemonCrystalLocation
 from .options import FreeFlyLocation, JohtoOnly, LevelScaling, BlackthornDarkCaveAccess, Goal

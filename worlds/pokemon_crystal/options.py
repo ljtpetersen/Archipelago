@@ -388,16 +388,6 @@ class DexcountsanityLeniency(Range):
     range_end = 251
 
 
-class DexsanityBlocklist(OptionSet):
-    """
-    These Pokemon will never be Dexsanity checks, this may cause you to get less Dexsanity checks than you request
-    You can use "_Legendaries" as a shortcut for all legendary Pokemon
-    Blocklists are best effort, other constraints may cause them to be ignored
-    """
-    display_name = "Dexsanity Blocklist"
-    valid_keys = sorted(pokemon.friendly_name for pokemon in data.pokemon.values()) + ["_Legendaries"]
-
-
 class DexsanityStarters(Choice):
     """
     Controls how Dexsanity treats starter Pokemon
@@ -1140,7 +1130,7 @@ class GameOptions(OptionDict):
         no_exp: EXP is disabled
     catch_exp: off/on - Sets whether or not you get EXP for catching a Pokemon
     poison_flicker: on/off - Sets whether the overworld poison flash effect is played
-    turbo_button: none/a/b/a_or_b - Sets which buttons auto advance text
+    turbo_button: none/a/b/a_or_b - Sets which buttons auto advance text when held
     low_hp_beep: on/off - Sets whether the low HP beep is played in battle
     time_of_day: auto/morn/day/nite - Sets a time of day override, auto follows the clock
     battle_move_stats: off/on - Sets whether or not to display power and accuracy of moves in battle
@@ -1219,7 +1209,6 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     trainersanity_alerts: TrainersanityAlerts
     rematchsanity: Rematchsanity
     dexsanity: Dexsanity
-    dexsanity_blocklist: DexsanityBlocklist
     dexsanity_starters: DexsanityStarters
     dexcountsanity: Dexcountsanity
     dexcountsanity_step: DexcountsanityStep

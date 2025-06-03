@@ -1,9 +1,10 @@
+from collections.abc import Iterable
 from dataclasses import replace
+from random import Random
 from typing import TYPE_CHECKING
 
 from BaseClasses import ItemClassification
-from . import StaticPokemon, WildRegionType
-from .data import data as crystal_data, EncounterMon
+from .data import data as crystal_data, EncounterMon, StaticPokemon, WildRegionType, PokemonData
 from .moves import get_tmhm_compatibility, randomize_learnset
 from .options import RandomizeTypes, RandomizePalettes, RandomizeBaseStats, RandomizeStarters, RandomizeTrades
 from .utils import get_random_filler_item, evolution_in_logic
@@ -291,15 +292,17 @@ def get_random_nezumi(random):
     return random.choice(pokemon_pool)
 
 
-def get_random_pokemon_evolution(random, pkmn_name, pkmn_data):
+def get_random_pokemon_evolution(random: Random, pkmn_name: str, pkmn_data: PokemonData):
     # if the Pokemon has no evolutions
-    if not len(pkmn_data.evolutions):
+    if not pkmn_data.evolutions:
         # return the same Pokemon
         return pkmn_name
     return random.choice(pkmn_data.evolutions).pokemon
 
 
-def pokemon_convert_friendly_to_ids(world: "PokemonCrystalWorld", pokemon) -> set[str]:
+def pokemon_convert_friendly_to_ids(world: "PokemonCrystalWorld", pokemon: Iterable[str]) -> set[str]:
+    if not pokemon: return set()
+
     pokemon = set(pokemon)
     if "_Legendaries" in pokemon:
         pokemon.discard("_Legendaries")
@@ -310,6 +313,24 @@ def pokemon_convert_friendly_to_ids(world: "PokemonCrystalWorld", pokemon) -> se
                    pokemon_data.friendly_name in pokemon}
 
     return pokemon_ids
+
+
+def _locations_to_pokemon(world: "PokemonCrystalWorld", locations: Iterable[str]):
+    pokemon = set()
+    for location in locations:
+        parts = location.split("- ")
+        if len(parts) != 2: continue
+        if "Catch" in parts[1]: continue
+        pokemon.add(parts[1])
+    return pokemon_convert_friendly_to_ids(world, pokemon)
+
+
+def get_priority_dexsanity(world: "PokemonCrystalWorld") -> set[str]:
+    return _locations_to_pokemon(world, world.options.priority_locations.value)
+
+
+def get_excluded_dexsanity(world: "PokemonCrystalWorld") -> set[str]:
+    return _locations_to_pokemon(world, world.options.exclude_locations.value)
 
 
 def get_random_base_stats(random, bst=None):

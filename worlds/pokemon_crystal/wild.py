@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 from .data import FishData, TreeMonData, EncounterMon, WildRegionType, RockMonData
 from .options import RandomizeWilds, EncounterGrouping, BreedingMethodsRequired
-from .pokemon import get_random_pokemon, pokemon_convert_friendly_to_ids
+from .pokemon import get_random_pokemon, pokemon_convert_friendly_to_ids, get_priority_dexsanity
 
 if TYPE_CHECKING:
     from . import PokemonCrystalWorld
@@ -98,6 +98,8 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
             logical_pokemon_pool.extend(evo_line.pop() for evo_line in evo_lines)
         elif world.options.randomize_wilds.option_catch_em_all:
             logical_pokemon_pool.extend(world.generated_pokemon.keys())
+
+        logical_pokemon_pool.extend(get_priority_dexsanity(world))
 
         global_blocklist = pokemon_convert_friendly_to_ids(world, world.options.wild_encounter_blocklist)
 

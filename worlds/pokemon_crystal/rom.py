@@ -6,11 +6,11 @@ import bsdiff4
 
 from settings import get_settings
 from worlds.Files import APProcedurePatch, APTokenMixin, APPatchExtension
-from . import FreeFlyLocation, APWORLD_VERSION, POKEDEX_OFFSET, HMBadgeRequirements
-from .data import data, MiscOption, POKEDEX_COUNT_OFFSET
+from .data import data, MiscOption, POKEDEX_COUNT_OFFSET, APWORLD_VERSION, POKEDEX_OFFSET
 from .items import item_const_name_to_id
 from .options import UndergroundsRequirePower, RequireItemfinder, Goal, Route2Access, \
-    BlackthornDarkCaveAccess, NationalParkAccess, Route3Access, EncounterSlotDistribution, KantoAccessRequirement
+    BlackthornDarkCaveAccess, NationalParkAccess, Route3Access, EncounterSlotDistribution, KantoAccessRequirement, \
+    FreeFlyLocation, HMBadgeRequirements
 from .utils import convert_to_ingame_text, write_bytes, replace_map_tiles
 
 if TYPE_CHECKING:

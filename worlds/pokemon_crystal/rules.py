@@ -3,13 +3,12 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 from worlds.generic.Rules import add_rule, set_rule
-from . import HMBadgeRequirements, EliteFourRequirement, RedRequirement, Route44AccessRequirement, RandomizeBadges, \
-    RadioTowerRequirement
 from .data import data, EvolutionType, EvolutionData, EncounterMon
 from .options import Goal, JohtoOnly, Route32Condition, UndergroundsRequirePower, Route2Access, \
     BlackthornDarkCaveAccess, \
     NationalParkAccess, KantoAccessRequirement, Route3Access, BreedingMethodsRequired, MtSilverRequirement, \
-    FreeFlyLocation
+    FreeFlyLocation, HMBadgeRequirements, EliteFourRequirement, RedRequirement, Route44AccessRequirement, \
+    RandomizeBadges, RadioTowerRequirement
 from .utils import evolution_in_logic, evolution_location_name
 
 if TYPE_CHECKING:
