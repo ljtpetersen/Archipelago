@@ -538,17 +538,21 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     set_rule(get_location("Azalea Town - Lure Ball from Kurt"),
              lambda state: state.has("EVENT_CLEARED_SLOWPOKE_WELL", world.player))
 
-    set_rule(get_location("RIVAL_BAYLEEF_AZALEA"), lambda state: state.has("EVENT_CLEARED_SLOWPOKE_WELL", world.player))
-    set_rule(get_location("RIVAL_CROCONAW_AZALEA"),
-             lambda state: state.has("EVENT_CLEARED_SLOWPOKE_WELL", world.player))
-    set_rule(get_location("RIVAL_QUILAVA_AZALEA"), lambda state: state.has("EVENT_CLEARED_SLOWPOKE_WELL", world.player))
+    if world.options.level_scaling:
+        set_rule(get_location("RIVAL_BAYLEEF_AZALEA"),
+                 lambda state: state.has("EVENT_CLEARED_SLOWPOKE_WELL", world.player))
+        set_rule(get_location("RIVAL_CROCONAW_AZALEA"),
+                 lambda state: state.has("EVENT_CLEARED_SLOWPOKE_WELL", world.player))
+        set_rule(get_location("RIVAL_QUILAVA_AZALEA"),
+                 lambda state: state.has("EVENT_CLEARED_SLOWPOKE_WELL", world.player))
 
     # Ilex Forest
     if not remove_ilex_cut_tree():
         set_rule(get_entrance("REGION_ILEX_FOREST:NORTH -> REGION_ILEX_FOREST:SOUTH"), can_cut)
         set_rule(get_entrance("REGION_ILEX_FOREST:SOUTH -> REGION_ILEX_FOREST:NORTH"), can_cut)
 
-    set_rule(get_location("Celebi"), lambda state: state.has("GS Ball", world.player))
+    if world.options.level_scaling:
+        set_rule(get_location("Celebi"), lambda state: state.has("GS Ball", world.player))
     if world.options.static_pokemon_required:
         set_rule(get_location("Static_Celebi_1"), lambda state: state.has("GS Ball", world.player))
 
@@ -585,7 +589,8 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
              lambda state: has_badge(state, "plain"))
     set_rule(get_location("Goldenrod City - Post-E4 GS Ball from Trade Corner Receptionist"),
              lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
-    set_rule(get_location("Eevee"), lambda state: state.has("EVENT_MET_BILL", world.player))
+    if world.options.level_scaling:
+        set_rule(get_location("Eevee"), lambda state: state.has("EVENT_MET_BILL", world.player))
     if world.options.static_pokemon_required:
         set_rule(get_location("Static_Eevee_1"), lambda state: state.has("EVENT_MET_BILL", world.player))
 
@@ -622,7 +627,8 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     set_rule(get_location("Radio Tower 4F - Pink Bow from Mary"),
              lambda state: state.has("EVENT_CLEARED_RADIO_TOWER", world.player))
 
-    set_rule(get_location("GRUNTM_3"), has_rockets_requirement)
+    if world.options.level_scaling:
+        set_rule(get_location("GRUNTM_3"), has_rockets_requirement)
 
     if trainersanity():
         set_rule(get_location("Radio Tower 1F - Grunt"), has_rockets_requirement)
@@ -677,7 +683,8 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     set_rule(get_entrance("REGION_ROUTE_37 -> REGION_ROUTE_36:EAST"), has_squirtbottle)
     set_rule(get_entrance("REGION_ROUTE_37 -> REGION_ROUTE_36:WEST"), has_squirtbottle)
 
-    set_rule(get_location("Sudowoodo"), has_squirtbottle)
+    if world.options.level_scaling:
+        set_rule(get_location("Sudowoodo"), has_squirtbottle)
     if world.options.static_pokemon_required:
         set_rule(get_location("Static_Sudowoodo_1"), has_squirtbottle)
 
@@ -713,7 +720,8 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     set_rule(get_entrance("REGION_TIN_TOWER_1F -> REGION_TIN_TOWER_2F"),
              lambda state: state.has("Rainbow Wing", world.player))
 
-    set_rule(get_location("Ho_Oh"), lambda state: state.has("Rainbow Wing", world.player))
+    if world.options.level_scaling:
+        set_rule(get_location("Ho_Oh"), lambda state: state.has("Rainbow Wing", world.player))
     if world.options.static_pokemon_required:
         set_rule(get_location("Static_Ho_Oh_1"), lambda state: state.has("Rainbow Wing", world.player))
 
@@ -788,7 +796,8 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     set_rule(get_entrance("REGION_ROUTE_41 -> REGION_WHIRL_ISLAND_SE"),
              lambda state: can_whirlpool(state) and can_flash(state))
 
-    set_rule(get_location("Lugia"), lambda state: state.has("Silver Wing", world.player))
+    if world.options.level_scaling:
+        set_rule(get_location("Lugia"), lambda state: state.has("Silver Wing", world.player))
     if world.options.static_pokemon_required:
         set_rule(get_location("Static_Lugia_1"), lambda state: state.has("Silver Wing", world.player))
 
@@ -807,8 +816,9 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     set_rule(get_location("Cianwood Pharmacy - Secretpotion"),
              lambda state: state.has("EVENT_JASMINE_EXPLAINED_AMPHYS_SICKNESS", world.player))
 
-    set_rule(get_location("MYSTICALMAN_EUSINE"),
-             lambda state: state.has("EVENT_BURNED_TOWER_MORTY", world.player))
+    if world.options.level_scaling:
+        set_rule(get_location("MYSTICALMAN_EUSINE"),
+                 lambda state: state.has("EVENT_BURNED_TOWER_MORTY", world.player))
 
     # Route 42
     set_rule(get_entrance("REGION_ROUTE_42:WEST -> REGION_ROUTE_42:CENTER"), can_surf)

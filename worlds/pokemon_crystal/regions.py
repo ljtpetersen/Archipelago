@@ -188,7 +188,7 @@ def create_regions(world: "PokemonCrystalWorld") -> dict[str, Region]:
             setup_wild_regions(new_region, region_data)
 
             # Level Scaling
-            if world.options != LevelScaling.option_off:
+            if world.options.level_scaling.value != LevelScaling.option_off:
                 trainer_name_level_list: list[tuple[str, int]] = []
                 encounter_name_level_list: list[tuple[str, int]] = []
 
