@@ -677,6 +677,10 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     set_rule(get_entrance("REGION_ROUTE_37 -> REGION_ROUTE_36:EAST"), has_squirtbottle)
     set_rule(get_entrance("REGION_ROUTE_37 -> REGION_ROUTE_36:WEST"), has_squirtbottle)
 
+    set_rule(get_location("Sudowoodo"), has_squirtbottle)
+    if world.options.static_pokemon_required:
+        set_rule(get_location("Static_Sudowoodo_1"), has_squirtbottle)
+
     # Route 36
     set_rule(get_entrance("REGION_ROUTE_35 -> REGION_ROUTE_36:WEST"), can_cut)
     set_rule(get_entrance("REGION_ROUTE_36:WEST -> REGION_ROUTE_35"), can_cut)
@@ -1122,7 +1126,8 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
             set_rule(get_location("Vermilion Port - Hidden Item in Buoy"), can_surf_kanto)
 
         set_rule(get_location("EVENT_FOUGHT_SNORLAX"), expn)
-
+        if world.options.level_scaling:
+            set_rule(get_location("Snorlax"), expn)
         if world.options.static_pokemon_required:
             set_rule(get_location("Static_Snorlax_1"), expn)
 
