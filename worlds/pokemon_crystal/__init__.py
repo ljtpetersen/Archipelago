@@ -253,12 +253,16 @@ class PokemonCrystalWorld(World):
                 default_itempool.append(self.create_item_by_code(item_code))
 
         if self.options.dexsanity:
-            default_itempool.extend(self.create_item_by_const_name(get_random_ball(self.random)) for _ in
-                                    self.generated_dexsanity)
+            default_itempool.extend(
+                self.create_item_by_const_name(get_random_ball(self.random)) if
+                self.random.randint(0, 100) >= total_trap_weight else get_random_trap()
+                for _ in self.generated_dexsanity)
 
         if self.generated_dexcountsanity:
-            default_itempool.extend(self.create_item_by_const_name(get_random_ball(self.random)) for _ in
-                                    self.generated_dexcountsanity)
+            default_itempool.extend(
+                self.create_item_by_const_name(get_random_ball(self.random)) if
+                self.random.randint(0, 100) >= total_trap_weight else get_random_trap()
+                for _ in self.generated_dexcountsanity)
 
         if self.options.johto_only.value != JohtoOnly.option_off:
             # Replace the S.S. Ticket with the Silver Wing for Johto only seeds

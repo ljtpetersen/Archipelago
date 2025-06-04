@@ -5566,12 +5566,7 @@
       "REGION_LAVENDER_TOWN"
     ],
     "locations": [],
-    "events": [],
-    "wild_encounters": {
-      "grass": "SLOWPOKE_WELL_B2F",
-      "surfing": "SLOWPOKE_WELL_B2F",
-      "fishing": "Lake"
-    }
+    "events": []
   },
   "REGION_SPROUT_TOWER_1F": {
     "johto": true,

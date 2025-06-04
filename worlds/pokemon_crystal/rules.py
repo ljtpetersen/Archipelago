@@ -1123,6 +1123,9 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
         set_rule(get_location("EVENT_FOUGHT_SNORLAX"), expn)
 
+        if world.options.static_pokemon_required:
+            set_rule(get_location("Static_Snorlax_1"), expn)
+
         set_rule(get_entrance("REGION_VERMILION_CITY -> REGION_ROUTE_11"), expn)
 
         set_rule(get_entrance("REGION_ROUTE_11 -> REGION_VERMILION_CITY"), expn)
