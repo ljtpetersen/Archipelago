@@ -686,7 +686,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
     if world.options.national_park_access.value == NationalParkAccess.option_bicycle:
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_NationalParkBicycle"] + 2)
 
-    if world.options.route_3_access == Route3Access.option_boulder_badge:
+    if world.options.route_3_access.value == Route3Access.option_boulder_badge:
         # This is a sprite event, so 0 shows the sprite
         write_bytes(patch, [0], data.rom_addresses["AP_Setting_PewterCityBadgeRequired_1"] + 2)
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_PewterCityBadgeRequired_2"] + 2)
