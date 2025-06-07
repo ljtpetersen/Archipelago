@@ -1218,9 +1218,9 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     dexcountsanity_step: DexcountsanityStep
     dexcountsanity_leniency: DexcountsanityLeniency
     wild_encounter_methods_required: WildEncounterMethodsRequired
+    static_pokemon_required: StaticPokemonRequired
     evolution_methods_required: EvolutionMethodsRequired
     evolution_gym_levels: EvolutionGymLevels
-    static_pokemon_required: StaticPokemonRequired
     breeding_methods_required: BreedingMethodsRequired
     randomize_pokegear: RandomizePokegear
     randomize_berry_trees: RandomizeBerryTrees
