@@ -9,7 +9,6 @@ if TYPE_CHECKING:
     from worlds._bizhawk.context import BizHawkClientContext
 
 TRACKER_EVENT_FLAGS = [
-    "EVENT_GOT_TOGEPI_EGG_FROM_ELMS_AIDE",
     "EVENT_GOT_KENYA",
     "EVENT_GAVE_KENYA",
     "EVENT_JASMINE_RETURNED_TO_GYM",
@@ -47,6 +46,7 @@ TRACKER_EVENT_FLAGS = [
 EVENT_FLAG_MAP = {data.event_flags[event]: event for event in TRACKER_EVENT_FLAGS}
 
 TRACKER_STATIC_EVENT_FLAGS = [
+    "EVENT_GOT_TOGEPI_EGG_FROM_ELMS_AIDE"
     "EVENT_FOUGHT_SUDOWOODO",
     "EVENT_LAKE_OF_RAGE_RED_GYARADOS",
     "EVENT_FOUGHT_HO_OH",
@@ -60,6 +60,12 @@ TRACKER_STATIC_EVENT_FLAGS = [
     "EVENT_GOT_DRATINI",
     "EVENT_TOGEPI_HATCHED",
     "EVENT_GOT_TYROGUE_FROM_KIYO",
+    "EVENT_UNION_CAVE_B2F_LAPRAS"
+]
+
+STATIC_EVENT_FLAG_MAP = {data.event_flags[event]: event for event in TRACKER_STATIC_EVENT_FLAGS}
+
+TRACKER_ROCKET_TRAP_EVENTS = [
     "EVENT_EXPLODING_TRAP_1",
     "EVENT_EXPLODING_TRAP_2",
     "EVENT_EXPLODING_TRAP_3",
@@ -81,11 +87,10 @@ TRACKER_STATIC_EVENT_FLAGS = [
     "EVENT_EXPLODING_TRAP_19",
     "EVENT_EXPLODING_TRAP_20",
     "EVENT_EXPLODING_TRAP_21",
-    "EVENT_EXPLODING_TRAP_22",
-    "EVENT_UNION_CAVE_B2F_LAPRAS"
+    "EVENT_EXPLODING_TRAP_22"
 ]
 
-STATIC_EVENT_FLAG_MAP = {data.event_flags[event]: event for event in TRACKER_STATIC_EVENT_FLAGS}
+ROCKET_TRAP_EVENT_FLAG_MAP = {data.event_flags[event]: event for event in TRACKER_ROCKET_TRAP_EVENTS}
 
 TRACKER_KEY_ITEM_FLAGS = [
     "EVENT_ZEPHYR_BADGE_FROM_FALKNER",
@@ -128,6 +133,7 @@ class PokemonCrystalClient(BizHawkClient):
     patch_suffix = ".apcrystal"
     local_set_events: dict[str, bool]
     local_set_static_events: dict[str, bool]
+    local_set_rocket_trap_events: dict[str, bool]
     local_found_key_items: dict[str, bool]
     local_pokemon: dict[str, list[int]]
     phone_trap_locations: list[int]
@@ -140,6 +146,7 @@ class PokemonCrystalClient(BizHawkClient):
         self.goal_flag = None
         self.local_set_events = dict()
         self.local_set_static_events = dict()
+        self.local_set_rocket_trap_events = dict()
         self.local_found_key_items = dict()
         self.local_pokemon = {"seen": list(), "caught": list()}
         self.phone_trap_locations = list()
@@ -253,6 +260,7 @@ class PokemonCrystalClient(BizHawkClient):
             local_checked_locations = set()
             local_set_events = {flag_name: False for flag_name in TRACKER_EVENT_FLAGS}
             local_set_static_events = {flag_name: False for flag_name in TRACKER_STATIC_EVENT_FLAGS}
+            local_set_rocket_trap_events = {flag_name: False for flag_name in TRACKER_ROCKET_TRAP_EVENTS}
             local_found_key_items = {flag_name: False for flag_name in TRACKER_KEY_ITEM_FLAGS}
             local_pokemon: dict[str, list[int]] = {"caught": list(), "seen": list()}
 
@@ -379,6 +387,21 @@ class PokemonCrystalClient(BizHawkClient):
                     "operations": [{"operation": "or", "value": event_bitfield}],
                 }])
                 self.local_set_static_events = local_set_static_events
+
+            if local_set_rocket_trap_events != self.local_set_rocket_trap_events and ctx.slot is not None:
+                event_bitfield = 0
+                for i, flag_name in enumerate(TRACKER_ROCKET_TRAP_EVENTS):
+                    if local_set_rocket_trap_events[flag_name]:
+                        event_bitfield |= 1 << i
+
+                await ctx.send_msgs([{
+                    "cmd": "Set",
+                    "key": f"pokemon_crystal_rockettraps_{ctx.team}_{ctx.slot}",
+                    "default": 0,
+                    "want_reply": False,
+                    "operations": [{"operation": "or", "value": event_bitfield}],
+                }])
+                self.local_set_rocket_trap_events = local_set_rocket_trap_events
 
             if local_found_key_items != self.local_found_key_items:
                 key_bitfield = 0
