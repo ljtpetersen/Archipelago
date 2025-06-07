@@ -1,11 +1,9 @@
 import logging
-from dataclasses import replace
 from random import Random
 from typing import TYPE_CHECKING
 
 from Options import Toggle
-from .data import data, EvolutionData, EvolutionType, StartingTown, EncounterMon, StaticPokemon, \
-    RouteEncounterData, FishData, TreeMonData, RockMonData
+from .data import data, EvolutionData, EvolutionType, StartingTown
 from .options import FreeFlyLocation, Route32Condition, JohtoOnly, RandomizeBadges, UndergroundsRequirePower, \
     Route3Access, EliteFourRequirement, Goal, Route44AccessRequirement, BlackthornDarkCaveAccess, RedRequirement, \
     MtSilverRequirement, HMBadgeRequirements, RedGyaradosAccess, EarlyFly, RadioTowerRequirement, \
@@ -300,80 +298,6 @@ def get_free_fly_locations(world: "PokemonCrystalWorld"):
     if world.options.free_fly_location.value in (FreeFlyLocation.option_free_fly_and_map_card,
                                                  FreeFlyLocation.option_map_card):
         world.map_card_fly_location = location_pool.pop()
-
-
-def get_encounters_for_wild_region(world: "PokemonCrystalWorld", region_id: str) -> list[EncounterMon | StaticPokemon]:
-    parts = region_id.split("_")
-    region_type = parts[0]
-
-    if region_type == "WildGrass":
-        region = "_".join(parts[1:])
-        return world.generated_wild.grass[region].day
-    elif region_type == "WildWater":
-        region = "_".join(parts[1:])
-        return world.generated_wild.water[region]
-    elif region_type == "WildFish":
-        region = "_".join(parts[1:-1])
-        rod_type = parts[-1]
-        fish = world.generated_wild.fish[region]
-        if rod_type == "Old":
-            return fish.old
-        elif rod_type == "Good":
-            return fish.good
-        else:
-            return fish.super
-    elif region_id.startswith("WildTree"):
-        region = "_".join(parts[1:-1])
-        encounter_type = parts[-1]
-        treemon = world.generated_wild.tree[region]
-        if encounter_type == "Common":
-            return treemon.common
-        else:
-            return treemon.rare
-    elif region_id == "WildRockSmash":
-        return world.generated_wild.rock.encounters
-    else:
-        return []
-
-
-def set_encounters_for_wild_region(world: "PokemonCrystalWorld", region_id: str,
-                                   encounters: list[EncounterMon | StaticPokemon]) -> None:
-    parts = region_id.split("_")
-    region_type = parts[0]
-    if region_type == "WildGrass":
-        region = "_".join(parts[1:])
-        world.generated_wild.grass[region] = RouteEncounterData(
-            morn=encounters,
-            day=encounters,
-            nite=encounters
-        )
-    elif region_type == "WildWater":
-        region = "_".join(parts[1:])
-        world.generated_wild.water[region] = encounters
-    elif region_type == "WildFish":
-        region = "_".join(parts[1:-1])
-        rod_type = parts[-1]
-        fish = world.generated_wild.fish[region]
-        old = encounters if rod_type == "Old" else fish.old
-        good = encounters if rod_type == "Good" else fish.good
-        super = encounters if rod_type == "Super" else fish.super
-        world.generated_wild.fish[region] = FishData(
-            old=old,
-            good=good,
-            super=super
-        )
-    elif region_id.startswith("WildTree"):
-        region = "_".join(parts[1:-1])
-        encounter_type = parts[-1]
-        tree_data = world.generated_wild.tree[region]
-        common = encounters if encounter_type == "Common" else tree_data.common
-        rare = encounters if encounter_type == "Rare" else tree_data.rare
-        world.generated_wild.tree[region] = TreeMonData(
-            common=common,
-            rare=rare
-        )
-    elif region_id == "WildRockSmash":
-        world.generated_wild = replace(world.generated_wild, rock=RockMonData(encounters))
 
 
 def evolution_in_logic(world: "PokemonCrystalWorld", evolution: EvolutionData):

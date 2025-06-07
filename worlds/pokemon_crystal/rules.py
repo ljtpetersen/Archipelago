@@ -3,12 +3,12 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 from worlds.generic.Rules import add_rule, set_rule
-from .data import data, EvolutionType, EvolutionData, EncounterMon
+from .data import data, EvolutionType, EvolutionData, FishingRodType, EncounterKey, \
+    TreeRarity, LogicalAccess
 from .options import Goal, JohtoOnly, Route32Condition, UndergroundsRequirePower, Route2Access, \
-    BlackthornDarkCaveAccess, \
-    NationalParkAccess, KantoAccessRequirement, Route3Access, BreedingMethodsRequired, MtSilverRequirement, \
-    FreeFlyLocation, HMBadgeRequirements, EliteFourRequirement, RedRequirement, Route44AccessRequirement, \
-    RandomizeBadges, RadioTowerRequirement
+    BlackthornDarkCaveAccess, NationalParkAccess, KantoAccessRequirement, Route3Access, BreedingMethodsRequired, \
+    MtSilverRequirement, FreeFlyLocation, HMBadgeRequirements, EliteFourRequirement, RedRequirement, \
+    Route44AccessRequirement, RandomizeBadges, RadioTowerRequirement
 from .utils import evolution_in_logic, evolution_location_name
 
 if TYPE_CHECKING:
@@ -167,15 +167,6 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     def has_tea(state: CollectionState):
         return state.has("Tea", world.player)
 
-    def has_old_rod(state: CollectionState):
-        return state.has("Old Rod", world.player)
-
-    def has_good_rod(state: CollectionState):
-        return state.has("Good Rod", world.player)
-
-    def has_super_rod(state: CollectionState):
-        return state.has("Super Rod", world.player)
-
     if world.options.randomize_badges.value == RandomizeBadges.option_vanilla:
         badge_items = {"zephyr": "EVENT_ZEPHYR_BADGE_FROM_FALKNER",
                        "hive": "EVENT_HIVE_BADGE_FROM_BUGSY",
@@ -233,6 +224,12 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
                   "blaine": "EVENT_BEAT_BLAINE",
                   "blue": "EVENT_BEAT_BLUE"
                   }
+
+    fishing_rod_rules = {
+        FishingRodType.Old: lambda state: state.has("Old Rod", world.player),
+        FishingRodType.Good: lambda state: state.has("Good Rod", world.player),
+        FishingRodType.Super: lambda state: state.has("Super Rod", world.player)
+    }
 
     def has_badge(state: CollectionState, badge: str):
         return state.has(badge_items[badge], world.player)
@@ -1250,11 +1247,18 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         set_rule(get_location("Pokedex - Final Catch"),
                  lambda state, count=logical_count: has_n_pokemon(state, logical_count))
 
-    def set_encounter_rule(region_id: str, encounters: list[EncounterMon], rule):
-        for i, encounter in enumerate(encounters):
-            set_rule(get_location(f"{region_id}_{i + 1}"),
-                     rule if encounter.pokemon != "UNOWN" else
-                     lambda state: state.has_any(unown_unlocks, world.player) and rule(state))
+    def set_encounter_rule(encounter_key: EncounterKey, region_rule):
+        for i, encounter in enumerate(world.generated_wild[encounter_key]):
+            rule = region_rule
+            if encounter.pokemon == "UNOWN":
+                if region_rule:
+                    rule = lambda state: state.has_any(unown_unlocks, world.player) and region_rule(state)
+                else:
+                    rule = lambda state: state.has_any(unown_unlocks, world.player)
+            elif not region_rule:
+                continue
+
+            set_rule(get_location(f"{encounter_key.region_name()}_{i + 1}"), rule)
 
     for region_id, region_data in data.regions.items():
         if world.options.johto_only and not region_data.johto: return
@@ -1262,29 +1266,30 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
                 and not region_data.silver_cave and not region_data.johto): return
         if not region_data.wild_encounters: continue
 
+        if region_data.wild_encounters.grass and "Land" in world.options.wild_encounter_methods_required:
+            set_encounter_rule(EncounterKey.grass(region_data.wild_encounters.grass), None)
+
         if region_data.wild_encounters.surfing and "Surfing" in world.options.wild_encounter_methods_required:
-            set_encounter_rule(f"WildWater_{region_data.wild_encounters.surfing}",
-                               world.generated_wild.water[region_data.wild_encounters.surfing],
+            set_encounter_rule(EncounterKey.water(region_data.wild_encounters.surfing),
                                can_surf if (region_data.johto or region_data.silver_cave) else can_surf_kanto)
 
         if region_data.wild_encounters.fishing and "Fishing" in world.options.wild_encounter_methods_required:
-            set_encounter_rule(f"WildFish_{region_data.wild_encounters.fishing}_Old",
-                               world.generated_wild.fish[region_data.wild_encounters.fishing].old, has_old_rod)
-            set_encounter_rule(f"WildFish_{region_data.wild_encounters.fishing}_Good",
-                               world.generated_wild.fish[region_data.wild_encounters.fishing].good, has_good_rod)
-            set_encounter_rule(f"WildFish_{region_data.wild_encounters.fishing}_Super",
-                               world.generated_wild.fish[region_data.wild_encounters.fishing].super, has_super_rod)
+            for rod_type in (FishingRodType.Old, FishingRodType.Good, FishingRodType.Super):
+                set_encounter_rule(
+                    EncounterKey.fish(region_data.wild_encounters.fishing, rod_type),
+                    fishing_rod_rules[rod_type]
+                )
 
         if region_data.wild_encounters.headbutt and "Headbutt" in world.options.wild_encounter_methods_required:
-            set_encounter_rule(f"WildTree_{region_data.wild_encounters.headbutt}_Common",
-                               world.generated_wild.tree[region_data.wild_encounters.headbutt].common,
-                               can_headbutt)
-            set_encounter_rule(f"WildTree_{region_data.wild_encounters.headbutt}_Rare",
-                               world.generated_wild.tree[region_data.wild_encounters.headbutt].rare,
-                               can_headbutt)
+            for tree_rarity in (TreeRarity.Common, TreeRarity.Rare):
+                set_encounter_rule(
+                    EncounterKey.tree(region_data.wild_encounters.headbutt, tree_rarity),
+                    can_headbutt
+                )
 
-        if region_data.wild_encounters.rock_smash and "Rock Smash" in world.options.wild_encounter_methods_required:
-            set_encounter_rule(f"WildRockSmash", world.generated_wild.rock.encounters, can_rocksmash)
+    rock_smash_key = EncounterKey.rock_smash()
+    if world.generated_wild_region_logic[rock_smash_key] is LogicalAccess.InLogic:
+        set_encounter_rule(rock_smash_key, can_rocksmash)
 
     def evolution_logic(state: CollectionState, evolved_from: str, evolutions: list[EvolutionData]) -> bool:
         if not state.has(evolved_from, world.player): return False

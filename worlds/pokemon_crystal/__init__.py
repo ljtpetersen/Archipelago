@@ -10,8 +10,9 @@ from BaseClasses import Tutorial, ItemClassification, MultiWorld
 from Fill import fill_restrictive, FillError
 from worlds.AutoWorld import World, WebWorld
 from .client import PokemonCrystalClient
-from .data import PokemonData, TrainerData, MiscData, TMHMData, data as crystal_data, WildData, StaticPokemon, \
-    MusicData, MoveData, FlyRegion, TradeData, MiscOption, APWORLD_VERSION, POKEDEX_OFFSET, StartingTown, WildRegionType
+from .data import PokemonData, TrainerData, MiscData, TMHMData, data as crystal_data, StaticPokemon, \
+    MusicData, MoveData, FlyRegion, TradeData, MiscOption, APWORLD_VERSION, POKEDEX_OFFSET, StartingTown, \
+    LogicalAccess, EncounterKey, EncounterMon
 from .items import PokemonCrystalItem, create_item_label_to_code_map, get_item_classification, ITEM_GROUPS, \
     item_const_name_to_id, item_const_name_to_label
 from .level_scaling import perform_level_scaling
@@ -90,9 +91,9 @@ class PokemonCrystalWorld(World):
     generated_trainers: dict[str, TrainerData]
 
     generated_tms: dict[str, TMHMData]
-    generated_wild: WildData
-    generated_wild_region_types: dict[str, WildRegionType]
-    generated_static: dict[str, StaticPokemon]
+    generated_wild: dict[EncounterKey, list[EncounterMon]]
+    generated_wild_region_logic: dict[EncounterKey, LogicalAccess]
+    generated_static: dict[EncounterKey, StaticPokemon]
     generated_trades: list[TradeData]
 
     generated_dexsanity: set[str]
@@ -126,7 +127,7 @@ class PokemonCrystalWorld(World):
         self.generated_trainers = copy.deepcopy(crystal_data.trainers)
         self.generated_tms = crystal_data.tmhm.copy()
         self.generated_wild = copy.deepcopy(crystal_data.wild)
-        self.generated_wild_region_types = defaultdict(lambda: WildRegionType.Inaccessible)
+        self.generated_wild_region_logic = defaultdict(lambda: LogicalAccess.Inaccessible)
         self.generated_static = crystal_data.static.copy()
         self.generated_trades = crystal_data.trades.copy()
         self.generated_dexsanity = set()

@@ -2,7 +2,7 @@ from collections import defaultdict
 from dataclasses import replace
 from typing import TYPE_CHECKING
 
-from .data import FishData, TreeMonData, EncounterMon, WildRegionType, RockMonData
+from .data import EncounterMon, LogicalAccess, EncounterType, EncounterKey
 from .options import RandomizeWilds, EncounterGrouping, BreedingMethodsRequired
 from .pokemon import get_random_pokemon, pokemon_convert_friendly_to_ids, get_priority_dexsanity
 
@@ -19,63 +19,22 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
         required_accessible_pokemon = 0
         required_inaccessible_pokemon = 0
 
-        def encounter_list_count(encounters: list[EncounterMon]):
+        for region_key, wilds in world.generated_wild.items():
+            logical_access = world.generated_wild_region_logic[region_key]
+
             if world.options.encounter_grouping == EncounterGrouping.option_all_split:
-                return len(encounters)
+                count = len(wilds)
             elif world.options.encounter_grouping == EncounterGrouping.option_one_per_method:
-                return 1
+                count = 1
             else:
-                return len({encounter.pokemon for encounter in encounters})
+                count = len({encounter.pokemon for encounter in wilds})
 
-        for region, wilds in world.generated_wild.grass.items():
-            count = encounter_list_count(wilds.day)
-            region_type = world.generated_wild_region_types[f"WildGrass_{region}"]
-            if region_type is WildRegionType.InLogic:
+            if logical_access is LogicalAccess.InLogic:
                 required_logical_pokemon += count
-            elif region_type is WildRegionType.OutOfLogic:
+            elif logical_access is LogicalAccess.OutOfLogic:
                 required_accessible_pokemon += count
             else:
                 required_inaccessible_pokemon += count
-
-        for region, wilds in world.generated_wild.water.items():
-            count = encounter_list_count(wilds)
-            region_type = world.generated_wild_region_types[f"WildWater_{region}"]
-            if region_type is WildRegionType.InLogic:
-                required_logical_pokemon += count
-            elif region_type is WildRegionType.OutOfLogic:
-                required_accessible_pokemon += count
-            else:
-                required_inaccessible_pokemon += count
-
-        for region, wilds in world.generated_wild.fish.items():
-            count = encounter_list_count(wilds.old) + encounter_list_count(wilds.good) + encounter_list_count(
-                wilds.super)
-            region_type = world.generated_wild_region_types[f"WildFish_{region}"]
-            if region_type is WildRegionType.InLogic:
-                required_logical_pokemon += count
-            elif region_type is WildRegionType.OutOfLogic:
-                required_accessible_pokemon += count
-            else:
-                required_inaccessible_pokemon += count
-
-        for region, wilds in world.generated_wild.tree.items():
-            count = encounter_list_count(wilds.common) + encounter_list_count(wilds.rare)
-            region_type = world.generated_wild_region_types[f"WildTree_{region}"]
-            if region_type is WildRegionType.InLogic:
-                required_logical_pokemon += count
-            elif region_type is WildRegionType.OutOfLogic:
-                required_accessible_pokemon += count
-            else:
-                required_inaccessible_pokemon += count
-
-        count = encounter_list_count(world.generated_wild.rock.encounters)
-        region_type = world.generated_wild_region_types["WildRockSmash"]
-        if region_type is WildRegionType.InLogic:
-            required_logical_pokemon += count
-        elif region_type is WildRegionType.OutOfLogic:
-            required_accessible_pokemon += count
-        else:
-            required_inaccessible_pokemon += count
 
         logical_pokemon_pool = list[str]()
         accessible_pokemon_pool = list[str]()
@@ -146,12 +105,13 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
                 pokemon = get_random_pokemon(world, exclude_unown=exclude_unown, blocklist=blocklist | global_blocklist)
             return pokemon
 
-        def randomize_encounter_list(region_id: str, encounter_list: list[EncounterMon], exclude_unown=False):
+        def randomize_encounter_list(region_key: EncounterKey, encounter_list: list[EncounterMon],
+                                     exclude_unown=False) -> list[EncounterMon]:
 
-            region_type = world.generated_wild_region_types[region_id]
-            if region_type is WildRegionType.InLogic:
+            region_type = world.generated_wild_region_logic[region_key]
+            if region_type is LogicalAccess.InLogic:
                 pokemon_pool = logical_pokemon_pool
-            elif region_type is WildRegionType.OutOfLogic:
+            elif region_type is LogicalAccess.OutOfLogic:
                 pokemon_pool = accessible_pokemon_pool
             else:
                 pokemon_pool = inaccessible_pokemon_pool
@@ -180,44 +140,14 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
                     encounter_blocklist.add(pokemon)
                     new_encounters.append(replace(encounter, pokemon=pokemon))
 
-            if region_type is WildRegionType.InLogic:
+            if region_type is LogicalAccess.InLogic:
                 world.logically_available_pokemon.update(encounter.pokemon for encounter in new_encounters)
             return new_encounters
 
-        for grass_name, grass_encounters in world.generated_wild.grass.items():
-            encounters = randomize_encounter_list(f"WildGrass_{grass_name}", grass_encounters.morn)
-            world.generated_wild.grass[grass_name] = replace(
-                world.generated_wild.grass[grass_name],
-                morn=encounters,
-                day=encounters,
-                nite=encounters
-            )
-
-        for water_name, water_encounters in world.generated_wild.water.items():
-            world.generated_wild.water[water_name] = randomize_encounter_list(f"WildWater_{water_name}",
-                                                                              water_encounters)
-
-        for fish_name, fish_area in world.generated_wild.fish.items():
-            region_id = f"WildFish_{fish_name}"
-            world.generated_wild.fish[fish_name] = FishData(
-                randomize_encounter_list(region_id, fish_area.old, exclude_unown=True),
-                randomize_encounter_list(region_id, fish_area.good, exclude_unown=True),
-                randomize_encounter_list(region_id, fish_area.super, exclude_unown=True)
-            )
-
-        for tree_name, tree_data in world.generated_wild.tree.items():
-            region_id = f"WildTree_{tree_name}"
-            world.generated_wild.tree[tree_name] = TreeMonData(
-                randomize_encounter_list(region_id, tree_data.common, exclude_unown=True),
-                randomize_encounter_list(region_id, tree_data.rare, exclude_unown=True)
-            )
-
-        world.generated_wild = replace(
-            world.generated_wild,
-            rock=RockMonData(
-                randomize_encounter_list("WildRockSmash", world.generated_wild.rock.encounters)
-            )
-        )
+        for region_key, encounters in world.generated_wild.items():
+            world.generated_wild[region_key] = randomize_encounter_list(
+                region_key, encounters,
+                exclude_unown=region_key.encounter_type not in (EncounterType.Grass, EncounterType.Water))
 
         if logical_pokemon_pool: raise AssertionError(
             "Logical Pokemon pool is not empty, something went horribly wrong.")
@@ -227,26 +157,11 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
             "Inaccessible Pokemon pool is not empty, something went horribly wrong.")
     else:
         wild_pokemon = set()
-        for region, wilds in world.generated_wild.grass.items():
-            if world.generated_wild_region_types[f"WildGrass_{region}"] is WildRegionType.InLogic:
-                wild_pokemon.update(wild.pokemon for wild in wilds.day)
-        for region, wilds in world.generated_wild.water.items():
-            if world.generated_wild_region_types[f"WildWater_{region}"] is WildRegionType.InLogic:
+        for region_key, wilds in world.generated_wild.items():
+            if world.generated_wild_region_logic[region_key] is LogicalAccess.InLogic:
                 wild_pokemon.update(wild.pokemon for wild in wilds)
-        for region, wilds in world.generated_wild.fish.items():
-            if world.generated_wild_region_types[f"WildFish_{region}"] is WildRegionType.InLogic:
-                wild_pokemon.update(wild.pokemon for wild in wilds.old)
-                wild_pokemon.update(wild.pokemon for wild in wilds.good)
-                wild_pokemon.update(wild.pokemon for wild in wilds.super)
-        for region, wilds in world.generated_wild.tree.items():
-            if world.generated_wild_region_types[f"WildTree_{region}"] is WildRegionType.InLogic:
-                wild_pokemon.update(wild.pokemon for wild in wilds.common)
-                wild_pokemon.update(wild.pokemon for wild in wilds.rare)
 
-        if world.generated_wild_region_types["WildRockSmash"] is WildRegionType.InLogic:
-            wild_pokemon.update(wild.pokemon for wild in world.generated_wild.rock.encounters)
-
-        world.logically_available_pokemon.update(wild_pokemon)
+        world.logically_available_pokemon.update()
 
 
 def randomize_static_pokemon(world: "PokemonCrystalWorld"):
@@ -264,8 +179,9 @@ def randomize_static_pokemon(world: "PokemonCrystalWorld"):
             )
     else:  # Still randomize the Odd Egg
         pokemon = world.random.choice(["PICHU", "CLEFFA", "IGGLYBUFF", "SMOOCHUM", "MAGBY", "ELEKID", "TYROGUE"])
-        world.generated_static["OddEgg"] = replace(world.generated_static["OddEgg"], pokemon=pokemon)
+        encounter_key = EncounterKey.static("OddEgg")
+        world.generated_static[encounter_key] = replace(world.generated_static[encounter_key], pokemon=pokemon)
 
     world.logically_available_pokemon.update(
-        static.pokemon for static in world.generated_static.values() if world.generated_wild_region_types[
-            f"Static_{static.name}"] is WildRegionType.InLogic)
+        static.pokemon for region_key, static in world.generated_static.items() if world.generated_wild_region_logic[
+            region_key] is LogicalAccess.InLogic)

@@ -1,6 +1,6 @@
 import pkgutil
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import Enum, StrEnum
 from typing import Any
 
 import orjson
@@ -191,41 +191,80 @@ class EncounterMon:
     pokemon: str
 
 
-@dataclass(frozen=True)
-class FishData:
-    old: list[EncounterMon]
-    good: list[EncounterMon]
-    super: list[EncounterMon]
+class EncounterType(StrEnum):
+    Grass = "WildGrass"
+    Water = "WildWater"
+    Fish = "WildFish"
+    Tree = "WildTree"
+    RockSmash = "WildRockSmash"
+    Static = "Static"
+
+
+class GrassTimeOfDay(Enum):
+    Morn = 0
+    Day = 1
+    Nite = 2
+
+
+class FishingRodType(StrEnum):
+    Old = "Old"
+    Good = "Good"
+    Super = "Super"
+
+
+class TreeRarity(StrEnum):
+    Common = "Common"
+    Rare = "Rare"
 
 
 @dataclass(frozen=True)
-class TreeMonData:
-    common: list[EncounterMon]
-    rare: list[EncounterMon]
+class EncounterKey:
+    encounter_type: EncounterType
+    region_id: str | None = None
+    time_of_day: GrassTimeOfDay | None = None
+    fishing_rod: FishingRodType | None = None
+    rarity: TreeRarity | None = None
+
+    def region_name(self):
+        if (self.encounter_type is EncounterType.Grass
+                or self.encounter_type is EncounterType.Water
+                or self.encounter_type is EncounterType.Static):
+            return f"{str(self.encounter_type)}_{self.region_id}"
+        elif self.encounter_type is EncounterType.Fish:
+            return f"{str(self.encounter_type)}_{self.region_id}_{str(self.fishing_rod)}"
+        elif self.encounter_type is EncounterType.Tree:
+            return f"{str(self.encounter_type)}_{self.region_id}_{str(self.rarity)}"
+        elif self.encounter_type is EncounterType.RockSmash:
+            return f"{str(self.encounter_type)}"
+        else:
+            raise ValueError(f"Invalid encounter type: {self.encounter_type}")
+
+    @staticmethod
+    def grass(region_id: str, time_of_day: GrassTimeOfDay = GrassTimeOfDay.Day):
+        return EncounterKey(EncounterType.Grass, region_id, time_of_day=time_of_day)
+
+    @staticmethod
+    def water(region_id: str):
+        return EncounterKey(EncounterType.Water, region_id)
+
+    @staticmethod
+    def fish(region_id: str, fishing_rod: FishingRodType):
+        return EncounterKey(EncounterType.Fish, region_id, fishing_rod=fishing_rod)
+
+    @staticmethod
+    def tree(region_id: str, rarity: TreeRarity):
+        return EncounterKey(EncounterType.Tree, region_id, rarity=rarity)
+
+    @staticmethod
+    def rock_smash():
+        return EncounterKey(EncounterType.RockSmash)
+
+    @staticmethod
+    def static(name: str):
+        return EncounterKey(EncounterType.Static, name)
 
 
-@dataclass(frozen=True)
-class RockMonData:
-    encounters: list[EncounterMon]
-
-
-@dataclass(frozen=True)
-class RouteEncounterData:
-    morn: list[EncounterMon]
-    day: list[EncounterMon]
-    nite: list[EncounterMon]
-
-
-@dataclass(frozen=True)
-class WildData:
-    grass: dict[str, RouteEncounterData]
-    water: dict[str, list[EncounterMon]]
-    fish: dict[str, FishData]
-    tree: dict[str, TreeMonData]
-    rock: RockMonData
-
-
-class WildRegionType(Enum):
+class LogicalAccess(Enum):
     InLogic = 0
     OutOfLogic = 1
     Inaccessible = 2
@@ -266,7 +305,7 @@ class RegionData:
     silver_cave: bool
     exits: list[str]
     trainers: list[TrainerData]
-    statics: list[StaticPokemon]
+    statics: list[EncounterKey]
     locations: list[str]
     events: list[EventData]
     wild_encounters: RegionWildEncounterData | None
@@ -344,13 +383,13 @@ class PokemonCrystalData:
     trainers: dict[str, TrainerData]
     pokemon: dict[str, PokemonData]
     moves: dict[str, MoveData]
-    wild: WildData
+    wild: dict[EncounterKey, list[EncounterMon]]
     types: list[str]
     type_ids: dict[str, int]
     tmhm: dict[str, TMHMData]
     misc: MiscData
     music: MusicData
-    static: dict[str, StaticPokemon]
+    static: dict[EncounterKey, StaticPokemon]
     trades: list[TradeData]
     fly_regions: list[FlyRegion]
     starting_towns: list[StartingTown]
@@ -365,6 +404,10 @@ def load_json_data(data_name: str) -> list[Any] | dict[str, Any]:
 
 def load_yaml_data(data_name: str) -> list[Any] | dict[str, Any]:
     return yaml.safe_load(pkgutil.get_data(__name__, "data/" + data_name).decode('utf-8-sig'))
+
+
+def _parse_encounters(encounter_list: list) -> list[EncounterMon]:
+    return [EncounterMon(int(pkmn["level"]), pkmn["pokemon"]) for pkmn in encounter_list]
 
 
 data: PokemonCrystalData
@@ -414,8 +457,9 @@ def _init() -> None:
             trainer_attributes["name_length"]
         )
 
-    statics = {}
+    statics = dict[EncounterKey, StaticPokemon]()
     for static_name, static_data in data_json["static"].items():
+        static_key = EncounterKey(EncounterType.Static, static_name)
         level_type = static_data["type"]
         if level_type == "loadwildmon" or level_type == "givepoke":
             level_address = static_data["addresses"][0]
@@ -423,7 +467,7 @@ def _init() -> None:
             level_address = static_data["level_address"]
         else:
             level_address = None
-        statics[static_name] = StaticPokemon(
+        statics[static_key] = StaticPokemon(
             static_name,
             static_data["pokemon"],
             static_data["addresses"],
@@ -464,7 +508,7 @@ def _init() -> None:
             johto=region_json["johto"],
             silver_cave=region_json["silver_cave"] if "silver_cave" in region_json else False,
             exits=[region_exit for region_exit in region_json["exits"]],
-            statics=[statics[static] for static in region_json.get("statics", [])],
+            statics=[EncounterKey(EncounterType.Static, static) for static in region_json.get("statics", [])],
             trainers=[trainers[trainer] for trainer in region_json.get("trainers", [])],
             events=[EventData(event, region_name) for event in region_json["events"]],
             locations=region_locations,
@@ -542,60 +586,26 @@ def _init() -> None:
         ) for move_name, move_attributes in move_data.items()
     }
 
-    grass_dict = {}
+    wild = dict[EncounterKey, list[EncounterMon]]()
+
     for grass_name, grass_data in wild_data["grass"].items():
-        grass_dict[grass_name] = RouteEncounterData(
-            # We currently only operate on the daytime encounters
-            morn=[EncounterMon(int(pkmn["level"]), pkmn["pokemon"]) for pkmn in grass_data["day"]],
-            day=[EncounterMon(int(pkmn["level"]), pkmn["pokemon"]) for pkmn in grass_data["day"]],
-            nite=[EncounterMon(int(pkmn["level"]), pkmn["pokemon"]) for pkmn in grass_data["day"]],
-        )
+        wild[EncounterKey.grass(grass_name)] = _parse_encounters(
+            grass_data["day"])
 
-    water_dict = {}
     for water_name, water_data in wild_data["water"].items():
-        encounter_list = []
-        for pkmn in water_data:
-            water_encounter = EncounterMon(int(pkmn["level"]), pkmn["pokemon"])
-            encounter_list.append(water_encounter)
-        water_dict[water_name] = encounter_list
+        wild[EncounterKey.water(water_name)] = _parse_encounters(water_data)
 
-    fish_dict = {}
     for fish_name, fish_data in wild_data["fish"].items():
-        old_encounters = []
-        good_encounters = []
-        super_encounters = []
-        for pkmn in fish_data["Old"]:
-            new_encounter = EncounterMon(int(pkmn["level"]), pkmn["pokemon"])
-            old_encounters.append(new_encounter)
-        for pkmn in fish_data["Good"]:
-            new_encounter = EncounterMon(int(pkmn["level"]), pkmn["pokemon"])
-            good_encounters.append(new_encounter)
-        for pkmn in fish_data["Super"]:
-            new_encounter = EncounterMon(int(pkmn["level"]), pkmn["pokemon"])
-            super_encounters.append(new_encounter)
+        wild[EncounterKey.fish(fish_name, FishingRodType.Old)] = _parse_encounters(fish_data["Old"])
+        wild[EncounterKey.fish(fish_name, FishingRodType.Good)] = _parse_encounters(fish_data["Good"])
+        wild[EncounterKey.fish(fish_name, FishingRodType.Super)] = _parse_encounters(fish_data["Super"])
 
-        fish_dict[fish_name] = FishData(
-            old_encounters,
-            good_encounters,
-            super_encounters
-        )
-
-    tree_dict = {}
     for tree_name, tree_data in wild_data["tree"].items():
-        common_list = []
-        rare_list = []
-        for pkmn in tree_data["common"]:
-            tree_encounter = EncounterMon(int(pkmn["level"]), pkmn["pokemon"])
-            common_list.append(tree_encounter)
         if "rare" in tree_data:
-            for pkmn in tree_data["rare"]:
-                tree_encounter = EncounterMon(int(pkmn["level"]), pkmn["pokemon"])
-                rare_list.append(tree_encounter)
-            tree_dict[tree_name] = TreeMonData(common_list, rare_list)
+            wild[EncounterKey.tree(tree_name, TreeRarity.Common)] = _parse_encounters(tree_data["common"])
+            wild[EncounterKey.tree(tree_name, TreeRarity.Rare)] = _parse_encounters(tree_data["rare"])
         else:
-            rock_data = RockMonData(common_list)
-
-    wild = WildData(grass_dict, water_dict, fish_dict, tree_dict, rock_data)
+            wild[EncounterKey.rock_smash()] = _parse_encounters(tree_data["common"])
 
     saffron_warps = {warp_name: MiscWarp(warp_data["coords"], warp_data["id"]) for warp_name, warp_data in
                      saffron_data["warps"].items()}

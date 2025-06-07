@@ -1,16 +1,14 @@
-import logging
 from collections.abc import Iterable
 from dataclasses import replace
 from random import Random
 from typing import TYPE_CHECKING
 
 from BaseClasses import ItemClassification
-from .data import data as crystal_data, EncounterMon, StaticPokemon, WildRegionType, PokemonData
+from .data import data as crystal_data, LogicalAccess, PokemonData, EncounterType
 from .moves import get_tmhm_compatibility, randomize_learnset
 from .options import RandomizeTypes, RandomizePalettes, RandomizeBaseStats, RandomizeStarters, RandomizeTrades, \
     DexsanityStarters, EncounterGrouping, BreedingMethodsRequired
-from .utils import get_random_filler_item, evolution_in_logic, get_encounters_for_wild_region, \
-    set_encounters_for_wild_region
+from .utils import get_random_filler_item, evolution_in_logic
 
 if TYPE_CHECKING:
     from . import PokemonCrystalWorld
@@ -158,13 +156,13 @@ def fill_wild_encounter_locations(world: "PokemonCrystalWorld"):
     if world.options.dexsanity_starters.value == DexsanityStarters.option_available_early:
 
         locations = world.multiworld.get_reachable_locations(world.multiworld.state, world.player)
-        locations = [loc for loc in locations if "wild encounter" in loc.tags]
-        early_wild_regions = {"_".join(loc.name.split("_")[:-1]) for loc in locations}
+        early_wild_regions = {loc.parent_region for loc in locations if "wild encounter" in loc.tags}
         early_wild_regions = {region for region in early_wild_regions if
-                              world.generated_wild_region_types[region] is WildRegionType.InLogic}
+                              world.generated_wild_region_logic[region.key] is LogicalAccess.InLogic
+                              and region.key.encounter_type is not EncounterType.Static}
 
-        other_wild_regions = {loc.parent_region.name for loc in world.multiworld.get_locations(world.player) if
-                              "wild encounter" in loc.tags}
+        other_wild_regions = {loc.parent_region for loc in world.multiworld.get_locations(world.player) if
+                              "wild encounter" in loc.tags and loc.parent_region.key.encounter_type is not EncounterType.Static}
 
         if early_wild_regions and other_wild_regions:
 
@@ -176,7 +174,7 @@ def fill_wild_encounter_locations(world: "PokemonCrystalWorld"):
                 source_encounters = None
 
                 for region in other_wild_regions:
-                    source_encounters = get_encounters_for_wild_region(world, region)
+                    source_encounters = world.generated_wild[region.key]
                     if starter in [encounter.pokemon for encounter in source_encounters]:
                         source_region = region
                         break
@@ -187,7 +185,7 @@ def fill_wild_encounter_locations(world: "PokemonCrystalWorld"):
                 while not target_encounters:
                     if not early_wild_regions: break
                     target_region = early_wild_regions.pop()
-                    target_encounters = get_encounters_for_wild_region(world, target_region)
+                    target_encounters = world.generated_wild[target_region.key]
 
                 if not target_encounters: continue
 
@@ -207,50 +205,23 @@ def fill_wild_encounter_locations(world: "PokemonCrystalWorld"):
                         target_encounters[i] = replace(target_encounters[i], pokemon=starter)
                     for i in source_indexes:
                         source_encounters[i] = replace(source_encounters[i], pokemon=pokemon_to_swap)
-                logging.debug(
-                    source_encounters
-                )
-                logging.debug(
-                    target_encounters
-                )
-                set_encounters_for_wild_region(world, source_region, source_encounters)
-                set_encounters_for_wild_region(world, target_region, target_encounters)
+                world.generated_wild[source_region.key] = source_encounters
+                world.generated_wild[target_region.key] = target_encounters
 
-    for (name, encounters) in world.generated_wild.grass.items():
-        region_id = f"WildGrass_{name}"
-        if world.generated_wild_region_types[region_id] is not WildRegionType.InLogic: continue
-        _fill_encounter_area(world, region_id, encounters.day)
-    for (name, encounters) in world.generated_wild.water.items():
-        region_id = f"WildWater_{name}"
-        if world.generated_wild_region_types[region_id] is not WildRegionType.InLogic: continue
-        _fill_encounter_area(world, region_id, encounters)
-    for (name, encounters) in world.generated_wild.fish.items():
-        base_id = f"WildFish_{name}"
-        if world.generated_wild_region_types[base_id] is not WildRegionType.InLogic: continue
-        _fill_encounter_area(world, f"{base_id}_Old", encounters.old)
-        _fill_encounter_area(world, f"{base_id}_Good", encounters.good)
-        _fill_encounter_area(world, f"{base_id}_Super", encounters.super)
-    for (name, encounters) in world.generated_wild.tree.items():
-        base_id = f"WildTree_{name}"
-        if world.generated_wild_region_types[base_id] is not WildRegionType.InLogic: continue
-        _fill_encounter_area(world, f"{base_id}_Common", encounters.common)
-        _fill_encounter_area(world, f"{base_id}_Rare", encounters.rare)
-    if world.generated_wild_region_types["WildRockSmash"] is WildRegionType.InLogic:
-        _fill_encounter_area(world, "WildRockSmash", world.generated_wild.rock.encounters)
-    for encounter in world.generated_static.values():
-        region_id = f"Static_{encounter.name}"
-        if world.generated_wild_region_types[region_id] is not WildRegionType.InLogic: continue
-        _fill_encounter_area(world, region_id, [encounter])
+    for region_key, encounters in world.generated_wild.items():
+        if world.generated_wild_region_logic[region_key] is LogicalAccess.InLogic:
+            seen_pokemon = set()
+            for i, encounter in enumerate(encounters):
+                location = world.get_location(f"{region_key.region_name()}_{i + 1}")
+                location.place_locked_item(world.create_event(encounter.pokemon))
+                if encounter.pokemon in seen_pokemon:
+                    location.item.classification = ItemClassification.useful
+                seen_pokemon.add(encounter.pokemon)
 
-
-def _fill_encounter_area(world: "PokemonCrystalWorld", area_name: str, encounters: list[EncounterMon | StaticPokemon]):
-    seen_pokemon = set()
-    for i, encounter in enumerate(encounters):
-        location = world.get_location(f"{area_name}_{i + 1}")
-        location.place_locked_item(world.create_event(encounter.pokemon))
-        if encounter.pokemon in seen_pokemon:
-            location.item.classification = ItemClassification.useful
-        seen_pokemon.add(encounter.pokemon)
+    for region_key, static in world.generated_static.items():
+        if world.generated_wild_region_logic[region_key] is LogicalAccess.InLogic:
+            location = world.get_location(f"{region_key.region_name()}_1")
+            location.place_locked_item((world.create_event(static.pokemon)))
 
 
 def generate_breeding_data(world: "PokemonCrystalWorld"):

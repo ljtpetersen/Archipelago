@@ -6,7 +6,9 @@ import bsdiff4
 
 from settings import get_settings
 from worlds.Files import APProcedurePatch, APTokenMixin, APPatchExtension
-from .data import data, MiscOption, POKEDEX_COUNT_OFFSET, APWORLD_VERSION, POKEDEX_OFFSET
+from .data import data, MiscOption, POKEDEX_COUNT_OFFSET, APWORLD_VERSION, POKEDEX_OFFSET, EncounterType, \
+    FishingRodType, \
+    TreeRarity
 from .items import item_const_name_to_id
 from .options import UndergroundsRequirePower, RequireItemfinder, Goal, Route2Access, \
     BlackthornDarkCaveAccess, NationalParkAccess, Route3Access, EncounterSlotDistribution, KantoAccessRequirement, \
@@ -138,7 +140,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
 
     world.finished_level_scaling.wait()
 
-    for _static_name, pkmn_data in world.generated_static.items():
+    for _, pkmn_data in world.generated_static.items():
         pokemon_id = data.pokemon[pkmn_data.pokemon].id
         for address in pkmn_data.addresses:
             cur_address = data.rom_addresses[address] + 1
@@ -184,44 +186,6 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
                 cur_address = data.rom_addresses["AP_Starter_" + pokemon + str(i)]
                 write_bytes(patch, starter_text + [0x7f] * (10 - len(starter_text)), cur_address)
 
-    for grass_name, grass_encounters in world.generated_wild.grass.items():
-        cur_address = data.rom_addresses["AP_WildGrass_" + grass_name] + 3
-
-        for encounter in grass_encounters.morn:
-            pokemon_id = data.pokemon[encounter.pokemon].id
-            write_bytes(patch, [encounter.level, pokemon_id], cur_address)
-            cur_address += 2
-
-        for encounter in grass_encounters.day:
-            pokemon_id = data.pokemon[encounter.pokemon].id
-            write_bytes(patch, [encounter.level, pokemon_id], cur_address)
-            cur_address += 2
-
-        for encounter in grass_encounters.nite:
-            pokemon_id = data.pokemon[encounter.pokemon].id
-            write_bytes(patch, [encounter.level, pokemon_id], cur_address)
-            cur_address += 2
-
-    for water_name, water_encounters in world.generated_wild.water.items():
-        cur_address = data.rom_addresses["AP_WildWater_" + water_name] + 1
-        for encounter in water_encounters:
-            pokemon_id = data.pokemon[encounter.pokemon].id
-            write_bytes(patch, [encounter.level, pokemon_id], cur_address)
-            cur_address += 2
-
-    for fish_name, fish_data in world.generated_wild.fish.items():
-        cur_address = data.rom_addresses["AP_FishMons_" + fish_name]
-        for rod_type in (fish_data.old, fish_data.good, fish_data.super):
-            for i, encounter in enumerate(rod_type):
-                if world.options.encounter_slot_distribution.value == EncounterSlotDistribution.option_equal:
-                    # fishing encounter rates are stored as an increasing fraction of 255
-                    encounter_rate = int(((i + 1) / len(rod_type)) * 255)
-                    write_bytes(patch, [encounter_rate], cur_address)
-                cur_address += 1
-                pokemon_id = data.pokemon[encounter.pokemon].id
-                write_bytes(patch, [pokemon_id, encounter.level], cur_address)
-                cur_address += 2
-
     tree_encounter_rates = []
     rock_encounter_rates = []
     if world.options.encounter_slot_distribution.value == EncounterSlotDistribution.option_balanced:
@@ -231,10 +195,45 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         tree_encounter_rates = [16, 16, 17, 17, 17, 17]
         rock_encounter_rates = [50, 50]
 
-    for tree_name, tree_data in world.generated_wild.tree.items():
-        cur_address = data.rom_addresses["TreeMonSet_" + tree_name]
-        for rarity in (tree_data.common, tree_data.rare):
-            for i, encounter in enumerate(rarity):
+    for region_key, encounters in world.generated_wild.items():
+        if region_key.encounter_type is EncounterType.Grass:
+            cur_address = data.rom_addresses[f"AP_WildGrass_{region_key.region_id}"] + 3
+
+            for _ in range(3):  # morn, day, nite
+                for encounter in encounters:
+                    pokemon_id = data.pokemon[encounter.pokemon].id
+                    write_bytes(patch, [encounter.level, pokemon_id], cur_address)
+                    cur_address += 2
+
+        elif region_key.encounter_type is EncounterType.Water:
+            cur_address = data.rom_addresses[f"AP_WildWater_{region_key.region_id}"] + 1
+            for encounter in encounters:
+                pokemon_id = data.pokemon[encounter.pokemon].id
+                write_bytes(patch, [encounter.level, pokemon_id], cur_address)
+                cur_address += 2
+
+        elif region_key.encounter_type is EncounterType.Fish:
+            cur_address = data.rom_addresses[f"AP_FishMons_{region_key.region_id}"]
+            if region_key.fishing_rod is FishingRodType.Good:
+                cur_address += 9  # skip the first 3 encounters, each encounter is 3 bytes
+            elif region_key.fishing_rod is FishingRodType.Super:
+                cur_address += 21  # skip the first 7 encounters
+
+            for i, encounter in enumerate(encounters):
+                if world.options.encounter_slot_distribution.value == EncounterSlotDistribution.option_equal:
+                    # fishing encounter rates are stored as an increasing fraction of 255
+                    encounter_rate = int(((i + 1) / len(encounters)) * 255)
+                    write_bytes(patch, [encounter_rate], cur_address)
+                cur_address += 1
+                pokemon_id = data.pokemon[encounter.pokemon].id
+                write_bytes(patch, [pokemon_id, encounter.level], cur_address)
+                cur_address += 2
+
+        elif region_key.encounter_type is EncounterType.Tree:
+            cur_address = data.rom_addresses[f"TreeMonSet_{region_key.region_id}"]
+            if region_key.rarity is TreeRarity.Rare:
+                cur_address += 19  # skip the first 6 encounters + terminator byte, each encounter is 3 bytes
+            for i, encounter in enumerate(encounters):
                 if tree_encounter_rates:
                     write_bytes(patch, [tree_encounter_rates[i]], cur_address)
                 cur_address += 1
@@ -242,14 +241,15 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
                 write_bytes(patch, [pokemon_id, encounter.level], cur_address)
                 cur_address += 2
 
-    cur_address = data.rom_addresses["TreeMonSet_Rock"]
-    for i, encounter in enumerate(world.generated_wild.rock.encounters):
-        if rock_encounter_rates:
-            write_bytes(patch, [rock_encounter_rates[i]], cur_address)
-        cur_address += 1
-        pokemon_id = data.pokemon[encounter.pokemon].id
-        write_bytes(patch, [pokemon_id, encounter.level], cur_address)
-        cur_address += 2
+        elif region_key.encounter_type is EncounterType.RockSmash:
+            cur_address = data.rom_addresses["TreeMonSet_Rock"]
+            for i, encounter in enumerate(encounters):
+                if rock_encounter_rates:
+                    write_bytes(patch, [rock_encounter_rates[i]], cur_address)
+                cur_address += 1
+                pokemon_id = data.pokemon[encounter.pokemon].id
+                write_bytes(patch, [pokemon_id, encounter.level], cur_address)
+                cur_address += 2
 
     wooper_sprite_address = data.rom_addresses["AP_Setting_Intro_Wooper_1"] + 1
     wooper_cry_address = data.rom_addresses["AP_Setting_Intro_Wooper_2"] + 1
