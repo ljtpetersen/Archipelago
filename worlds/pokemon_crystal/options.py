@@ -1211,6 +1211,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     trainersanity: Trainersanity
     trainersanity_alerts: TrainersanityAlerts
     rematchsanity: Rematchsanity
+    randomize_wilds: RandomizeWilds
     dexsanity: Dexsanity
     dexsanity_starters: DexsanityStarters
     dexcountsanity: Dexcountsanity
@@ -1226,7 +1227,6 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     randomize_starters: RandomizeStarters
     starter_blocklist: StarterBlocklist
     starters_bst_average: StarterBST
-    randomize_wilds: RandomizeWilds
     wild_encounter_blocklist: WildEncounterBlocklist
     encounter_grouping: EncounterGrouping
     force_fully_evolved: ForceFullyEvolved
