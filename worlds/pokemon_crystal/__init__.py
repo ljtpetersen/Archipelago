@@ -126,7 +126,7 @@ class PokemonCrystalWorld(World):
         self.generated_pokemon = copy.deepcopy(crystal_data.pokemon)
         self.generated_trainers = copy.deepcopy(crystal_data.trainers)
         self.generated_tms = crystal_data.tmhm.copy()
-        self.generated_wild = copy.deepcopy(crystal_data.wild)
+        self.generated_wild = {key: encounters.copy() for key, encounters in crystal_data.wild.items()}
         self.generated_wild_region_logic = defaultdict(lambda: LogicalAccess.Inaccessible)
         self.generated_static = crystal_data.static.copy()
         self.generated_trades = crystal_data.trades.copy()
@@ -389,14 +389,14 @@ class PokemonCrystalWorld(World):
         slot_data["tea_west"] = 1 if "West" in self.options.saffron_gatehouse_tea.value else 0
         slot_data["dexsanity_count"] = len(self.generated_dexsanity)
         slot_data["dexsanity_pokemon"] = [self.generated_pokemon[poke].id for poke in self.generated_dexsanity]
-        wild_encounters = dict[int, list[str]]()  # This should be defaultdict but pickle doesn't like it
-        slot_data["wild_encounters"] = wild_encounters
-        for location in self.get_locations():
-            if "wild encounter" in location.tags:
-                dex_id = self.generated_pokemon[location.item.name].id
+        wild_encounters = dict[int, set[str]]()  # This should be defaultdict but pickle doesn't like it
+        for encounter_key, encounters in self.generated_wild.items():
+            for encounter in encounters:
+                dex_id = self.generated_pokemon[encounter.pokemon].id
                 if dex_id not in wild_encounters:
-                    wild_encounters[dex_id] = []
-                wild_encounters[dex_id].append(location.name)
+                    wild_encounters[dex_id] = set()
+                wild_encounters[dex_id].add(encounter_key.region_name())
+        slot_data["wild_encounters"] = wild_encounters
 
         for hm in self.options.remove_badge_requirement.valid_keys:
             slot_data["free_" + hm.lower()] = 1 if hm in self.options.remove_badge_requirement.value else 0
