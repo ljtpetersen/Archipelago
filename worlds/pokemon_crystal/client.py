@@ -4,6 +4,7 @@ import worlds._bizhawk as bizhawk
 from NetUtils import ClientStatus
 from worlds._bizhawk.client import BizHawkClient
 from .data import data, APWORLD_VERSION, POKEDEX_OFFSET, POKEDEX_COUNT_OFFSET
+from .options import Goal
 
 if TYPE_CHECKING:
     from worlds._bizhawk.context import BizHawkClientContext
@@ -217,7 +218,7 @@ class PokemonCrystalClient(BizHawkClient):
         if ctx.server is None or ctx.server.socket.closed or ctx.slot_data is None:
             return
 
-        if ctx.slot_data["goal"] == 0:
+        if ctx.slot_data["goal"] == Goal.option_elite_four:
             self.goal_flag = data.event_flags["EVENT_BEAT_ELITE_FOUR"]
         else:
             self.goal_flag = data.event_flags["EVENT_BEAT_RED"]
@@ -341,7 +342,7 @@ class PokemonCrystalClient(BizHawkClient):
                     "status": ClientStatus.CLIENT_GOAL
                 }])
 
-            if not len(self.phone_trap_locations):
+            if not self.phone_trap_locations:
                 phone_result = await bizhawk.guarded_read(
                     ctx.bizhawk_ctx,
                     [(data.rom_addresses["AP_Setting_Phone_Trap_Locations"], 0x20, "ROM")],
@@ -355,9 +356,10 @@ class PokemonCrystalClient(BizHawkClient):
                     self.phone_trap_locations = read_locations
             else:
                 hint_locations = [location for location in self.phone_trap_locations[:phone_trap_index] if
-                                  location != 0 and location not in local_checked_locations
+                                  location not in ctx.locations_scouted
+                                  and location != 0 and location not in local_checked_locations
                                   and location not in ctx.checked_locations]
-                if len(hint_locations):
+                if hint_locations:
                     await ctx.send_msgs([{
                         "cmd": "LocationScouts",
                         "locations": hint_locations,
