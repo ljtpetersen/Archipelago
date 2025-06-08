@@ -715,7 +715,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         write_bytes(patch, [byte], data.rom_addresses[f"AP_Setting_StartMoney_{i + 1}"] + 1)
 
     if world.options.metronome_only:
-        for i in range(3):
+        for i in range(4):
             write_bytes(patch, [1], data.rom_addresses[f"AP_Setting_MetronomeOnly_{i + 1}"] + 1)
 
     # Set slot auth
