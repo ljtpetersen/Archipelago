@@ -423,6 +423,7 @@ class PokemonCrystalWorld(World):
 
         slot_data["dexcountsanity"] = self.generated_dexcountsanity[-1] if self.generated_dexcountsanity else 0
         slot_data["dexcountsanity_checks"] = len(self.generated_dexcountsanity)
+        slot_data["dexcountsanity_counts"] = self.generated_dexcountsanity
 
         slot_data["encmethod_land"] = 1 if "Land" in self.options.wild_encounter_methods_required else 0
         slot_data["encmethod_water"] = 1 if "Surfing" in self.options.wild_encounter_methods_required else 0

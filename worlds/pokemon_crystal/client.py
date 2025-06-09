@@ -315,9 +315,9 @@ class PokemonCrystalClient(BizHawkClient):
                 }])
                 self.local_pokemon = local_pokemon
 
-            if ctx.slot_data["dexcountsanity"]:
+            if ctx.slot_data["dexcountsanity_counts"]:
                 dex_count = len(local_pokemon["caught"])
-                check_counts = ctx.slot_data["dexcountsanity"]
+                check_counts = ctx.slot_data["dexcountsanity_counts"]
 
                 for count in check_counts[:-1]:
                     location_id = count + POKEDEX_COUNT_OFFSET
