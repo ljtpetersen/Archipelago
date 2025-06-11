@@ -22,7 +22,7 @@ from .moves import randomize_tms, randomize_move_values, randomize_move_types
 from .music import randomize_music
 from .options import PokemonCrystalOptions, JohtoOnly, RandomizeBadges, Goal, HMBadgeRequirements, Route32Condition, \
     LevelScaling, RedGyaradosAccess, FreeFlyLocation, EliteFourRequirement, MtSilverRequirement, RedRequirement, \
-    EarlyFly, Route44AccessRequirement, BlackthornDarkCaveAccess, RadioTowerRequirement
+    EarlyFly, Route44AccessRequirement, BlackthornDarkCaveAccess, RadioTowerRequirement, RequireItemfinder
 from .phone import generate_phone_traps
 from .phone_data import PhoneScript
 from .pokemon import randomize_pokemon_data, randomize_starters, randomize_traded_pokemon, \
@@ -351,8 +351,6 @@ class PokemonCrystalWorld(World):
             "red_requirement",
             "red_count",
             "randomize_badges",
-            "randomize_hidden_items",
-            "require_itemfinder",
             "trainersanity",
             "dexsanity",
             "randomize_pokegear",
@@ -442,6 +440,23 @@ class PokemonCrystalWorld(World):
         slot_data["evomethod_level"] = 1 if "Level" in self.options.evolution_methods_required else 0
         slot_data["evomethod_tyrogue"] = 1 if "Level Tyrogue" in self.options.evolution_methods_required else 0
         slot_data["evomethod_useitem"] = 1 if "Use Item" in self.options.evolution_methods_required else 0
+
+        if not self.options.randomize_hidden_items:
+            if not self.options.require_itemfinder:
+                hidden_items_setting = 0
+            elif self.options.require_itemfinder.value == RequireItemfinder.option_logically_required:
+                hidden_items_setting = 1
+            else:
+                hidden_items_setting = 2
+        else:
+            if not self.options.require_itemfinder:
+                hidden_items_setting = 3
+            elif self.options.require_itemfinder.value == RequireItemfinder.option_logically_required:
+                hidden_items_setting = 4
+            else:
+                hidden_items_setting = 5
+
+        slot_data["hiddenitem_logic"] = hidden_items_setting
 
         return slot_data
 
