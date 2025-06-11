@@ -205,14 +205,14 @@ DEXCOUNTSANITY_LOCATIONS = {f"Pokedex - Catch {i + 1} Pokemon" for i in range(le
     "Pokedex - Final Catch"}
 
 LOCATION_GROUPS = {
-    "Badges": {loc.name for loc in data.locations.values() if "Badge" in loc.tags},
+    "Badges": {loc.label for loc in data.locations.values() if "Badge" in loc.tags},
     "Dexsanity": DEXSANITY_LOCATIONS,
     "Dexcountsanity": DEXCOUNTSANITY_LOCATIONS,
     "Dex": DEXSANITY_LOCATIONS | DEXCOUNTSANITY_LOCATIONS,
-    "Hidden Items": {loc.name for loc in data.locations.values() if "Hidden" in loc.tags},
-    "Item Balls": {loc.name for loc in data.locations.values() if "Overworld" in loc.tags},
-    "Trainersanity": {loc.name for loc in data.locations.values() if "Trainersanity" in loc.tags},
-    "Berry Trees": {loc.name for loc in data.locations.values() if "BerryTree" in loc.tags},
-    "Key Items": {loc.name for loc in data.locations.values() if "KeyItem" in loc.tags},
-    "Ruins of Alph": {loc.name for loc in data.locations.values() if "AlphItemChambers" in loc.tags}
+    "Hidden Items": {loc.label for loc in data.locations.values() if "Hidden" in loc.tags},
+    "Item Balls": {loc.label for loc in data.locations.values() if "Overworld" in loc.tags},
+    "Trainersanity": {loc.label for loc in data.locations.values() if "Trainersanity" in loc.tags},
+    "Berry Trees": {loc.label for loc in data.locations.values() if "BerryTree" in loc.tags},
+    "Key Items": {loc.label for loc in data.locations.values() if "KeyItem" in loc.tags},
+    "Ruins of Alph": {loc.label for loc in data.locations.values() if "AlphItemChambers" in loc.tags}
 }
