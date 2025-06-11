@@ -398,6 +398,13 @@ class PokemonCrystalWorld(World):
                 if dex_id not in wild_encounters:
                     wild_encounters[dex_id] = set()
                 wild_encounters[dex_id].add(f"{encounter_key.region_name()}_{i + 1}")
+
+        for encounter_key, encounter in self.generated_static.items():
+            dex_id = self.generated_pokemon[encounter.pokemon].id
+            if dex_id not in wild_encounters:
+                wild_encounters[dex_id] = set()
+            wild_encounters[dex_id].add(f"{encounter_key.region_name()}_1")
+
         slot_data["wild_encounters"] = wild_encounters
 
         for hm in self.options.remove_badge_requirement.valid_keys:
