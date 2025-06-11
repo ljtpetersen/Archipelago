@@ -16,7 +16,7 @@ from .data import PokemonData, TrainerData, MiscData, TMHMData, data as crystal_
 from .items import PokemonCrystalItem, create_item_label_to_code_map, get_item_classification, ITEM_GROUPS, \
     item_const_name_to_id, item_const_name_to_label
 from .level_scaling import perform_level_scaling
-from .locations import create_locations, PokemonCrystalLocation, create_location_label_to_id_map
+from .locations import create_locations, PokemonCrystalLocation, create_location_label_to_id_map, LOCATION_GROUPS
 from .misc import randomize_mischief, get_misc_spoiler_log
 from .moves import randomize_tms, randomize_move_values, randomize_move_types
 from .music import randomize_music
@@ -77,6 +77,7 @@ class PokemonCrystalWorld(World):
     item_name_to_id = create_item_label_to_code_map()
     location_name_to_id = create_location_label_to_id_map()
     item_name_groups = ITEM_GROUPS  # item_groups
+    location_name_groups = LOCATION_GROUPS  # location groups
 
     auth: bytes
 
