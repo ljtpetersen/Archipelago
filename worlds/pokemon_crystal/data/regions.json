@@ -1096,14 +1096,12 @@
       "REGION_ROUTE_37",
       "REGION_ROUTE_42_ECRUTEAK_GATE",
       "REGION_ECRUTEAK_TIN_TOWER_ENTRANCE",
-      "REGION_WISE_TRIOS_ROOM",
       "REGION_ECRUTEAK_POKECENTER_1F",
       "REGION_ECRUTEAK_LUGIA_SPEECH_HOUSE",
       "REGION_DANCE_THEATER",
       "REGION_ECRUTEAK_MART",
       "REGION_ECRUTEAK_GYM",
       "REGION_ECRUTEAK_ITEMFINDER_HOUSE",
-      "REGION_TIN_TOWER_1F",
       "REGION_BURNED_TOWER_1F",
       "REGION_ROUTE_38_ECRUTEAK_GATE"
     ],
@@ -1184,7 +1182,7 @@
   "REGION_ECRUTEAK_TIN_TOWER_ENTRANCE": {
     "johto": true,
     "exits": [
-      "REGION_TIN_TOWER_1F",
+      "REGION_ECRUTEAK_CITY",
       "REGION_WISE_TRIOS_ROOM"
     ],
     "locations": [],
@@ -5721,7 +5719,7 @@
   "REGION_TIN_TOWER_1F": {
     "johto": true,
     "exits": [
-      "REGION_ECRUTEAK_CITY",
+      "REGION_WISE_TRIOS_ROOM",
       "REGION_TIN_TOWER_2F"
     ],
     "statics": [
@@ -6501,7 +6499,7 @@
   "REGION_WISE_TRIOS_ROOM": {
     "johto": true,
     "exits": [
-      "REGION_ECRUTEAK_CITY",
+      "REGION_TIN_TOWER_1F",
       "REGION_ECRUTEAK_TIN_TOWER_ENTRANCE"
     ],
     "trainers": [
