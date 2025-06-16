@@ -539,12 +539,9 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         # prevents disabling gym trainers, among a few others
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_Trainersanity"] + 2)
         # removes events from certain trainers, to prevent disabling them.
-        missable_trainers = ["BurglarDuncan", "BurglarEddie", "GruntM13", "GruntM11", "GruntM25", "GruntF3", "GruntM24",
-                             "GruntM14", "GruntM15", "GruntM3", "GruntM4", "GruntM5", "GruntM6", "GruntF2", "GruntM7",
-                             "GruntM8", "GruntM9", "ScientistMarc", "GruntM10", "ExecutiveM2", "GruntF4",
-                             "ScientistRich", "ExecutiveF1", "GruntM29", "GruntM2", "GruntF1", "GruntM16",
-                             "ScientistJed", "GruntM17", "GruntM18", "GruntM19", "RocketMurkrow", "SlowpokeGrunt",
-                             "RaticateGrunt", "ScientistRoss", "ScientistMitch", "RocketBaseB3FRocket"]
+        missable_trainers = ["GruntM29", "GruntM2", "GruntF1", "GruntM16", "ScientistJed", "GruntM17", "GruntM18",
+                             "GruntM19", "RocketMurkrow", "SlowpokeGrunt", "RaticateGrunt", "ScientistRoss",
+                             "ScientistMitch", "RocketBaseB3FRocket"]
 
         for trainer in missable_trainers:
             # the dw at +11 is the event flag.
