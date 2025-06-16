@@ -3674,6 +3674,9 @@
       "REGION_CERULEAN_CITY",
       "REGION_CERULEAN_CITY:SURF"
     ],
+    "trainers": [
+      "GRUNTM_31"
+    ],
     "locations": [],
     "events": [],
     "wild_encounters": {
@@ -5633,6 +5636,8 @@
       "REGION_TEAM_ROCKET_BASE_B1F"
     ],
     "trainers": [
+      "GRUNTM_20",
+      "GRUNTM_21",
       "GRUNTM_16",
       "SCIENTIST_JED"
     ],
