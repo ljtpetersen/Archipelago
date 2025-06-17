@@ -81,7 +81,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         if not world.options.remote_items and location.item and location.item.player == world.player:
             item_id = location.item.code
             write_bytes(patch, [item_id], location_address)
-        else:
+        elif location.address < POKEDEX_OFFSET:
             # for in game text
             item_flag = location.address
             player_name = world.multiworld.player_name[location.item.player].upper()
