@@ -580,11 +580,14 @@ class EncounterSlotDistribution(Choice):
         Grass/Cave: 20%/20%/15%/15%/10%/10%/10%
         Headbutt:  20%/20%/20%/15%/15%/10%
         Rock Smash: 70%/30%
-        Fishing is left vanilla
+        Fishing (vanilla):
+            Old Rod: 70%/15%/15%
+            Good Rod: 35%/35%/20%/10%
+            Super Rod: 40%/30%/20%/10%
     Equal sets all encounter slots to have (almost) equal probability.
     """
     display_name = "Encounter Slot Distribution"
-    default = 0
+    default = 1
     option_vanilla = 0
     option_remove_one_percents = 1
     option_balanced = 2
@@ -1149,7 +1152,7 @@ class GameOptions(OptionDict):
     surf_music: on/off - Sets whether the surf music will play
     text_frame: 1-8 - Sets the textbox frame, "random" will pick a random frame
     text_speed: mid/slow/fast/instant - Sets the speed at which text advances
-    time_of_day: auto/morn/day/nite - Sets a time of day override, auto follows the clock
+    time_of_day: auto/morn/day/nite - Sets a time of day override, auto follows the clock, "random" will pick a random time
     turbo_button: none/a/b/a_or_b - Sets which buttons auto advance text when held
     """
     display_name = "Game Options"

@@ -60,6 +60,8 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         option_selection = world.options.game_options.get(setting_name, None)
         if setting_name == "text_frame" and option_selection == "random":
             option_selection = world.random.randint(1, 8)
+        if setting_name == "time_of_day" and option_selection == "random":
+            option_selection = world.random.choice(("morn", "day", "nite"))
         if setting_name == "_death_link":
             option_selection = "on" if world.options.death_link else "off"
         setting.set_option_byte(option_selection, option_bytes)
