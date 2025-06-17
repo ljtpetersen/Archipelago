@@ -228,7 +228,15 @@ def get_random_starting_town(world: "PokemonCrystalWorld"):
     location_pool = data.starting_towns[:]
     location_pool = [loc for loc in location_pool if _starting_town_valid(world, loc)]
 
-    filtered_pool = [loc for loc in location_pool if loc.name not in world.options.starting_town_blocklist]
+    blocklist = set(world.options.starting_town_blocklist.value)
+    if "_Johto" in blocklist:
+        blocklist.remove("_Johto")
+        blocklist.update(town.name for town in data.starting_towns if town.johto)
+    if "_Kanto" in blocklist:
+        blocklist.remove("_Kanto")
+        blocklist.update(town.name for town in data.starting_towns if not town.johto)
+
+    filtered_pool = [loc for loc in location_pool if loc.name not in blocklist]
     if not filtered_pool: filtered_pool = location_pool
 
     world.random.shuffle(filtered_pool)
@@ -285,8 +293,16 @@ def get_free_fly_locations(world: "PokemonCrystalWorld"):
     if world.options.randomize_starting_town:
         world.options.free_fly_blocklist.value.add(world.starting_town.name)
 
+    blocklist = set(world.options.free_fly_blocklist.value)
+    if "_Johto" in blocklist:
+        blocklist.remove("_Johto")
+        blocklist.update(town.name for town in data.fly_regions if town.johto)
+    if "_Kanto" in blocklist:
+        blocklist.remove("_Kanto")
+        blocklist.update(town.name for town in data.fly_regions if not town.johto)
+
     # only do any of this if there even is a fly location blocklist
-    if world.options.free_fly_blocklist:
+    if blocklist:
 
         # figure out how many fly locations are needed
         locations_required = 1
@@ -295,7 +311,7 @@ def get_free_fly_locations(world: "PokemonCrystalWorld"):
 
         # calculate what the list of locations would be after the blocklist
         location_pool_after_blocklist = [item for item in location_pool if
-                                         item.name not in world.options.free_fly_blocklist]
+                                         item.name not in blocklist]
 
         # if the list after the blocked locations are removed is long enough to satisfy all the requested fly locations, set the location pool to it
         if len(location_pool_after_blocklist) >= locations_required:

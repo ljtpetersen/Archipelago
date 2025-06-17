@@ -134,10 +134,11 @@ class RandomizeStartingTown(Toggle):
     Randomly chooses a town to start in.
     Any Pokemon Center except Indigo Plateau, Cinnabar Island and Silver Cave can be chosen.
     Lake of Rage can also be chosen.
+    "_Johto" and "_Kanto" are shortcuts for all Johto and Kanto towns respectively
 
     Other settings may additionally restrict which Pokemon Centers can be chosen.
 
-    WARNING: Some starting towns in combination with Trainersanity may produce difficult starts.
+    WARNING: Some starting towns without level scaling may produce difficult starts.
     """
     display_name = "Randomize Starting Town"
 
@@ -147,9 +148,10 @@ class StartingTownBlocklist(OptionSet):
     Specify places which cannot be chosen as a starting town. If you block every valid option, this list will do
     nothing.
     Indigo Plateau, Cinnabar Island and Silver Cave cannot be chosen as starting towns and are not valid options
+    "_Johto" and "_Kanto" are shortcuts for all Johto and Kanto towns respectively
     """
     display_name = "Starting Town Blocklist"
-    valid_keys = sorted(town.name for town in data.starting_towns)
+    valid_keys = sorted(town.name for town in data.starting_towns) + ["_Johto", "_Kanto"]
 
 
 class VanillaClair(Toggle):
@@ -1099,9 +1101,10 @@ class FlyLocationBlocklist(OptionSet):
     Locations should be provided in the form: "Ecruteak City"
     Indigo Plateau cannot be chosen as a free fly location and is not a valid option
     If you blocklist enough locations that there aren't enough locations left for your total number of free fly locations, the blocklist will simply do nothing
+    "_Johto" and "_Kanto" are shortcuts for all Johto and Kanto towns respectively
     """
     display_name = "Fly Location Blocklist"
-    valid_keys = [region.name for region in data.fly_regions]
+    valid_keys = [region.name for region in data.fly_regions] + ["_Johto", "_Kanto"]
 
 
 class RemoteItems(Toggle):
