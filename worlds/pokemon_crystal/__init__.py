@@ -409,6 +409,18 @@ class PokemonCrystalWorld(World):
 
         slot_data["wild_encounters"] = wild_encounters
 
+        region_encounters = dict[str, set[int]]()
+
+        # the tracker is very needy so we have to put this data in slot data twice
+        for encounter_key, encounters in self.generated_wild.items():
+            region_encounters[encounter_key.region_name()] = {self.generated_pokemon[enc.pokemon].id for enc in
+                                                              encounters}
+
+        for encounter_key, encounter in self.generated_static.items():
+            region_encounters[encounter_key.region_name()] = {self.generated_pokemon[encounter.pokemon].id}
+
+        slot_data["region_encounters"] = region_encounters
+
         for hm in self.options.remove_badge_requirement.valid_keys:
             slot_data["free_" + hm.lower()] = 1 if hm in self.options.remove_badge_requirement.value else 0
 
