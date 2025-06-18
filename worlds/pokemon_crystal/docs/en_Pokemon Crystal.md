@@ -13,7 +13,8 @@ Some changes have been made to the logic for this randomizer:
 - The card key door in Goldenrod Department Store B1F unlocks with the Card Key in your Pack
 - Time based checks such as the Day of the Week siblings and the Celadon Mansion roof guy are always available
     - The hidden items under Freida and Wesley have been moved a tile across to remain accessible
-- The Ship between Olivine and Vermilion is always present in non-Johto-Only-games, even before entering Hall of Fame, and available to
+- The Ship between Olivine and Vermilion is always present in non-Johto-Only-games, even before entering Hall of Fame,
+  and available to
   ride with the S.S. Ticket
 - Magnet train between Goldenrod and Saffron is available to ride with the Pass before power is restored to Kanto
 - Misty is always in Cerulean Gym
@@ -43,7 +44,7 @@ There are options to include more items in the pool:
 - Randomize Berry Trees: Adds berry tree items to the pool
 - Trainersanity: Adds a reward for beating trainers to the pool
 - Dexsanity: A Pokémon's Dex entry can hold a check. This is tied to specific Pokémon
-- Dexcountsanity: A certain amount of Dex entries hold checks. This is not tied to specific Pokémon but a total 
+- Dexcountsanity: A certain amount of Dex entries hold checks. This is not tied to specific Pokémon but a total
 
 ## What other changes are made to the game?
 
@@ -53,7 +54,6 @@ Many additional quality of life changes have been implemented:
   quickly speed through dialog
 - When battle scenes are turned off, HP reduction and XP gain animations are skipped
 - You can hold B to run
-- Reduced long dialog in various places
 - Lag in menu has been removed
 - The Bicycle can be used indoors
 - If a repel runs out and you have more in your Pack, it will prompt to use another
@@ -61,12 +61,13 @@ Many additional quality of life changes have been implemented:
 - Pokémon growth rates are normalized (Medium-Fast for non-Legendary Pokémon, Slow for Legendary Pokémon)
 - The clock reset password system has been removed, you can reset the clock with Down + Select + B on the title screen
 - Trade evolutions have been changed to make them possible in a solo run of the game:
-    - Regular trade evolutions now evolve at level 40
+    - Regular trade evolutions now evolve at level 37
     - Held item trade evolutions evolve when their evolution item is used on them, as you would an evolution stone
 - Espeon and Umbreon evolve with the Sun Stone and Moon Stone respectively
 - The Celebi Event can be activated by giving the multiworld item GS-Ball to Kurt after clearing Slowpoke Well
 - You can respawn all static events by talking to the Time Capsule person in the second floor of any PokéCenter
-- You can teleport back to your starting town by selecting "Warp to Home" in the main menu before you load into the overworld
+- You can teleport back to your starting town by selecting "Warp to Home" in the main menu before you load into the
+  overworld
 
 ## What does another world's item look like in Pokémon Crystal?
 
