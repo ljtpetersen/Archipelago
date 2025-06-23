@@ -149,7 +149,10 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
                 world.logically_available_pokemon.update(encounter.pokemon for encounter in new_encounters)
             return new_encounters
 
-        for region_key, encounters in world.generated_wild.items():
+        region_keys = list(world.generated_wild)
+        world.random.shuffle(region_keys)
+        for region_key in region_keys:
+            encounters = world.generated_wild[region_key]
             world.generated_wild[region_key] = randomize_encounter_list(
                 region_key, encounters,
                 exclude_unown=region_key.encounter_type not in (EncounterType.Grass, EncounterType.Water))
