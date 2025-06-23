@@ -42,7 +42,7 @@ def randomize_trainers(world: "PokemonCrystalWorld"):
     trainer_party_blocklist = pokemon_convert_friendly_to_ids(world, world.options.trainer_party_blocklist)
 
     for trainer_name, trainer_data in world.generated_trainers.items():
-        new_party = trainer_data.pokemon
+        new_party = trainer_data.pokemon.copy()
         for i, pkmn_data in enumerate(trainer_data.pokemon):
             new_pokemon = pkmn_data.pokemon
             new_item = pkmn_data.item
@@ -70,7 +70,7 @@ def randomize_trainers(world: "PokemonCrystalWorld"):
             if pkmn_data.item is not None:
                 # If this trainer has items, add an item
                 new_item = get_random_filler_item(world.random)
-            if len(pkmn_data.moves):
+            if pkmn_data.moves:
                 new_moves = randomize_trainer_pokemon_moves(world, pkmn_data, new_pokemon)
             new_party[i] = replace(pkmn_data, pokemon=new_pokemon, item=new_item, moves=new_moves)
         world.generated_trainers[trainer_name] = replace(world.generated_trainers[trainer_name], pokemon=new_party)
@@ -83,7 +83,7 @@ def vanilla_trainer_movesets(world: "PokemonCrystalWorld"):
         if trainer_data.trainer_type not in ("TRAINERTYPE_MOVES", "TRAINERTYPE_ITEM_MOVES"):
             # if there's no predefined moveset, skip
             continue
-        new_party = trainer_data.pokemon
+        new_party = trainer_data.pokemon.copy()
         for i, pkmn_data in enumerate(trainer_data.pokemon):
             new_moves = randomize_trainer_pokemon_moves(world, pkmn_data, pkmn_data.pokemon)
             new_party[i] = replace(pkmn_data, moves=new_moves)
@@ -91,7 +91,7 @@ def vanilla_trainer_movesets(world: "PokemonCrystalWorld"):
 
 
 def randomize_trainer_pokemon_moves(world, pkmn_data, new_pokemon):
-    new_moves = pkmn_data.moves
+    new_moves = pkmn_data.moves.copy()
     for i, move in enumerate(pkmn_data.moves):
         # fill out all four moves if start_with_four_moves, else skip empty slots
         if move != "NO_MOVE" or world.options.randomize_learnsets == RandomizeLearnsets.option_start_with_four_moves:
