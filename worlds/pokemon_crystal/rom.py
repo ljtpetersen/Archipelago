@@ -472,9 +472,21 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         marts_end_address = data.rom_addresses["MartsEnd"]
         better_mart_address = data.rom_addresses["MartBetterMart"] - 0x10000
         better_mart_bytes = better_mart_address.to_bytes(2, "little")
+        ignore_indexes = [mart.index for mart in (
+            "MART_GOLDENROD_2F_2",
+            "MART_GOLDENROD_3F",
+            "MART_GOLDENROD_4F",
+            "MART_GOLDENROD_5F",
+            "MART_CELADON_2F_2",
+            "MART_CELADON_3F",
+            "MART_CELADON_4F",
+            "MART_CELADON_5F_1",
+            "MART_CELADON_5F_2",
+            "MART_GOLDENROD_1F_S"
+        )]
         for i in range((marts_end_address - mart_address) // 2):
             # skip goldenrod and celadon
-            if i not in (6, 7, 8, 9, 21, 22, 23, 24, 25, 31):
+            if i not in ignore_indexes:
                 write_bytes(patch, better_mart_bytes, mart_address)
             mart_address += 2
 

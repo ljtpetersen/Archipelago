@@ -125,6 +125,12 @@ class TMHMData:
     move_id: int
 
 
+@dataclass(frozen=True)
+class MartData:
+    index: int
+    items: Sequence[str]
+
+
 class MiscOption(Enum):
     FuchsiaGym = 0
     SaffronGym = 1
@@ -397,6 +403,7 @@ class PokemonCrystalData:
     types: Sequence[str]
     type_ids: Mapping[str, int]
     tmhm: Mapping[str, TMHMData]
+    marts: Mapping[str, MartData]
     misc: MiscData
     music: MusicData
     static: Mapping[EncounterKey, StaticPokemon]
@@ -441,6 +448,7 @@ def _init() -> None:
     radio_addr_data = data_json["misc"]["radio_channel_addresses"]
     mom_items_data = data_json["misc"]["mom_items"]
     tmhm_data = data_json["tmhm"]
+    mart_data = data_json["marts"]
     map_size_data = data_json["map_sizes"]
 
     claimed_locations: set[str] = set()
@@ -638,6 +646,11 @@ def _init() -> None:
         move_data[tm_name]["id"]
     ) for tm_name, tm_data in tmhm_data.items()}
 
+    marts = {mart_name: MartData(
+        mart_data["index"],
+        mart_data["items"]
+    ) for mart_name, mart_data in mart_data.items()}
+
     music_consts = {music_name: MusicConst(music_data["id"], music_data["loop"]) for music_name, music_data in
                     data_json["music"]["consts"].items()}
 
@@ -774,6 +787,7 @@ def _init() -> None:
         types=types,
         type_ids=type_ids,
         tmhm=tmhm,
+        marts=marts,
         misc=misc,
         music=music,
         static=statics,
