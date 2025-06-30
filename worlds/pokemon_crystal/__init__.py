@@ -6,7 +6,7 @@ from threading import Event
 from typing import ClassVar, Any
 
 import settings
-from BaseClasses import Tutorial, ItemClassification, MultiWorld
+from BaseClasses import Tutorial, ItemClassification, MultiWorld, CollectionState, Item
 from Fill import fill_restrictive, FillError
 from worlds.AutoWorld import World, WebWorld
 from .client import PokemonCrystalClient
@@ -30,7 +30,7 @@ from .pokemon import randomize_pokemon_data, randomize_starters, randomize_trade
     fill_wild_encounter_locations, generate_breeding_data, generate_evolution_data
 from .regions import create_regions, setup_free_fly_regions
 from .rom import generate_output, PokemonCrystalProcedurePatch
-from .rules import set_rules
+from .rules import set_rules, PokemonCrystalLogic, set_hm_compatible_pokemon, verify_hm_accessibility
 from .trainers import boost_trainer_pokemon, randomize_trainers, vanilla_trainer_movesets
 from .utils import get_random_filler_item, get_free_fly_locations, get_random_ball, get_random_starting_town, \
     adjust_options
@@ -96,7 +96,6 @@ class PokemonCrystalWorld(World):
 
     generated_tms: dict[str, TMHMData]
     generated_wild: dict[EncounterKey, list[EncounterMon]]
-    generated_wild_region_logic: dict[EncounterKey, LogicalAccess]
     generated_static: dict[EncounterKey, StaticPokemon]
     generated_trades: list[TradeData]
 
@@ -122,6 +121,10 @@ class PokemonCrystalWorld(World):
 
     blocklisted_moves: set
 
+    itempool: list[PokemonCrystalItem]
+    pre_fill_items: list[PokemonCrystalItem]
+    logic: PokemonCrystalLogic
+
     finished_level_scaling: Event
 
     def __init__(self, multiworld: MultiWorld, player: int):
@@ -131,7 +134,6 @@ class PokemonCrystalWorld(World):
         self.generated_trainers = dict(crystal_data.trainers)
         self.generated_tms = dict(crystal_data.tmhm)
         self.generated_wild = {key: list(encounters) for key, encounters in crystal_data.wild.items()}
-        self.generated_wild_region_logic = defaultdict(lambda: LogicalAccess.Inaccessible)
         self.generated_static = dict(crystal_data.static)
         self.generated_trades = list(crystal_data.trades)
         self.generated_dexsanity = set()
@@ -156,11 +158,15 @@ class PokemonCrystalWorld(World):
 
         self.blocklisted_moves = set()
 
-        self.logically_available_pokemon = set()
+        self.itempool = []
+        self.pre_fill_items = []
 
         self.finished_level_scaling = Event()
 
     def generate_early(self) -> None:
+        adjust_options(self)
+        self.logic = PokemonCrystalLogic(self)
+
         if self.options.early_fly:
             self.multiworld.local_early_items[self.player]["HM02 Fly"] = 1
             if (self.options.hm_badge_requirements.value != HMBadgeRequirements.option_no_badges
@@ -168,9 +174,10 @@ class PokemonCrystalWorld(World):
                     and self.options.randomize_badges == RandomizeBadges.option_completely_random):
                 self.multiworld.local_early_items[self.player]["Storm Badge"] = 1
 
-        adjust_options(self)
-
         self.blocklisted_moves = {move.replace(" ", "_").upper() for move in self.options.move_blocklist.value}
+
+        randomize_pokemon_data(self)
+        set_hm_compatible_pokemon(self)
 
     def create_regions(self) -> None:
         if self.options.randomize_starting_town:
@@ -180,7 +187,6 @@ class PokemonCrystalWorld(World):
 
         randomize_wild_pokemon(self)
         randomize_static_pokemon(self)
-        randomize_pokemon_data(self)
         randomize_starters(self)
         generate_breeding_data(self)
         generate_evolution_data(self)
@@ -200,6 +206,8 @@ class PokemonCrystalWorld(World):
         ]
 
         if self.options.randomize_badges.value == RandomizeBadges.option_shuffle:
+            self.pre_fill_items.extend(
+                self.create_item_by_code(loc.default_item_code) for loc in item_locations if "Badge" in loc.tags)
             item_locations = [location for location in item_locations if "Badge" not in location.tags]
 
         badge_option_counts = [8]
@@ -242,47 +250,49 @@ class PokemonCrystalWorld(World):
         def get_random_trap():
             return self.create_item(self.random.choices(trap_names, trap_weights)[0])
 
-        default_itempool = []
-
         for location in item_locations:
             item_code = location.default_item_code
             if item_code > 0 and get_item_classification(item_code) != ItemClassification.filler:
-                default_itempool.append(self.create_item_by_code(item_code))
+                self.itempool.append(self.create_item_by_code(item_code))
             elif add_items:
-                default_itempool.append(self.create_item_by_const_name(add_items.pop()))
+                self.itempool.append(self.create_item_by_const_name(add_items.pop()))
             elif self.random.randint(0, 100) < total_trap_weight:
-                default_itempool.append(get_random_trap())
+                self.itempool.append(get_random_trap())
             elif item_code == 0:  # item is NO_ITEM, trainersanity checks
-                default_itempool.append(self.create_item_by_const_name(get_random_filler_item(self.random)))
+                self.itempool.append(self.create_item_by_const_name(get_random_filler_item(self.random)))
             else:
-                default_itempool.append(self.create_item_by_code(item_code))
+                self.itempool.append(self.create_item_by_code(item_code))
 
         if self.options.dexsanity:
-            default_itempool.extend(
+            self.itempool.extend(
                 self.create_item_by_const_name(get_random_ball(self.random)) if
                 self.random.randint(0, 100) >= total_trap_weight else get_random_trap()
                 for _ in self.generated_dexsanity)
 
         if self.generated_dexcountsanity:
-            default_itempool.extend(
+            self.itempool.extend(
                 self.create_item_by_const_name(get_random_ball(self.random)) if
                 self.random.randint(0, 100) >= total_trap_weight else get_random_trap()
                 for _ in self.generated_dexcountsanity)
 
         if self.options.johto_only.value != JohtoOnly.option_off:
             # Replace the S.S. Ticket with the Silver Wing for Johto only seeds
-            default_itempool = [item if item.name != "S.S. Ticket" else self.create_item_by_const_name("SILVER_WING")
-                                for item in default_itempool]
+            self.itempool = [item if item.name != "S.S. Ticket" else self.create_item_by_const_name("SILVER_WING")
+                             for item in self.itempool]
 
-        self.multiworld.itempool.extend(default_itempool)
+        self.multiworld.itempool.extend(self.itempool)
 
     def set_rules(self) -> None:
         set_rules(self)
+        fill_wild_encounter_locations(self)
+        verify_hm_accessibility(self)
 
     def pre_fill(self) -> None:
         if self.options.randomize_badges.value == RandomizeBadges.option_shuffle:
-            badge_locs = [loc for loc in self.multiworld.get_locations(self.player) if "Badge" in loc.tags]
-            badge_items = [self.create_item_by_code(loc.default_item_code) for loc in badge_locs]
+            badge_items = []
+            badge_items.extend(self.pre_fill_items)
+            self.pre_fill_items.clear()
+
             if self.options.early_fly and "Fly" not in self.options.remove_badge_requirement.value:
                 early_badge_locs = [loc for loc in
                                     self.multiworld.get_reachable_locations(self.multiworld.state, self.player) if
@@ -292,17 +302,20 @@ class PokemonCrystalWorld(World):
                     storm_loc = self.random.choice(early_badge_locs)
                     storm_badge = next(item for item in badge_items if item.name == "Storm Badge")
                     storm_loc.place_locked_item(storm_badge)
-                    badge_locs.remove(storm_loc)
                     badge_items.remove(storm_badge)
 
-            collection_state = self.multiworld.get_all_state(False)
-
             # If we can't do this in 5 attempts then just accept our fate
-            for attempt in range(6):
-                attempt_locs = badge_locs.copy()
+            for attempt in range(5):
+                if attempt >= 1:
+                    self.logic.guaranteed_hm_access = True
+                state = self.get_world_collection_state()
+
+                attempt_locs = [loc for loc in self.multiworld.get_locations(self.player) if
+                                "Badge" in loc.tags and not loc.item]
                 attempt_items = badge_items.copy()
                 self.random.shuffle(attempt_locs)
-                fill_restrictive(self.multiworld, collection_state, attempt_locs, attempt_items,
+                self.random.shuffle(attempt_items)
+                fill_restrictive(self.multiworld, state, attempt_locs, attempt_items,
                                  single_player_placement=True, lock=True, allow_excluded=True, allow_partial=True)
                 if not attempt_items and not attempt_locs:
                     break
@@ -311,7 +324,7 @@ class PokemonCrystalWorld(World):
                     raise FillError(
                         f"Failed to shuffle badges for player {self.player} ({self.player_name}). Aborting.")
 
-                for location in badge_locs:
+                for location in attempt_locs:
                     location.locked = False
                     if location.item is not None:
                         location.item.location = None
@@ -319,7 +332,8 @@ class PokemonCrystalWorld(World):
 
                 logging.debug(f"Failed to shuffle badges for player {self.player} ({self.player_name}). Retrying.")
 
-        fill_wild_encounter_locations(self)
+            self.logic.guaranteed_hm_access = False
+            verify_hm_accessibility(self)
 
     def generate_basic(self) -> None:
         randomize_move_values(self)
@@ -525,3 +539,41 @@ class PokemonCrystalWorld(World):
             None,
             self.player
         )
+
+    def get_world_collection_state(self) -> CollectionState:
+        state = CollectionState(self.multiworld, True)
+        progression_items = [item for item in self.itempool if item.advancement]
+        locations = self.get_locations()
+        for item in progression_items:
+            state.collect(item, True)
+        for item in self.get_pre_fill_items():
+            state.collect(item, True)
+        state.sweep_for_advancements(locations)
+        return state
+
+    def get_pre_fill_items(self):
+        pre_fill_items = self.pre_fill_items.copy()
+        if self.logic.guaranteed_hm_access:
+            for hm in ["CUT", "FLY", "SURF", "STRENGTH", "FLASH", "WHIRLPOOL", "WATERFALL", "HEADBUTT", "ROCK_SMASH"]:
+                pre_fill_items.append(self.create_event(f"Teach {hm}"))
+        return pre_fill_items
+
+    def collect(self, state: "CollectionState", item: "Item") -> bool:
+        changed = super().collect(state, item)
+        if changed:
+            item_name = item.name
+            if item_name in self.logic.pokemon_hm_use:
+                state.prog_items[self.player].update(self.logic.pokemon_hm_use[item_name])
+            return True
+        else:
+            return False
+
+    def remove(self, state: "CollectionState", item: "Item") -> bool:
+        changed = super().remove(state, item)
+        if changed:
+            item_name = item.name
+            if item_name in self.logic.pokemon_hm_use:
+                state.prog_items[self.player].subtract(self.logic.pokemon_hm_use[item_name])
+            return True
+        else:
+            return False

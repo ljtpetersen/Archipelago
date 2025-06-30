@@ -79,7 +79,7 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
                 region.locations.append(location)
 
     if world.options.dexsanity:
-        pokemon_items = list(world.logically_available_pokemon)
+        pokemon_items = list(world.logic.available_pokemon)
         priority_pokemon = get_priority_dexsanity(world)
         excluded_pokemon = get_excluded_dexsanity(world)
 
@@ -110,7 +110,7 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
             pokedex_region.locations.append(new_location)
 
     if world.options.dexcountsanity:
-        total_pokemon = len(world.logically_available_pokemon)
+        total_pokemon = len(world.logic.available_pokemon)
         dexcountsanity_total = min(world.options.dexcountsanity.value, total_pokemon)
         dexcountsanity_step = world.options.dexcountsanity_step.value
 
@@ -146,7 +146,7 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
     if world.options.evolution_methods_required:
         evolution_region = regions["Evolutions"]
         created_locations = set()
-        for pokemon_id in world.logically_available_pokemon:
+        for pokemon_id in world.logic.available_pokemon:
             for evolution in world.generated_pokemon[pokemon_id].evolutions:
                 location_name = evolution_location_name(world, pokemon_id, evolution.pokemon)
                 if not evolution_in_logic(world, evolution) or location_name in created_locations: continue

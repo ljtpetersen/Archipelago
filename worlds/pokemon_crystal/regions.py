@@ -121,58 +121,58 @@ def create_regions(world: "PokemonCrystalWorld") -> dict[str, Region]:
             if wild_region_data.wild_encounters.grass:
                 encounter_key = EncounterKey.grass(wild_region_data.wild_encounters.grass)
                 if "Land" in world.options.wild_encounter_methods_required:
-                    world.generated_wild_region_logic[encounter_key] = LogicalAccess.InLogic
+                    world.logic.wild_regions[encounter_key] = LogicalAccess.InLogic
                     create_wild_region(parent_region, encounter_key, world.generated_wild[encounter_key])
                 else:
-                    world.generated_wild_region_logic[encounter_key] = LogicalAccess.OutOfLogic
+                    world.logic.wild_regions[encounter_key] = LogicalAccess.OutOfLogic
 
             if wild_region_data.wild_encounters.surfing:
                 encounter_key = EncounterKey.water(wild_region_data.wild_encounters.surfing)
                 if "Surfing" in world.options.wild_encounter_methods_required:
-                    world.generated_wild_region_logic[encounter_key] = LogicalAccess.InLogic
+                    world.logic.wild_regions[encounter_key] = LogicalAccess.InLogic
                     create_wild_region(parent_region, encounter_key, world.generated_wild[encounter_key])
                 else:
-                    world.generated_wild_region_logic[encounter_key] = LogicalAccess.OutOfLogic
+                    world.logic.wild_regions[encounter_key] = LogicalAccess.OutOfLogic
 
             if wild_region_data.wild_encounters.fishing:
                 if "Fishing" in world.options.wild_encounter_methods_required:
                     for fishing_rod in (FishingRodType.Old, FishingRodType.Good, FishingRodType.Super):
                         encounter_key = EncounterKey.fish(wild_region_data.wild_encounters.fishing, fishing_rod)
-                        world.generated_wild_region_logic[encounter_key] = LogicalAccess.InLogic
+                        world.logic.wild_regions[encounter_key] = LogicalAccess.InLogic
                         create_wild_region(parent_region, encounter_key, world.generated_wild[encounter_key])
                 else:
                     for fishing_rod in (FishingRodType.Old, FishingRodType.Good, FishingRodType.Super):
                         encounter_key = EncounterKey.fish(wild_region_data.wild_encounters.fishing, fishing_rod)
-                        world.generated_wild_region_logic[encounter_key] = LogicalAccess.OutOfLogic
+                        world.logic.wild_regions[encounter_key] = LogicalAccess.OutOfLogic
 
             if wild_region_data.wild_encounters.headbutt:
                 if "Headbutt" in world.options.wild_encounter_methods_required:
                     for rarity in (TreeRarity.Common, TreeRarity.Rare):
                         encounter_key = EncounterKey.tree(wild_region_data.wild_encounters.headbutt, rarity)
-                        world.generated_wild_region_logic[encounter_key] = LogicalAccess.InLogic
+                        world.logic.wild_regions[encounter_key] = LogicalAccess.InLogic
                         create_wild_region(parent_region, encounter_key, world.generated_wild[encounter_key])
                 else:
                     for rarity in (TreeRarity.Common, TreeRarity.Rare):
                         encounter_key = EncounterKey.tree(wild_region_data.wild_encounters.headbutt, rarity)
-                        world.generated_wild_region_logic[encounter_key] = LogicalAccess.OutOfLogic
+                        world.logic.wild_regions[encounter_key] = LogicalAccess.OutOfLogic
 
             if wild_region_data.wild_encounters.rock_smash:
                 encounter_key = EncounterKey.rock_smash()
                 if "Rock Smash" in world.options.wild_encounter_methods_required:
-                    world.generated_wild_region_logic[encounter_key] = LogicalAccess.InLogic
+                    world.logic.wild_regions[encounter_key] = LogicalAccess.InLogic
                     create_wild_region(parent_region, encounter_key, world.generated_wild[encounter_key])
                 else:
-                    world.generated_wild_region_logic[encounter_key] = LogicalAccess.OutOfLogic
+                    world.logic.wild_regions[encounter_key] = LogicalAccess.OutOfLogic
 
         for static_id in wild_region_data.statics:
             static_encounter = world.generated_static[static_id]
             encounter_key = EncounterKey.static(static_encounter.name)
             if (world.options.static_pokemon_required
                     and static_encounter.name not in LOGIC_EXCLUDE_STATICS):
-                world.generated_wild_region_logic[encounter_key] = LogicalAccess.InLogic
+                world.logic.wild_regions[encounter_key] = LogicalAccess.InLogic
                 create_wild_region(parent_region, encounter_key, [static_encounter])
             else:
-                world.generated_wild_region_logic[encounter_key] = LogicalAccess.OutOfLogic
+                world.logic.wild_regions[encounter_key] = LogicalAccess.OutOfLogic
 
     for region_name, region_data in data.regions.items():
         if should_include_region(region_data):
