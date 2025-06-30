@@ -315,12 +315,12 @@ class PokemonCrystalWorld(World):
                 attempt_items = badge_items.copy()
                 self.random.shuffle(attempt_locs)
                 self.random.shuffle(attempt_items)
-                fill_restrictive(self.multiworld, state, attempt_locs, attempt_items,
+                fill_restrictive(self.multiworld, state, attempt_locs.copy(), attempt_items,
                                  single_player_placement=True, lock=True, allow_excluded=True, allow_partial=True)
-                if not attempt_items and not attempt_locs:
+                if not attempt_items:
                     break
 
-                if attempt >= 5:
+                if attempt >= 4:
                     raise FillError(
                         f"Failed to shuffle badges for player {self.player} ({self.player_name}). Aborting.")
 

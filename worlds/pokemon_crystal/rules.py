@@ -271,7 +271,7 @@ class PokemonCrystalLogic:
     def can_map_card_fly(self) -> Callable[[CollectionState], bool]:
         return lambda state: state.has_all(self.map_card_fly_unlocks, self.player)
 
-    def expn(self) -> Callable[[CollectionState], bool]:
+    def has_expn(self) -> Callable[[CollectionState], bool]:
         return lambda state: state.has_all(self.expn_components, self.player)
 
     def has_rockets_requirement(self) -> Callable[[CollectionState], bool]:
@@ -663,16 +663,18 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     set_rule(get_entrance("REGION_GOLDENROD_DEPT_STORE_B1F:WAREHOUSE -> REGION_GOLDENROD_DEPT_STORE_B1F"),
              lambda state: state.has("Card Key", world.player))
 
+    has_rockets_requirement = world.logic.has_rockets_requirement()
+
     set_rule(get_entrance("REGION_GOLDENROD_UNDERGROUND_WAREHOUSE -> REGION_GOLDENROD_UNDERGROUND_WAREHOUSE:TAKEOVER"),
-             world.logic.has_rockets_requirement())
+             has_rockets_requirement)
 
     set_rule(get_entrance(
         "REGION_GOLDENROD_UNDERGROUND_SWITCH_ROOM_ENTRANCES -> REGION_GOLDENROD_UNDERGROUND_SWITCH_ROOM_ENTRANCES:TAKEOVER"),
-        world.logic.has_rockets_requirement())
+        has_rockets_requirement)
 
     # Radio Tower
     set_rule(get_entrance("REGION_RADIO_TOWER_2F -> REGION_RADIO_TOWER_2F:TAKEOVER"),
-             world.logic.has_rockets_requirement())
+             has_rockets_requirement)
 
     set_rule(get_entrance("REGION_RADIO_TOWER_3F:NOCARDKEY -> REGION_RADIO_TOWER_3F:CARDKEY"),
              lambda state: state.has("Card Key", world.player))
@@ -684,10 +686,10 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
              lambda state: state.has("EVENT_CLEARED_RADIO_TOWER", world.player))
 
     if world.options.level_scaling:
-        set_rule(get_location("GRUNTM_3"), world.logic.has_rockets_requirement())
+        set_rule(get_location("GRUNTM_3"), has_rockets_requirement)
 
     if trainersanity():
-        set_rule(get_location("Radio Tower 1F - Grunt"), world.logic.has_rockets_requirement())
+        set_rule(get_location("Radio Tower 1F - Grunt"), has_rockets_requirement)
 
     # Route 35
     set_rule(get_location("Route 35 - HP Up after delivering Kenya"),
@@ -918,8 +920,10 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     set_rule(get_entrance("REGION_MAHOGANY_TOWN -> REGION_MAHOGANY_GYM"),
              lambda state: state.has("EVENT_CLEARED_ROCKET_HIDEOUT", world.player))
 
-    set_rule(get_entrance("REGION_MAHOGANY_TOWN -> REGION_ROUTE_44"), world.logic.has_route_44_access())
-    set_rule(get_entrance("REGION_ROUTE_44 -> REGION_MAHOGANY_TOWN"), world.logic.has_route_44_access())
+    has_route_44_access = world.logic.has_route_44_access()
+
+    set_rule(get_entrance("REGION_MAHOGANY_TOWN -> REGION_ROUTE_44"), has_route_44_access)
+    set_rule(get_entrance("REGION_ROUTE_44 -> REGION_MAHOGANY_TOWN"), has_route_44_access)
 
     # Route 43
     set_rule(get_entrance("REGION_ROUTE_43 -> REGION_ROUTE_43:FRUITTREE"),
@@ -1063,9 +1067,10 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
     # Victory Road
     if johto_only() != JohtoOnly.option_on:
-        set_rule(get_entrance("REGION_ROUTE_28 -> REGION_VICTORY_ROAD_GATE"), world.logic.has_mt_silver_requirement())
-        set_rule(get_entrance("REGION_VICTORY_ROAD_GATE -> REGION_ROUTE_28"), world.logic.has_mt_silver_requirement())
-        set_rule(get_location("EVENT_OPENED_MT_SILVER"), world.logic.has_mt_silver_requirement())
+        has_mt_silver_requirement = world.logic.has_mt_silver_requirement()
+        set_rule(get_entrance("REGION_ROUTE_28 -> REGION_VICTORY_ROAD_GATE"), has_mt_silver_requirement)
+        set_rule(get_entrance("REGION_VICTORY_ROAD_GATE -> REGION_ROUTE_28"), has_mt_silver_requirement)
+        set_rule(get_location("EVENT_OPENED_MT_SILVER"), has_mt_silver_requirement)
 
         set_rule(get_location("EVENT_BEAT_RED"), world.logic.has_red_requirement())
         # set_rule(get_location("RED_1"), has_red_requirement)
@@ -1089,10 +1094,9 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
     if not johto_only():
 
-        set_rule(get_entrance("REGION_ROUTE_22 -> REGION_VICTORY_ROAD_GATE"),
-                 world.logic.has_kanto_access_requirement())
-        set_rule(get_entrance("REGION_VICTORY_ROAD_GATE -> REGION_ROUTE_22"),
-                 world.logic.has_kanto_access_requirement())
+        has_kanto_access_requirement = world.logic.has_kanto_access_requirement()
+        set_rule(get_entrance("REGION_ROUTE_22 -> REGION_VICTORY_ROAD_GATE"), has_kanto_access_requirement)
+        set_rule(get_entrance("REGION_VICTORY_ROAD_GATE -> REGION_ROUTE_22"), has_kanto_access_requirement)
 
         set_rule(get_entrance("REGION_INDIGO_PLATEAU_POKECENTER_1F -> REGION_INDIGO_PLATEAU_POKECENTER_1F:RIVAL"),
                  lambda state: state.has("EVENT_BEAT_RIVAL_IN_MT_MOON", world.player))
@@ -1187,19 +1191,20 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         if hidden():
             set_rule(get_location("Vermilion Port - Hidden Item in Buoy"), can_surf_kanto)
 
-        set_rule(get_location("EVENT_FOUGHT_SNORLAX"), world.logic.expn())
+        has_expn = world.logic.has_expn()
+        set_rule(get_location("EVENT_FOUGHT_SNORLAX"), has_expn)
         if world.options.level_scaling:
-            set_rule(get_location("Snorlax"), world.logic.expn())
+            set_rule(get_location("Snorlax"), has_expn)
         if world.options.static_pokemon_required:
-            set_rule(get_location("Static_Snorlax_1"), world.logic.expn())
+            set_rule(get_location("Static_Snorlax_1"), has_expn)
 
-        set_rule(get_entrance("REGION_VERMILION_CITY -> REGION_ROUTE_11"), world.logic.expn())
+        set_rule(get_entrance("REGION_VERMILION_CITY -> REGION_ROUTE_11"), has_expn)
 
-        set_rule(get_entrance("REGION_ROUTE_11 -> REGION_VERMILION_CITY"), world.logic.expn())
+        set_rule(get_entrance("REGION_ROUTE_11 -> REGION_VERMILION_CITY"), has_expn)
 
-        set_rule(get_entrance("REGION_VERMILION_CITY -> REGION_DIGLETTS_CAVE"), world.logic.expn())
+        set_rule(get_entrance("REGION_VERMILION_CITY -> REGION_DIGLETTS_CAVE"), has_expn)
 
-        set_rule(get_entrance("REGION_DIGLETTS_CAVE -> REGION_VERMILION_CITY"), world.logic.expn())
+        set_rule(get_entrance("REGION_DIGLETTS_CAVE -> REGION_VERMILION_CITY"), has_expn)
 
         set_rule(get_entrance("REGION_VERMILION_PORT_PASSAGE -> REGION_VERMILION_PORT"),
                  lambda state: state.has("S.S. Ticket", world.player))
@@ -1211,21 +1216,23 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         set_rule(get_entrance("REGION_SAFFRON_MAGNET_TRAIN_STATION -> REGION_GOLDENROD_MAGNET_TRAIN_STATION"),
                  lambda state: state.has("Pass", world.player))
 
+        has_tea = world.logic.has_tea()
+
         if "North" in world.options.saffron_gatehouse_tea.value:
-            set_rule(get_entrance("REGION_SAFFRON_CITY -> REGION_ROUTE_5_SAFFRON_GATE"), world.logic.has_tea())
-            set_rule(get_entrance("REGION_ROUTE_5_SAFFRON_GATE -> REGION_SAFFRON_CITY"), world.logic.has_tea())
+            set_rule(get_entrance("REGION_SAFFRON_CITY -> REGION_ROUTE_5_SAFFRON_GATE"), has_tea)
+            set_rule(get_entrance("REGION_ROUTE_5_SAFFRON_GATE -> REGION_SAFFRON_CITY"), has_tea)
 
         if "East" in world.options.saffron_gatehouse_tea.value:
-            set_rule(get_entrance("REGION_SAFFRON_CITY -> REGION_ROUTE_8_SAFFRON_GATE"), world.logic.has_tea())
-            set_rule(get_entrance("REGION_ROUTE_8_SAFFRON_GATE -> REGION_SAFFRON_CITY"), world.logic.has_tea())
+            set_rule(get_entrance("REGION_SAFFRON_CITY -> REGION_ROUTE_8_SAFFRON_GATE"), has_tea)
+            set_rule(get_entrance("REGION_ROUTE_8_SAFFRON_GATE -> REGION_SAFFRON_CITY"), has_tea)
 
         if "South" in world.options.saffron_gatehouse_tea.value:
-            set_rule(get_entrance("REGION_SAFFRON_CITY -> REGION_ROUTE_6_SAFFRON_GATE"), world.logic.has_tea())
-            set_rule(get_entrance("REGION_ROUTE_6_SAFFRON_GATE -> REGION_SAFFRON_CITY"), world.logic.has_tea())
+            set_rule(get_entrance("REGION_SAFFRON_CITY -> REGION_ROUTE_6_SAFFRON_GATE"), has_tea)
+            set_rule(get_entrance("REGION_ROUTE_6_SAFFRON_GATE -> REGION_SAFFRON_CITY"), has_tea)
 
         if "West" in world.options.saffron_gatehouse_tea.value:
-            set_rule(get_entrance("REGION_SAFFRON_CITY -> REGION_ROUTE_7_SAFFRON_GATE"), world.logic.has_tea())
-            set_rule(get_entrance("REGION_ROUTE_7_SAFFRON_GATE -> REGION_SAFFRON_CITY"), world.logic.has_tea())
+            set_rule(get_entrance("REGION_SAFFRON_CITY -> REGION_ROUTE_7_SAFFRON_GATE"), has_tea)
+            set_rule(get_entrance("REGION_ROUTE_7_SAFFRON_GATE -> REGION_SAFFRON_CITY"), has_tea)
 
         # Underground Paths
         if world.options.undergrounds_require_power.value in (UndergroundsRequirePower.option_north_south,
