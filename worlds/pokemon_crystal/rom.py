@@ -472,7 +472,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         marts_end_address = data.rom_addresses["MartsEnd"]
         better_mart_address = data.rom_addresses["MartBetterMart"] - 0x10000
         better_mart_bytes = better_mart_address.to_bytes(2, "little")
-        ignore_indexes = [mart.index for mart in (
+        ignore_indexes = [data.marts[mart].index for mart in (
             "MART_GOLDENROD_2F_2",
             "MART_GOLDENROD_3F",
             "MART_GOLDENROD_4F",
