@@ -482,7 +482,9 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
             "MART_CELADON_4F",
             "MART_CELADON_5F_1",
             "MART_CELADON_5F_2",
-            "MART_GOLDENROD_1F_S"
+            "MART_GOLDENROD_1F_S",
+            "MART_ROOFTOP_SALE",
+            "MART_BARGAIN_SHOP"
         )]
         for i in range((marts_end_address - mart_address) // 2):
             # skip goldenrod and celadon

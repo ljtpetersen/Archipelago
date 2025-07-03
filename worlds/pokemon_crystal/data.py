@@ -126,9 +126,16 @@ class TMHMData:
 
 
 @dataclass(frozen=True)
+class MartItemData:
+    item: str
+    price: int
+    flag: str | None
+
+
+@dataclass(frozen=True)
 class MartData:
     index: int
-    items: Sequence[tuple[str, int]]
+    items: Sequence[MartItemData]
 
 
 class MiscOption(Enum):
@@ -648,7 +655,7 @@ def _init() -> None:
 
     marts = {mart_name: MartData(
         mart_data["index"],
-        [(entry["item"], entry["price"]) for entry in mart_data["items"]]
+        [MartItemData(entry["item"], entry["price"], entry.get("flag")) for entry in mart_data["items"]]
     ) for mart_name, mart_data in mart_data.items()}
 
     music_consts = {music_name: MusicConst(music_data["id"], music_data["loop"]) for music_name, music_data in
