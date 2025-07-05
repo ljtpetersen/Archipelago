@@ -108,8 +108,8 @@ def get_tmhm_compatibility(world: "PokemonCrystalWorld", pkmn_name):
     tmhms = []
     for tm_name, tm_data in world.generated_tms.items():
         use_value = hm_value if tm_data.is_hm or tm_name in HM_COMPAT_TMS else tm_value
-        # if the value is 0, use vanilla compatibility
-        if use_value == 0:
+        # if the value is -1, use vanilla compatibility
+        if use_value == -1:
             if tm_name in pkmn_data.tm_hm:
                 tmhms.append(tm_name)
                 continue

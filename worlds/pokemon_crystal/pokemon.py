@@ -58,7 +58,7 @@ def randomize_pokemon_data(world: "PokemonCrystalWorld"):
         if world.options.randomize_learnsets or world.options.metronome_only:
             new_learnset = randomize_learnset(world, pkmn_name)
 
-        if world.options.tm_compatibility.value or world.options.hm_compatibility.value:
+        if world.options.tm_compatibility >= 0 or world.options.hm_compatibility >= 0:
             new_tm_hms = get_tmhm_compatibility(world, pkmn_name)
 
         world.generated_pokemon[pkmn_name] = replace(

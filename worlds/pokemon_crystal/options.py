@@ -771,11 +771,12 @@ class TMCompatibility(NamedRange):
     Headbutt and Rock Smash are considered HMs when applying compatibility
     """
     display_name = "TM Compatibility"
-    default = 0
-    range_start = 1
+    default = -1
+    range_start = 0
     range_end = 100
     special_range_names = {
-        "vanilla": 0,
+        "vanilla": -1,
+        "none": 0,
         "fully_compatible": 100
     }
 
@@ -784,13 +785,16 @@ class HMCompatibility(NamedRange):
     """
     Percent chance for Pokemon to be compatible with each HM
     Headbutt and Rock Smash are considered HMs when applying compatibility
+
+    Minimal compatibility will ensure only the minimum required number of Pokemon can learn each HM, usually one
     """
     display_name = "HM Compatibility"
-    default = 0
-    range_start = 1
+    default = -1
+    range_start = 0
     range_end = 100
     special_range_names = {
-        "vanilla": 0,
+        "vanilla": -1,
+        "minimal": 0,
         "fully_compatible": 100
     }
 
