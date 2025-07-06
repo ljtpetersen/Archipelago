@@ -85,18 +85,20 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
             write_bytes(patch, [item_id], location_address)
         else:
             # for in game text
-            if location.address < POKEDEX_OFFSET and "shopsanity" not in location.tags:
+            if location.address < POKEDEX_OFFSET:
                 item_flag = location.address
                 player_name = world.multiworld.player_name[location.item.player].upper()
                 item_name = location.item.name.upper()
-                item_texts.append([player_name, item_name, item_flag])
+                item_texts.append((player_name, item_name, item_flag, "shopsanity" in location.tags))
 
             write_bytes(patch, [item_const_name_to_id("AP_ITEM")], location_address)
 
     # table has format: location id (2 bytes), string address (2 bytes), string bank (1 byte),
     # and is terminated by 0xFF
-    item_name_table_length = len(item_texts) * 5 + 1
+    item_name_table_length = len([entry for entry in item_texts if not entry[3]]) * 5 + 1
     item_name_table_adr = data.rom_addresses["AP_ItemText_Table"]
+    shopsanity_name_table_length = len([entry for entry in item_texts if entry[3]]) * 5 + 1
+    shopsanity_name_table_adr = data.rom_addresses["AP_MartItemTable"]
 
     # strings are 16 chars each, plus a terminator byte,
     # this gives every pair of item + player names a size of 34 bytes
@@ -108,7 +110,11 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
     item_name_bank2_length = data.rom_addresses["AP_ItemText_Bank2_End"] - item_name_bank2
     item_name_bank2_capacity = int(item_name_bank2_length / 34)
 
+    table_offset_adr = item_name_table_adr
+    shopsanity_table_offset_adr = shopsanity_name_table_adr
+
     for i, text in enumerate(item_texts):
+        shopsanity_entry = text[3]
         # truncate if too long
         player_text = convert_to_ingame_text(text[0])[:16]
         # pad with terminator byte to keep alignment
@@ -117,12 +123,12 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         item_text.append(0x50)
         # bank 1
         bank = 0x75
-        table_offset_adr = item_name_table_adr + i * 5
 
         if i >= item_name_bank1_capacity + item_name_bank2_capacity:
             # if we somehow run out of capacity in both banks, just finish the table and break,
             # there is a fallback string in the ROM, so it should handle this gracefully.
             write_bytes(patch, [0xFF], item_name_table_adr + table_offset_adr)
+            write_bytes(patch, [0xFF], shopsanity_name_table_adr + shopsanity_table_offset_adr)
             print("oopsie")
             break
         if i + 1 < item_name_bank1_capacity:
@@ -136,10 +142,19 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         write_bytes(patch, player_text + item_text, text_adr)
         # get the address within the rom bank (0x4000 - 0x7FFF)
         text_bank_adr = (text_adr % 0x4000) + 0x4000
-        write_bytes(patch, text[2].to_bytes(2, "big"), table_offset_adr)
-        write_bytes(patch, text_bank_adr.to_bytes(2, "little"), table_offset_adr + 2)
-        write_bytes(patch, [bank], table_offset_adr + 4)
+        offset_adr = shopsanity_table_offset_adr if shopsanity_entry else table_offset_adr
+        write_bytes(patch, ((text[2] - data.mart_flag_offset) if shopsanity_entry else text[2]).to_bytes(2, "big"),
+                    offset_adr)
+        write_bytes(patch, text_bank_adr.to_bytes(2, "little"), offset_adr + 2)
+        write_bytes(patch, [bank], offset_adr + 4)
+
+        if shopsanity_entry:
+            shopsanity_table_offset_adr += 5
+        else:
+            table_offset_adr += 5
+
     write_bytes(patch, [0xFF], item_name_table_adr + item_name_table_length - 1)
+    write_bytes(patch, [0xFF], shopsanity_name_table_adr + shopsanity_name_table_length - 1)
 
     world.finished_level_scaling.wait()
 
