@@ -810,6 +810,7 @@ class HMCompatibility(NamedRange):
         "fully_compatible": 100
     }
 
+
 class HMPowerCap(NamedRange):
     """
     Lowers the power of damaging HM moves that exceed the set power down to match it.
@@ -822,6 +823,7 @@ class HMPowerCap(NamedRange):
     special_range_names = {
         "none": range_end
     }
+
 
 class RandomizeBaseStats(Choice):
     """
@@ -862,11 +864,17 @@ class RandomizePalettes(Choice):
     option_completely_random = 2
 
 
-class RandomizeMusic(Toggle):
+class RandomizeMusic(Choice):
     """
     Randomize all music
+    - Shuffle will map each music track to a new track
+    - Completely Random will map each music area to a new track
     """
     display_name = "Randomize Music"
+    default = 0
+    option_off = 0
+    option_shuffle = 1
+    option_completely_random = 2
 
 
 # class RandomizeSFX(Toggle):

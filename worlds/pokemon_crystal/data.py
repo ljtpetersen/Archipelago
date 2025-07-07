@@ -729,7 +729,7 @@ def _init() -> None:
     music_consts = {music_name: MusicConst(music_data["id"], music_data["loop"]) for music_name, music_data in
                     data_json["music"]["consts"].items()}
 
-    music_maps = {map_name: "" for map_name in data_json["music"]["maps"]}
+    music_maps = {map_name: music_name for map_name, music_name in data_json["music"]["maps"].items()}
 
     music = MusicData(music_consts,
                       music_maps,
