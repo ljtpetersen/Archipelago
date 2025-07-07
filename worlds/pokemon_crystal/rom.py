@@ -120,7 +120,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         player_text = convert_to_ingame_text(text[0])[:16]
         # pad with terminator byte to keep alignment
         player_text.extend([0x50] * (17 - len(player_text)))
-        item_text = convert_to_ingame_text(text[1])[:16]
+        item_text = convert_to_ingame_text(text[1])[:14 if shopsanity_entry else 16]
         item_text.append(0x50)
         # bank 1
         bank = 0x75
