@@ -533,6 +533,12 @@ class ProvideShopHints(Choice):
     option_all = 3
 
 
+class ShopsanityRestrictRareCandies(Toggle):
+    """
+    Makes Rare Candies in shops only purchasable once
+    """
+
+
 class RandomizePokegear(Toggle):
     """
     Shuffles the Pokegear and cards into the pool
@@ -1341,6 +1347,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     shopsanity_minimum_price: MinimumShopsanityPrice
     shopsanity_maximum_price: MaximumShopsanityPrice
     provide_shop_hints: ProvideShopHints
+    shopsanity_restrict_rare_candies: ShopsanityRestrictRareCandies
     randomize_pokegear: RandomizePokegear
     randomize_berry_trees: RandomizeBerryTrees
     randomize_starters: RandomizeStarters
@@ -1445,7 +1452,8 @@ OPTION_GROUPS = [
          ShopsanityPrices,
          MinimumShopsanityPrice,
          MaximumShopsanityPrice,
-         ProvideShopHints]
+         ProvideShopHints,
+         ShopsanityRestrictRareCandies]
     ),
     OptionGroup(
         "HMs",
