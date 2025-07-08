@@ -1157,6 +1157,9 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
         # Cerulean
         set_rule(get_entrance("REGION_ROUTE_24 -> REGION_CERULEAN_CITY:SURF"), can_surf_kanto)
+        if trainersanity():
+            set_rule(get_location("Route 24 - Grunt"),
+                     lambda state: state.has("EVENT_CERULEAN_GYM_ROCKET", world.player))
 
         set_rule(get_entrance("REGION_CERULEAN_CITY -> REGION_ROUTE_9"), can_cut_kanto)
 

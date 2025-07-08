@@ -545,7 +545,9 @@
       "REGION_ROUTE_9"
     ],
     "locations": [],
-    "events": []
+    "events": [
+      "EVENT_CERULEAN_GYM_ROCKET"
+    ]
   },
   "REGION_CERULEAN_CITY:SURF": {
     "johto": false,
@@ -1402,7 +1404,11 @@
     ],
     "locations": [
       "TM06_TOXIC",
-      "SOUL_BADGE_FROM_JANINE"
+      "SOUL_BADGE_FROM_JANINE",
+      "ITEM_FROM_LASS_ALICE",
+      "ITEM_FROM_LASS_LINDA",
+      "ITEM_FROM_PICNICKER_CINDY",
+      "ITEM_FROM_CAMPER_BARRY"
     ],
     "events": [
       "EVENT_SOUL_BADGE_FROM_JANINE",
@@ -3774,7 +3780,9 @@
     "trainers": [
       "GRUNTM_31"
     ],
-    "locations": [],
+    "locations": [
+      "ITEM_FROM_ROCKET_GRUNTM_31"
+    ],
     "events": [],
     "wild_encounters": {
       "grass": "ROUTE_24",
