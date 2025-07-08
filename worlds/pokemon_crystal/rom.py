@@ -740,6 +740,10 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         # Don't set the scene to the noop scene
         write_bytes(patch, [0], data.rom_addresses["AP_Setting_PewterCityBadgeRequired_2"] + 2)
 
+    if world.options.mount_mortar_access:
+        # This is a sprite event, so 0 shows the sprite
+        write_bytes(patch, [0], data.rom_addresses["AP_Setting_MountMortarRocks"] + 2)
+
     headbutt_seed = (world.multiworld.seed & 0xFFFF).to_bytes(2, "little")
     write_bytes(patch, headbutt_seed[:0], data.rom_addresses["AP_Setting_TreeMonSeed_1"] + 1)
     write_bytes(patch, headbutt_seed[-1:], data.rom_addresses["AP_Setting_TreeMonSeed_2"] + 1)

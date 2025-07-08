@@ -305,6 +305,17 @@ class NationalParkAccess(Choice):
     option_bicycle = 1
 
 
+class MountMortarAccess(Choice):
+    """
+    Sets the requirement to pass through Mount Mortar east <> west
+    Vanilla: No requirement
+    Rock Smash: Rock Smash is required
+    """
+    default = 0
+    option_vanilla = 0
+    option_rock_smash = 1
+
+
 class Trainersanity(Toggle):
     """
     Adds checks for defeating trainers
@@ -1258,6 +1269,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     route_3_access: Route3Access
     blackthorn_dark_cave_access: BlackthornDarkCaveAccess
     national_park_access: NationalParkAccess
+    mount_mortar_access: MountMortarAccess
     trainersanity: Trainersanity
     trainersanity_alerts: TrainersanityAlerts
     rematchsanity: Rematchsanity
@@ -1352,6 +1364,7 @@ OPTION_GROUPS = [
          Route32Condition,
          Route2Access,
          Route3Access,
+         MountMortarAccess,
          RedGyaradosAccess,
          BlackthornDarkCaveAccess,
          NationalParkAccess,

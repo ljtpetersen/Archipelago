@@ -2404,10 +2404,22 @@
       "grass": "MOUNT_MORTAR_1F_INSIDE"
     }
   },
-  "REGION_MOUNT_MORTAR_1F_OUTSIDE:WEST": {
+  "REGION_MOUNT_MORTAR_1F_OUTSIDE:WEST:ENTRANCE": {
     "johto": true,
     "exits": [
       "REGION_ROUTE_42:WEST",
+      "REGION_MOUNT_MORTAR_1F_OUTSIDE:WEST"
+    ],
+    "locations": [],
+    "events": [],
+    "wild_encounters": {
+      "grass": "MOUNT_MORTAR_1F_OUTSIDE"
+    }
+  },
+  "REGION_MOUNT_MORTAR_1F_OUTSIDE:WEST": {
+    "johto": true,
+    "exits": [
+      "REGION_MOUNT_MORTAR_1F_OUTSIDE:WEST:ENTRANCE",
       "REGION_MOUNT_MORTAR_1F_INSIDE:FRONT"
     ],
     "locations": [],
@@ -2434,12 +2446,24 @@
   "REGION_MOUNT_MORTAR_1F_OUTSIDE:EAST": {
     "johto": true,
     "exits": [
-      "REGION_ROUTE_42:EAST",
+      "REGION_MOUNT_MORTAR_1F_OUTSIDE:EAST:ENTRANCE",
       "REGION_MOUNT_MORTAR_1F_INSIDE:FRONT"
     ],
     "locations": [
       "MOUNT_MORTAR_1F_OUTSIDE_HIDDEN_HYPER_POTION"
     ],
+    "events": [],
+    "wild_encounters": {
+      "grass": "MOUNT_MORTAR_1F_OUTSIDE"
+    }
+  },
+  "REGION_MOUNT_MORTAR_1F_OUTSIDE:EAST:ENTRANCE": {
+    "johto": true,
+    "exits": [
+      "REGION_ROUTE_42:EAST",
+      "REGION_MOUNT_MORTAR_1F_OUTSIDE:EAST"
+    ],
+    "locations": [],
     "events": [],
     "wild_encounters": {
       "grass": "MOUNT_MORTAR_1F_OUTSIDE"
