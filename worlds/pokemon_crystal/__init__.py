@@ -399,7 +399,8 @@ class PokemonCrystalWorld(World):
             "rematchsanity",
             "all_pokemon_seen",
             "dexcountsanity_leniency",
-            "dexcountsanity_step"
+            "dexcountsanity_step",
+            "provide_shop_hints"
         )
         slot_data["apworld_version"] = self.apworld_version
         slot_data["tea_north"] = 1 if "North" in self.options.saffron_gatehouse_tea.value else 0

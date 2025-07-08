@@ -481,6 +481,18 @@ class Shopsanity(Choice):
     option_both = 3
 
 
+class ProvideShopHints(Choice):
+    """
+    Sends out hints when a randomized shop is accessed
+    """
+    display_name = "Provide Shop Hints"
+    default = 0
+    option_off = 0
+    option_progression = 1
+    option_progression_and_useful = 2
+    option_all = 3
+
+
 class RandomizePokegear(Toggle):
     """
     Shuffles the Pokegear and cards into the pool
@@ -1285,6 +1297,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     evolution_gym_levels: EvolutionGymLevels
     breeding_methods_required: BreedingMethodsRequired
     shopsanity: Shopsanity
+    provide_shop_hints: ProvideShopHints
     randomize_pokegear: RandomizePokegear
     randomize_berry_trees: RandomizeBerryTrees
     randomize_starters: RandomizeStarters
@@ -1385,7 +1398,8 @@ OPTION_GROUPS = [
     ),
     OptionGroup(
         "Shopsanity",
-        [Shopsanity]
+        [Shopsanity,
+         ProvideShopHints]
     ),
     OptionGroup(
         "HMs",
