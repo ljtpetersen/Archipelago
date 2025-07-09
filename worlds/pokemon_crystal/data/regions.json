@@ -2573,7 +2573,8 @@
       "Tyrogue"
     ],
     "locations": [
-      "MOUNT_MORTAR_B1F_HIDDEN_MAX_REVIVE"
+      "MOUNT_MORTAR_B1F_HIDDEN_MAX_REVIVE",
+      "ITEM_FROM_BLACKBELT_KIYO"
     ],
     "events": [],
     "wild_encounters": {
