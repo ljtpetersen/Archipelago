@@ -6159,6 +6159,16 @@
     "default_item": "NO_ITEM",
     "script": "AP_Trainer_PSYCHIC_T_NORMAN"
   },
+  "ITEM_FROM_POKEFANF_JAIME": {
+    "label": "Route 39 - Pokefan Jaime",
+    "flag": "EVENT_ITEM_FROM_POKEFANF_JAIME",
+    "type": "giveitem",
+    "tags": [
+      "Trainersanity"
+    ],
+    "default_item": "NO_ITEM",
+    "script": "AP_NPC_Route39_PokefanJaime_NO_ITEM"
+  },
   "ITEM_FROM_BIRD_KEEPER_HANK": {
     "label": "Route 4 - Bird Keeper Hank",
     "flag": "EVENT_ITEM_FROM_BIRD_KEEPER_HANK",
