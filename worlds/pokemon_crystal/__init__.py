@@ -180,6 +180,7 @@ class PokemonCrystalWorld(World):
 
         self.blocklisted_moves = {move.replace(" ", "_").upper() for move in self.options.move_blocklist.value}
 
+        randomize_move_types(self)
         randomize_pokemon_data(self)
         self.logic.set_hm_compatible_pokemon(self)
 
@@ -342,7 +343,6 @@ class PokemonCrystalWorld(World):
     def generate_basic(self) -> None:
         randomize_move_values(self)
         cap_hm_move_power(self)
-        randomize_move_types(self)
         randomize_traded_pokemon(self)
         randomize_music(self)
         randomize_mischief(self)
