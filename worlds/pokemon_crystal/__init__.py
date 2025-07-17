@@ -215,7 +215,8 @@ class PokemonCrystalWorld(World):
                 self.create_item_by_code(loc.default_item_code) for loc in item_locations if "Badge" in loc.tags)
             item_locations = [location for location in item_locations if "Badge" not in location.tags]
 
-        if self.options.randomize_fly_unlocks == RandomizeFlyUnlocks.option_exclude_silver_cave:
+        if (self.options.randomize_fly_unlocks == RandomizeFlyUnlocks.option_exclude_silver_cave
+                and self.options.johto_only.value != JohtoOnly.option_on):
             item_locations = [location for location in item_locations if location.name != "Visit Silver Cave"]
 
         badge_option_counts = [8]
@@ -296,7 +297,8 @@ class PokemonCrystalWorld(World):
         verify_hm_accessibility(self)
 
     def pre_fill(self) -> None:
-        if self.options.randomize_fly_unlocks == RandomizeFlyUnlocks.option_exclude_silver_cave:
+        if (self.options.randomize_fly_unlocks == RandomizeFlyUnlocks.option_exclude_silver_cave
+                and self.options.johto_only != JohtoOnly.option_on):
             self.get_location("Visit Silver Cave").place_locked_item(self.create_item_by_const_name("FLY_SILVER_CAVE"))
         if self.options.randomize_badges == RandomizeBadges.option_shuffle:
             badge_items = []

@@ -318,7 +318,7 @@ def setup_free_fly_regions(world: "PokemonCrystalWorld"):
         fly_region = world.get_region(free_fly_location.region_id)
         connection = Entrance(
             world.player,
-            f"REGION_FLY -> {free_fly_location.region_id}",
+            f"Free Fly {free_fly_location.region_id}",
             fly
         )
         fly.exits.append(connection)
@@ -330,7 +330,7 @@ def setup_free_fly_regions(world: "PokemonCrystalWorld"):
         map_card_region = world.get_region(map_card_fly_location.region_id)
         connection = Entrance(
             world.player,
-            f"REGION_FLY -> {map_card_fly_location.region_id}",
+            f"Free Fly {map_card_fly_location.region_id}",
             fly
         )
         fly.exits.append(connection)
