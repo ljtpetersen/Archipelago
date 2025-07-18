@@ -262,7 +262,8 @@ def _starting_town_valid(world: "PokemonCrystalWorld", starting_town: StartingTo
         return not world.options.mount_mortar_access or world.options.trainersanity or johto_shopsanity
 
     if starting_town.name in ("Pallet Town", "Viridian City", "Pewter City"):
-        return immediate_hiddens or world.options.route_3_access == Route3Access.option_vanilla or kanto_shopsanity or world.options.randomize_berry_trees
+        return (immediate_hiddens or world.options.route_3_access == Route3Access.option_vanilla or kanto_shopsanity
+                or world.options.randomize_berry_trees)
     if starting_town.name == "Rock Tunnel":
         return world.options.trainersanity
     if starting_town.name == "Vermilion City":
