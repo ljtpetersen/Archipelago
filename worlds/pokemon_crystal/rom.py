@@ -862,6 +862,9 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
     if world.options.randomize_fly_unlocks:
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_FlyUnlocksShuffled"] + 2)
 
+    if world.options.better_marts:
+        write_bytes(patch, [1], data.rom_addresses["AP_Setting_BetterMarts"] + 1)
+
     # Set slot auth
     ap_version_text = convert_to_ingame_text(APWORLD_VERSION)[:19]
     ap_version_text.append(0x50)
