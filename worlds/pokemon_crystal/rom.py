@@ -412,6 +412,27 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
             address = data.rom_addresses["AP_Stats_Base_" + pkmn_name]
             write_bytes(patch, pkmn_data.base_stats, address)
 
+        if world.options.randomize_evolution:
+            address = data.rom_addresses["AP_Evos_" + pkmn_name]
+            for evo in pkmn_data.evolutions:
+                evo_pkmn_id = data.pokemon[evo.pokemon].id
+                if evo_pkmn_id == pkmn_name:
+                    if evo.length < 4:
+                        # Edge case: no valid evolution found, is not Tyrogue
+                        write_bytes(patch, [evo.evo_type.value, evo.condition, evo_pkmn_id], address)
+                        address += evo.length
+                    else:
+                        # Edge case: no valid evolution found, is Tyrogue
+                        write_bytes(patch, [evo.evo_type.value, evo.level], address)
+                        write_bytes(patch, [evo_pkmn_id], address + 3)
+                        address += evo.length
+                else:
+                    # Normal case
+                    address += evo.length - 1
+                    # Enums over evolution conditions would be needed to write the whole evolution data for all cases
+                    write_bytes(patch, [evo_pkmn_id], address)
+                    address += 1
+
         if world.options.randomize_learnsets.value:
             address = data.rom_addresses["AP_Attacks_" + pkmn_name]
             for move in pkmn_data.learnset:

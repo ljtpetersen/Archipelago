@@ -13,6 +13,7 @@ from .client import PokemonCrystalClient
 from .data import PokemonData, TrainerData, MiscData, TMHMData, data as crystal_data, StaticPokemon, \
     MusicData, MoveData, FlyRegion, TradeData, MiscOption, APWORLD_VERSION, POKEDEX_OFFSET, StartingTown, \
     LogicalAccess, EncounterKey, EncounterMon, MartData
+from .evolution import randomize_evolution
 from .items import PokemonCrystalItem, create_item_label_to_code_map, get_item_classification, ITEM_GROUPS, \
     item_const_name_to_id, item_const_name_to_label
 from .level_scaling import perform_level_scaling
@@ -190,10 +191,11 @@ class PokemonCrystalWorld(World):
 
         regions = create_regions(self)
 
+        random_evolutions_dict = randomize_evolution(self)
         randomize_wild_pokemon(self)
         randomize_static_pokemon(self)
         randomize_starters(self)
-        generate_breeding_data(self)
+        generate_breeding_data(random_evolutions_dict, self)
         generate_evolution_data(self)
 
         create_locations(self, regions)

@@ -932,6 +932,16 @@ class RandomizeTypes(Choice):
     option_follow_evolutions = 1
     option_completely_random = 2
 
+class RandomizeEvolution(Choice):
+    """
+    Vanilla: Pokemon evolve into the same Pokemon they do in vanilla
+    Match a Type: Pokemon evolve into a random Pokemon with a higher base stat total, that shares at least one type with it.
+    """
+    display_name = "Randomize Evolution"
+    default = 0
+    option_vanilla = 0
+    option_match_a_type = 1
+
 
 class RandomizePalettes(Choice):
     """
@@ -1390,6 +1400,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     hm_power_cap: HMPowerCap
     randomize_base_stats: RandomizeBaseStats
     randomize_types: RandomizeTypes
+    randomize_evolution: RandomizeEvolution
     randomize_palettes: RandomizePalettes
     randomize_music: RandomizeMusic
     # randomize_sfx: RandomizeSFX
@@ -1487,6 +1498,7 @@ OPTION_GROUPS = [
          StaticBlocklist,
          RandomizeBaseStats,
          RandomizeTypes,
+         RandomizeEvolution,
          RandomizeTrades,
          EncounterGrouping,
          EncounterSlotDistribution]
