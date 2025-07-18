@@ -7,7 +7,7 @@ from .data import data, EvolutionData, EvolutionType, StartingTown, FlyRegion
 from .options import FreeFlyLocation, Route32Condition, JohtoOnly, RandomizeBadges, UndergroundsRequirePower, \
     Route3Access, EliteFourRequirement, Goal, Route44AccessRequirement, BlackthornDarkCaveAccess, RedRequirement, \
     MtSilverRequirement, HMBadgeRequirements, RedGyaradosAccess, EarlyFly, RadioTowerRequirement, \
-    BreedingMethodsRequired
+    BreedingMethodsRequired, Shopsanity
 from ..Files import APTokenTypes
 
 if TYPE_CHECKING:
@@ -252,24 +252,29 @@ def _starting_town_valid(world: "PokemonCrystalWorld", starting_town: StartingTo
         return False
 
     immediate_hiddens = world.options.randomize_hidden_items and not world.options.require_itemfinder
+    johto_shopsanity = world.options.shopsanity in (Shopsanity.option_johto, Shopsanity.option_both)
+    kanto_shopsanity = world.options.shopsanity in (Shopsanity.option_kanto, Shopsanity.option_both)
 
     if starting_town.name == "Cianwood City":
-        return world.options.trainersanity and immediate_hiddens and world.options.static_pokemon_required
+        return ((world.options.trainersanity and immediate_hiddens and world.options.static_pokemon_required)
+                or johto_shopsanity)
+    if starting_town.name in ("Lake of Rage", "Mahogany Town"):
+        return not world.options.mount_mortar_access or world.options.trainersanity or johto_shopsanity
 
     if starting_town.name in ("Pallet Town", "Viridian City", "Pewter City"):
-        return immediate_hiddens or world.options.route_3_access.value == Route3Access.option_vanilla
+        return immediate_hiddens or world.options.route_3_access == Route3Access.option_vanilla or kanto_shopsanity or world.options.randomize_berry_trees
     if starting_town.name == "Rock Tunnel":
-        return world.options.trainersanity and not world.options.dexsanity
+        return world.options.trainersanity
     if starting_town.name == "Vermilion City":
-        return "South" not in world.options.saffron_gatehouse_tea or world.options.undergrounds_require_power.value not in (
-            UndergroundsRequirePower.option_both, UndergroundsRequirePower.option_north_south)
+        return "South" not in world.options.saffron_gatehouse_tea or world.options.undergrounds_require_power not in (
+            UndergroundsRequirePower.option_both, UndergroundsRequirePower.option_north_south) or kanto_shopsanity
     if starting_town.name == "Cerulean City":
-        return "North" not in world.options.saffron_gatehouse_tea or immediate_hiddens
+        return "North" not in world.options.saffron_gatehouse_tea or immediate_hiddens or kanto_shopsanity
     if starting_town.name == "Celadon City":
-        return "West" not in world.options.saffron_gatehouse_tea or immediate_hiddens
+        return "West" not in world.options.saffron_gatehouse_tea or immediate_hiddens or kanto_shopsanity
     if starting_town.name in ("Lavender Town", "Fuchsia City"):
         return "East" not in world.options.saffron_gatehouse_tea or (
-                immediate_hiddens and world.options.randomize_berry_trees)
+                immediate_hiddens and world.options.randomize_berry_trees) or kanto_shopsanity
 
     return True
 
