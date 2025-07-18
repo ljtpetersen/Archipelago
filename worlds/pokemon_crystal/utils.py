@@ -256,8 +256,8 @@ def _starting_town_valid(world: "PokemonCrystalWorld", starting_town: StartingTo
     kanto_shopsanity = world.options.shopsanity in (Shopsanity.option_kanto, Shopsanity.option_both)
 
     if starting_town.name == "Cianwood City":
-        return ((world.options.trainersanity and immediate_hiddens and world.options.static_pokemon_required)
-                or johto_shopsanity)
+        return world.options.static_pokemon_required and (
+                    (world.options.trainersanity and immediate_hiddens) or johto_shopsanity)
     if starting_town.name in ("Lake of Rage", "Mahogany Town"):
         return not world.options.mount_mortar_access or world.options.trainersanity or johto_shopsanity
 
