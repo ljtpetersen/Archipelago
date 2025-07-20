@@ -874,6 +874,7 @@ weast_call:
     - |
       then you need t--
 
+
 headbutt_call:
   caller: withheld
   script:
@@ -906,7 +907,8 @@ headbutt_call:
       helps!
     - |
       Peace out.
-      
+
+
 kurt_balls:
   caller: withheld
   script:
@@ -935,6 +937,7 @@ kurt_balls:
       them coming
       He--------
 
+
 black_friday_call:
   caller: out_of_area
   script:
@@ -954,7 +957,7 @@ black_friday_call:
       For purchases 
       above ¥1000 you
       will receive a
-    - |  
+    - |
       free SLOWPOKETAIL!
       Thank you for
       shopping with us.
