@@ -502,7 +502,9 @@ class PokemonCrystalClient(BizHawkClient):
 
                     hint_ids = []
                     for location_id in hints_locations:
-                        if location_id not in ctx.missing_locations or location_id in self.local_checked_locations:
+                        if (location_id not in ctx.missing_locations
+                                or location_id in self.local_checked_locations
+                                or location_id not in ctx.locations_info):
                             continue
                         if not item_flag_mask or (ctx.locations_info[location_id].flags & item_flag_mask):
                             hint_ids.append(location_id)
