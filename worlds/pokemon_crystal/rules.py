@@ -1399,9 +1399,11 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     def evolution_logic(state: CollectionState, evolved_from: str, evolutions: list[EvolutionData]) -> bool:
         if not state.has(evolved_from, world.player): return False
         for evo in evolutions:
-            if evo.evo_type is EvolutionType.Level or evo.evo_type is EvolutionType.Stats:
+            if evo.evo_type is EvolutionType.Level or (
+                    evo.evo_type is EvolutionType.Stats and state.has_any(evolution_item_unlocks, world.player)):
                 required_gyms = ((evo.level - 1) // world.options.evolution_gym_levels) + 1
                 if world.logic.has_beaten_n_gyms(state, required_gyms): return True
+                return False
             if evo.evo_type is EvolutionType.Item and state.has_any(evolution_item_unlocks, world.player): return True
             if evo.evo_type is EvolutionType.Happiness and state.has_any(happiness_unlocks, world.player): return True
 
