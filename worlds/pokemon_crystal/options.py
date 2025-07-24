@@ -350,6 +350,7 @@ class Rematchsanity(Toggle):
 class TrainersanityAlerts(Choice):
     """
     Shows a message box or plays a sound for Trainersanity checks
+    Does not apply to some trainers with special handling
     """
     display_name = "Trainersanity Alerts"
     default = 1
