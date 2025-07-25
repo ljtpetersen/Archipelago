@@ -7239,6 +7239,26 @@
     "default_item": "NO_ITEM",
     "script": "AP_NPC_KarensRoom_Karen_NO_ITEM"
   },
+  "ITEM_FROM_OFFICER_KEITH": {
+    "label": "Route 34 - Officer Keith",
+    "flag": "EVENT_ITEM_FROM_OFFICER_KEITH",
+    "type": "giveitem",
+    "tags": [
+      "Trainersanity"
+    ],
+    "default_item": "NO_ITEM",
+    "script": "AP_NPC_Route34_OfficerKeith_NO_ITEM"
+  },
+  "ITEM_FROM_OFFICER_DIRK": {
+    "label": "Route 35 - Officer Dirk",
+    "flag": "EVENT_ITEM_FROM_OFFICER_DIRK",
+    "type": "giveitem",
+    "tags": [
+      "Trainersanity"
+    ],
+    "default_item": "NO_ITEM",
+    "script": "AP_NPC_Route35_OfficerDirk_NO_ITEM"
+  },
   "FRUITTREE_ROUTE_29": {
     "label": "Route 29 - Berry Tree",
     "flag": "FRUITTREE_ROUTE_29",
