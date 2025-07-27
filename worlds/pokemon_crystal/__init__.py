@@ -116,11 +116,13 @@ class PokemonCrystalWorld(World):
     generated_phone_traps: list[PhoneScript]
     generated_phone_indices: list[int]
 
-    encounter_name_list: list[str]
-    encounter_level_list: list[int]
     trainer_name_list: list[str]
     trainer_level_list: list[int]
     trainer_name_level_dict: dict[str, int]
+    static_name_list: list[str]
+    static_level_list: list[int]
+    encounter_region_name_list: list[str]
+    encounter_region_levels_list = list[int]
 
     shop_locations_by_spheres: list[set[PokemonCrystalLocation]]
 
@@ -157,8 +159,10 @@ class PokemonCrystalWorld(World):
         self.trainer_name_list = []
         self.trainer_level_list = []
         self.trainer_name_level_dict = {}
-        self.encounter_name_list = []
-        self.encounter_level_list = []
+        self.static_name_list = []
+        self.static_level_list = []
+        self.encounter_region_name_list = []
+        self.encounter_region_levels_list = []
 
         self.shop_locations_by_spheres = []
 

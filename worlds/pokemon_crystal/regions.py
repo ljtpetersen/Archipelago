@@ -2,7 +2,8 @@ import logging
 from typing import TYPE_CHECKING
 
 from BaseClasses import Region, ItemClassification, Entrance
-from .data import data, RegionData, EncounterMon, StaticPokemon, LogicalAccess, EncounterKey, FishingRodType, TreeRarity
+from .data import data, RegionData, EncounterMon, StaticPokemon, LogicalAccess, EncounterKey, FishingRodType, \
+    TreeRarity, EncounterType
 from .items import PokemonCrystalItem
 from .locations import PokemonCrystalLocation
 from .options import FreeFlyLocation, JohtoOnly, BlackthornDarkCaveAccess, Goal, Shopsanity, FlyCheese
@@ -79,8 +80,9 @@ def create_regions(world: "PokemonCrystalWorld") -> dict[str, Region]:
     johto_only = world.options.johto_only.value
     skip_e4 = world.options.skip_elite_four.value
 
+    wild_name_level_list: list[tuple[str, list[int]]] = []
     trainer_name_level_list: list[tuple[str, int]] = []
-    encounter_name_level_list: list[tuple[str, int]] = []
+    static_name_level_list: list[tuple[str, int]] = []
 
     def should_include_region(region):
         # check if region should be included
@@ -99,6 +101,24 @@ def create_regions(world: "PokemonCrystalWorld") -> dict[str, Region]:
             return True
         else:
             return False
+
+    def create_scaling_location(parent_region: Region, wild_key: EncounterKey):
+        if wild_key.region_name() in regions: return
+        if world.options.level_scaling and wild_key.encounter_type in [EncounterType.Grass,
+                                                                       EncounterType.Water]:
+            wild_name_level_list.append((
+                wild_key.region_name(),
+                [slot.level for slot in world.generated_wild[wild_key]]
+            ))
+
+            scaling_event = PokemonCrystalLocation(
+                world.player, wild_key.region_name(), parent_region, None, None, None,
+                frozenset({"wilds scaling"}))
+            scaling_event.show_in_spoiler = False
+            scaling_event.place_locked_item(PokemonCrystalItem(
+                "Wild Pokemon", ItemClassification.filler, None, world.player))
+            scaling_event.encounter_key = wild_key
+            parent_region.locations.append(scaling_event)
 
     def create_wild_region(parent_region: Region, wild_key: EncounterKey, wilds: list[EncounterMon | StaticPokemon],
                            tags: set[str] | None = None):
@@ -127,6 +147,7 @@ def create_regions(world: "PokemonCrystalWorld") -> dict[str, Region]:
         if wild_region_data.wild_encounters:
             if wild_region_data.wild_encounters.grass:
                 encounter_key = EncounterKey.grass(wild_region_data.wild_encounters.grass)
+                create_scaling_location(parent_region, encounter_key)
                 if "Land" in world.options.wild_encounter_methods_required:
                     world.logic.wild_regions[encounter_key] = LogicalAccess.InLogic
                     create_wild_region(parent_region, encounter_key, world.generated_wild[encounter_key])
@@ -135,6 +156,7 @@ def create_regions(world: "PokemonCrystalWorld") -> dict[str, Region]:
 
             if wild_region_data.wild_encounters.surfing:
                 encounter_key = EncounterKey.water(wild_region_data.wild_encounters.surfing)
+                create_scaling_location(parent_region, encounter_key)
                 if "Surfing" in world.options.wild_encounter_methods_required:
                     world.logic.wild_regions[encounter_key] = LogicalAccess.InLogic
                     create_wild_region(parent_region, encounter_key, world.generated_wild[encounter_key])
@@ -233,9 +255,6 @@ def create_regions(world: "PokemonCrystalWorld") -> dict[str, Region]:
                         "Static Pokemon", ItemClassification.filler, None, world.player))
                     new_region.locations.append(scaling_event)
 
-                # Create plando locations for the wilds in their regions.
-                # TODO once wilds logic gets implemented.
-
                 min_level = 100
                 # Create a new list of all the Trainer Pokemon and their levels
                 for trainer in region_data.trainers:
@@ -252,11 +271,7 @@ def create_regions(world: "PokemonCrystalWorld") -> dict[str, Region]:
                 for static_id in region_data.statics:
                     static = world.generated_static[static_id]
                     min_level = min(min_level, static.level)
-                    encounter_name_level_list.append((static.name, min_level))
-
-                # And finally the wilds.
-                # TODO add wilds scaling.
-                # End level scaling in regions.py
+                    static_name_level_list.append((static.name, min_level))
 
             for region_exit in region_data.exits:
                 connections.append((f"{region_name} -> {region_exit}", region_name, region_exit))
@@ -313,10 +328,13 @@ def create_regions(world: "PokemonCrystalWorld") -> dict[str, Region]:
         trainer_name_level_list.sort(key=lambda i: i[1])
         world.trainer_name_list = [i[0] for i in trainer_name_level_list]
         world.trainer_level_list = [i[1] for i in trainer_name_level_list]
-        encounter_name_level_list.sort(key=lambda i: i[1])
-        world.encounter_name_list = [i[0] for i in encounter_name_level_list]
-        world.encounter_level_list = [i[1] for i in encounter_name_level_list]
-
+        static_name_level_list.sort(key=lambda i: i[1])
+        world.static_name_list = [i[0] for i in static_name_level_list]
+        world.static_level_list = [i[1] for i in static_name_level_list]
+        wild_name_level_list.sort(key=lambda i: max(i[1]))
+        world.encounter_region_name_list = [i[0] for i in wild_name_level_list]
+        world.encounter_region_levels_list = [j for i in wild_name_level_list for j in i[1]]
+        world.encounter_region_levels_list.sort()
     return regions
 
 

@@ -798,7 +798,7 @@ class TrainerPartyBlocklist(OptionSet):
 
 class LevelScaling(Choice):
     """
-    Sets whether Trainer levels are scaled based on sphere access.
+    Sets whether Trainer, Wild Pokemon and Static Pokemon levels are scaled based on sphere access.
 
     - Off: Vanilla levels are used.
     - Spheres: Levels are scaled based on sphere access only.
