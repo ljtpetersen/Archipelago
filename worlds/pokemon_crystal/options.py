@@ -464,6 +464,8 @@ class EnforceWildEncounterMethodsLogic(Toggle):
     """
     Sets whether the game will prevent capture of Pokemon found through disabled wild encounter methods
     Statics and roamers can always be caught
+
+    You can always re-catch Pokemon you have already caught
     """
     display_name = "Enforce Wild Encounter Methods Logic"
 
