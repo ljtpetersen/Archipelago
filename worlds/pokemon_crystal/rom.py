@@ -174,6 +174,9 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
 
     if world.options.shopsanity in (Shopsanity.option_johto, Shopsanity.option_both):
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_JohtoShopsanityEnabled"] + 2)
+        # the dw at +11 is the event flag.
+        write_bytes(patch, [0xFF, 0xFF], data.rom_addresses["AP_Setting_Shopsanity_MahoganyMart_1"] + 11)
+        write_bytes(patch, [0xFF, 0xFF], data.rom_addresses["AP_Setting_Shopsanity_MahoganyMart_2"] + 11)
 
     if world.options.shopsanity in (Shopsanity.option_kanto, Shopsanity.option_both):
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_KantoShopsanityEnabled"] + 2)
