@@ -455,7 +455,10 @@
       "REGION_CELADON_CITY"
     ],
     "locations": [],
-    "events": []
+    "events": [],
+    "marts": [
+      "MART_CELADON_GAME_CORNER_PRIZE_ROOM"
+    ]
   },
   "REGION_CELADON_GYM": {
     "johto": false,
@@ -1620,7 +1623,10 @@
       "REGION_GOLDENROD_CITY"
     ],
     "locations": [],
-    "events": []
+    "events": [],
+    "marts": [
+      "MART_GOLDENROD_GAME_CORNER"
+    ]
   },
   "REGION_GOLDENROD_GYM": {
     "johto": true,

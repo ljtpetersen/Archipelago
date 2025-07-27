@@ -48,7 +48,9 @@ FRIENDLY_MART_NAMES = {
     "MART_GOLDENROD_1F_S": "Evolution Stone Shop",
     "MART_ROOFTOP_SALE": "Goldenrod Dept. Store - Rooftop Sale",
     "MART_BARGAIN_SHOP": "Goldenrod UG - Bargain Shop",
-    "MART_BLUE_CARD": "Radio Tower - Blue Card Shop"
+    "MART_BLUE_CARD": "Radio Tower - Blue Card Shop",
+    "MART_GOLDENROD_GAME_CORNER": "Goldenrod Game Corner - Prize Shop",
+    "MART_CELADON_GAME_CORNER_PRIZE_ROOM": "Celadon Game Corner - Prize Shop"
 }
 
 JOHTO_MARTS = {
@@ -69,7 +71,8 @@ JOHTO_MARTS = {
     "MART_UNDERGROUND",
     "MART_BARGAIN_SHOP",
     "MART_ROOFTOP_SALE",
-    "MART_BLUE_CARD"
+    "MART_BLUE_CARD",
+    "MART_GOLDENROD_GAME_CORNER"
 }
 
 REQUEST_POKEMON = [

@@ -391,7 +391,8 @@ class PokemonCrystalWorld(World):
     def stage_generate_output(cls, multiworld: MultiWorld, output_directory: str):
         shop_locations: dict[int, list[set[PokemonCrystalLocation]]] = defaultdict(list)
 
-        exclude_shops = ("REGION_MART_BLUE_CARD",)
+        exclude_shops = ("REGION_MART_BLUE_CARD", "REGION_MART_GOLDENROD_GAME_CORNER",
+                         "MART_CELADON_GAME_CORNER_PRIZE_ROOM")
         for sphere in multiworld.get_spheres():
             shop_locations_in_sphere = defaultdict(set)
             for location in sphere:

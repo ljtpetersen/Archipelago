@@ -319,10 +319,12 @@
   },
   "COIN_CASE": {
     "name": "Coin Case",
-    "classification": "FILLER",
+    "classification": "PROGRESSION",
     "price": 0,
     "tags": [
-      "Unique"
+      "KeyItem",
+      "Unique",
+      "Tracker"
     ]
   },
   "ITEMFINDER": {
@@ -724,7 +726,8 @@
     "price": 0,
     "tags": [
       "KeyItem",
-      "Unique"
+      "Unique",
+      "Tracker"
     ]
   },
   "MIRACLE_SEED": {

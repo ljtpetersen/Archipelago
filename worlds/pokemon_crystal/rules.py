@@ -696,6 +696,10 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         "REGION_GOLDENROD_UNDERGROUND_SWITCH_ROOM_ENTRANCES -> REGION_GOLDENROD_UNDERGROUND_SWITCH_ROOM_ENTRANCES:TAKEOVER"),
         has_rockets_requirement)
 
+    if world.options.shopsanity in (Shopsanity.option_johto, Shopsanity.option_both):
+        set_rule(get_entrance("REGION_GOLDENROD_GAME_CORNER -> REGION_MART_GOLDENROD_GAME_CORNER"),
+                 lambda state: state.has("Coin Case", world.player))
+
     # Radio Tower
     set_rule(get_entrance("REGION_RADIO_TOWER_2F -> REGION_RADIO_TOWER_2F:TAKEOVER"),
              has_rockets_requirement)
@@ -1306,6 +1310,11 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
         # Celadon
         set_rule(get_entrance("REGION_CELADON_CITY -> REGION_CELADON_GYM"), can_cut_kanto)
+
+        if world.options.shopsanity in (Shopsanity.option_kanto, Shopsanity.option_both):
+            set_rule(
+                get_entrance("REGION_CELADON_GAME_CORNER_PRIZE_ROOM -> REGION_MART_CELADON_GAME_CORNER_PRIZE_ROOM"),
+                lambda state: state.has("Coin Case", world.player))
 
         # Route 16
         set_rule(get_entrance("REGION_ROUTE_16 -> REGION_ROUTE_16:CUT"), can_cut_kanto)
