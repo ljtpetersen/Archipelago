@@ -720,7 +720,7 @@
   },
   "BLUE_CARD": {
     "name": "Blue Card",
-    "classification": "FILLER",
+    "classification": "PROGRESSION",
     "price": 0,
     "tags": [
       "KeyItem",

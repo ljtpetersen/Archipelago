@@ -669,7 +669,7 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     if world.options.static_pokemon_required:
         set_rule(get_location("Static_Eevee_1"), lambda state: state.has("EVENT_MET_BILL", world.player))
 
-    if world.options.shopsanity == Shopsanity.option_johto or world.options.shopsanity == Shopsanity.option_both:
+    if world.options.shopsanity in (Shopsanity.option_johto, Shopsanity.option_both):
         set_rule(get_entrance("REGION_GOLDENROD_DEPT_STORE_ROOF -> REGION_MART_ROOFTOP_SALE"),
                  lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
 
@@ -699,6 +699,10 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     # Radio Tower
     set_rule(get_entrance("REGION_RADIO_TOWER_2F -> REGION_RADIO_TOWER_2F:TAKEOVER"),
              has_rockets_requirement)
+
+    if world.options.shopsanity in (Shopsanity.option_johto, Shopsanity.option_both):
+        set_rule(get_entrance("REGION_RADIO_TOWER_2F -> REGION_MART_BLUE_CARD"),
+                 lambda state: state.has("Blue Card", world.player))
 
     set_rule(get_entrance("REGION_RADIO_TOWER_3F:NOCARDKEY -> REGION_RADIO_TOWER_3F:CARDKEY"),
              lambda state: state.has("Card Key", world.player))

@@ -14,7 +14,7 @@ from .items import item_const_name_to_id
 from .moves import LOGIC_MOVES
 from .options import UndergroundsRequirePower, RequireItemfinder, Goal, Route2Access, \
     BlackthornDarkCaveAccess, NationalParkAccess, Route3Access, EncounterSlotDistribution, KantoAccessRequirement, \
-    FreeFlyLocation, HMBadgeRequirements, ShopsanityPrices, WildEncounterMethodsRequired, FlyCheese
+    FreeFlyLocation, HMBadgeRequirements, ShopsanityPrices, WildEncounterMethodsRequired, FlyCheese, Shopsanity
 from .utils import convert_to_ingame_text, write_bytes, replace_map_tiles
 
 if TYPE_CHECKING:
@@ -171,6 +171,12 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
 
     write_bytes(patch, [0xFF], item_name_table_adr + item_name_table_length - 1)
     write_bytes(patch, [0xFF], shopsanity_name_table_adr + shopsanity_name_table_length - 1)
+
+    if world.options.shopsanity in (Shopsanity.option_johto, Shopsanity.option_both):
+        write_bytes(patch, [1], data.rom_addresses["AP_Setting_JohtoShopsanityEnabled"] + 2)
+
+    if world.options.shopsanity in (Shopsanity.option_kanto, Shopsanity.option_both):
+        write_bytes(patch, [1], data.rom_addresses["AP_Setting_KantoShopsanityEnabled"] + 2)
 
     if world.options.shopsanity and world.options.shopsanity_prices:
 

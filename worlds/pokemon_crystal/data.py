@@ -47,7 +47,8 @@ FRIENDLY_MART_NAMES = {
     "MART_UNDERGROUND": "Goldenrod UG - Herb Shop",
     "MART_GOLDENROD_1F_S": "Evolution Stone Shop",
     "MART_ROOFTOP_SALE": "Goldenrod Dept. Store - Rooftop Sale",
-    "MART_BARGAIN_SHOP": "Goldenrod UG - Bargain Shop"
+    "MART_BARGAIN_SHOP": "Goldenrod UG - Bargain Shop",
+    "MART_BLUE_CARD": "Radio Tower - Blue Card Shop"
 }
 
 JOHTO_MARTS = {
@@ -67,7 +68,8 @@ JOHTO_MARTS = {
     "MART_BLACKHORN",
     "MART_UNDERGROUND",
     "MART_BARGAIN_SHOP",
-    "MART_ROOFTOP_SALE"
+    "MART_ROOFTOP_SALE",
+    "MART_BLUE_CARD"
 }
 
 REQUEST_POKEMON = [

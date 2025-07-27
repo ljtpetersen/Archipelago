@@ -1,6 +1,7 @@
 import logging
 import pkgutil
 from collections import defaultdict
+from collections.abc import Sequence
 from dataclasses import replace
 from threading import Event
 from typing import ClassVar, Any
@@ -205,7 +206,7 @@ class PokemonCrystalWorld(World):
     def create_items(self) -> None:
 
         # Delete trainersanity locations if there are more than the amount specified in the settings
-        def remove_excess_trainersanity(trainer_locations: [PokemonCrystalLocation], locs_to_remove: int):
+        def remove_excess_trainersanity(trainer_locations: Sequence[PokemonCrystalLocation], locs_to_remove: int):
             if locs_to_remove > 0:
                 priority_trainer_locations = [loc for loc in trainer_locations
                                               if loc.name in self.options.priority_locations.value]
@@ -390,12 +391,13 @@ class PokemonCrystalWorld(World):
     def stage_generate_output(cls, multiworld: MultiWorld, output_directory: str):
         shop_locations: dict[int, list[set[PokemonCrystalLocation]]] = defaultdict(list)
 
+        exclude_shops = ("REGION_MART_BLUE_CARD",)
         for sphere in multiworld.get_spheres():
             shop_locations_in_sphere = defaultdict(set)
             for location in sphere:
                 if location.game == "Pokemon Crystal":
                     assert isinstance(location, PokemonCrystalLocation)
-                    if "shopsanity" in location.tags:
+                    if "shopsanity" in location.tags and location.parent_region.name not in exclude_shops:
                         shop_locations_in_sphere[location.player].add(location)
 
             for player, locations in shop_locations_in_sphere.items():

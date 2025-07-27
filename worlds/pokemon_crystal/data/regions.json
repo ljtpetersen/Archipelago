@@ -3123,7 +3123,10 @@
     "locations": [
       "BUENA_BLUE_CARD"
     ],
-    "events": []
+    "events": [],
+    "marts": [
+      "MART_BLUE_CARD"
+    ]
   },
   "REGION_RADIO_TOWER_2F:TAKEOVER": {
     "johto": true,
