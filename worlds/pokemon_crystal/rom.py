@@ -248,11 +248,25 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
 
     for _, pkmn_data in world.generated_static.items():
         pokemon_id = data.pokemon[pkmn_data.pokemon].id
-        for address in pkmn_data.addresses:
+        if pkmn_data.level_type == "gamecorner":
+            addresses = pkmn_data.addresses[:-1]
+        else:
+            addresses = pkmn_data.addresses
+
+        for address in addresses:
             cur_address = data.rom_addresses[address] + 1
             write_bytes(patch, [pokemon_id], cur_address)
+
+        if pkmn_data.level_type == "gamecorner":
+            static_name = world.generated_pokemon[pkmn_data.pokemon].friendly_name.upper()
+            static_name = "NIDORAN♀" if static_name == "NIDORAN F" else static_name
+            static_name = "NIDORAN♂" if static_name == "NIDORAN M" else static_name
+            static_text = convert_to_ingame_text(static_name)
+
+            write_bytes(patch, static_text, data.rom_addresses[pkmn_data.addresses[-1]])
+
         if pkmn_data.level_address is not None:
-            if pkmn_data.level_type in ("givepoke", "loadwildmon"):
+            if pkmn_data.level_type in ("givepoke", "loadwildmon", "gamecorner"):
                 write_bytes(patch, [pkmn_data.level], data.rom_addresses[pkmn_data.level_address] + 2)
             elif pkmn_data.level_type == "custom":
                 write_bytes(patch, [pkmn_data.level], data.rom_addresses[pkmn_data.level_address] + 1)

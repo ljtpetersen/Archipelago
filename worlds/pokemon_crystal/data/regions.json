@@ -458,6 +458,11 @@
     "events": [],
     "marts": [
       "MART_CELADON_GAME_CORNER_PRIZE_ROOM"
+    ],
+    "statics": [
+      "CeladonGameCornerPrizeRoom1",
+      "CeladonGameCornerPrizeRoom2",
+      "CeladonGameCornerPrizeRoom3"
     ]
   },
   "REGION_CELADON_GYM": {
@@ -1626,6 +1631,11 @@
     "events": [],
     "marts": [
       "MART_GOLDENROD_GAME_CORNER"
+    ],
+    "statics": [
+      "GoldenrodGameCorner1",
+      "GoldenrodGameCorner2",
+      "GoldenrodGameCorner3"
     ]
   },
   "REGION_GOLDENROD_GYM": {

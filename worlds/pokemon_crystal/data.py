@@ -566,7 +566,7 @@ def _init() -> None:
     for static_name, static_data in data_json["static"].items():
         static_key = EncounterKey(EncounterType.Static, static_name)
         level_type = static_data["type"]
-        if level_type == "loadwildmon" or level_type == "givepoke":
+        if level_type in ("loadwildmon", "givepoke", "gamecorner"):
             level_address = static_data["addresses"][0]
         elif level_type == "custom":
             level_address = static_data["level_address"]
