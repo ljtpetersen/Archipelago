@@ -582,7 +582,7 @@ class PokemonCrystalWorld(World):
 
         if self.options.randomize_pokemon_requests:
             request_pokemon = ", ".join(self.generated_request_pokemon)
-            spoiler_handle.write(f"Bill's Grandpa Pokemon: {request_pokemon}\n")g
+            spoiler_handle.write(f"Bill's Grandpa Pokemon: {request_pokemon}\n")
 
         if self.options.enable_mischief:
             spoiler_handle.write(f"Mischief:\n")
