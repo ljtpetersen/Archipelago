@@ -16,7 +16,8 @@ from .data import PokemonData, TrainerData, MiscData, TMHMData, data as crystal_
     LogicalAccess, EncounterKey, EncounterMon, MartData
 from .evolution import randomize_evolution
 from .items import PokemonCrystalItem, create_item_label_to_code_map, get_item_classification, ITEM_GROUPS, \
-    item_const_name_to_id, item_const_name_to_label
+    item_const_name_to_id, item_const_name_to_label, adjust_item_classifications, get_random_filler_item, \
+    get_random_ball
 from .level_scaling import perform_level_scaling
 from .locations import create_locations, PokemonCrystalLocation, create_location_label_to_id_map, LOCATION_GROUPS
 from .misc import randomize_mischief, get_misc_spoiler_log
@@ -34,7 +35,7 @@ from .regions import create_regions, setup_free_fly_regions
 from .rom import generate_output, PokemonCrystalProcedurePatch
 from .rules import set_rules, PokemonCrystalLogic, verify_hm_accessibility
 from .trainers import boost_trainer_pokemon, randomize_trainers, vanilla_trainer_movesets
-from .utils import get_random_filler_item, get_free_fly_locations, get_random_ball, get_random_starting_town, \
+from .utils import get_free_fly_locations, get_random_starting_town, \
     adjust_options
 from .wild import randomize_wild_pokemon, randomize_static_pokemon
 
@@ -302,8 +303,6 @@ class PokemonCrystalWorld(World):
                 self.itempool.append(self.create_item_by_code(item_code))
             elif add_items:
                 self.itempool.append(self.create_item_by_const_name(add_items.pop()))
-            elif self.random.randint(0, 100) < total_trap_weight:
-                self.itempool.append(get_random_trap())
             elif item_code == 0:  # item is NO_ITEM, trainersanity checks
                 self.itempool.append(self.create_item_by_const_name(get_random_filler_item(self.random)))
             else:
@@ -325,6 +324,13 @@ class PokemonCrystalWorld(World):
             # Replace the S.S. Ticket with the Silver Wing for Johto only seeds
             self.itempool = [item if item.name != "S.S. Ticket" else self.create_item_by_const_name("SILVER_WING")
                              for item in self.itempool]
+
+        adjust_item_classifications(self)
+
+        for i in range(len(self.itempool)):
+            if (self.itempool[i].classification == ItemClassification.filler
+                    and self.random.randint(0, 100) < total_trap_weight):
+                self.itempool[i] = get_random_trap()
 
         self.multiworld.itempool.extend(self.itempool)
 

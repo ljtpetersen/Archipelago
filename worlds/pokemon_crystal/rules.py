@@ -738,7 +738,8 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         blue_card_points = (2, 2, 3, 3, 5, 5, 5, 5, 5)
 
         for i, points in enumerate(blue_card_points):
-            set_rule(get_location(f"Radio Tower - Blue Card Shop - {get_mart_slot_location_name("MART_BLUE_CARD", i)}"),
+            slot_name = get_mart_slot_location_name("MART_BLUE_CARD", i)
+            set_rule(get_location(f"Radio Tower - Blue Card Shop - {slot_name}"),
                      lambda state, num_points=points: state.has("Blue Card Point", world.player, count=num_points))
 
     set_rule(get_entrance("REGION_RADIO_TOWER_3F:NOCARDKEY -> REGION_RADIO_TOWER_3F:CARDKEY"),

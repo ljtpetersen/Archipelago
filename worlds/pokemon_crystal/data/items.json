@@ -546,7 +546,9 @@
     "name": "Red Apricorn",
     "classification": "FILLER",
     "price": 200,
-    "tags": []
+    "tags": [
+      "Apricorn"
+    ]
   },
   "TINYMUSHROOM": {
     "name": "Tinymushroom",
@@ -570,7 +572,9 @@
     "name": "Blu Apricorn",
     "classification": "FILLER",
     "price": 200,
-    "tags": []
+    "tags": [
+      "Apricorn"
+    ]
   },
   "AMULET_COIN": {
     "name": "Amulet Coin",
@@ -582,13 +586,17 @@
     "name": "Ylw Apricorn",
     "classification": "FILLER",
     "price": 200,
-    "tags": []
+    "tags": [
+      "Apricorn"
+    ]
   },
   "GRN_APRICORN": {
     "name": "Grn Apricorn",
     "classification": "FILLER",
     "price": 200,
-    "tags": []
+    "tags": [
+      "Apricorn"
+    ]
   },
   "CLEANSE_TAG": {
     "name": "Cleanse Tag",
@@ -612,7 +620,9 @@
     "name": "Wht Apricorn",
     "classification": "FILLER",
     "price": 200,
-    "tags": []
+    "tags": [
+      "Apricorn"
+    ]
   },
   "BLACKBELT_I": {
     "name": "Blackbelt",
@@ -624,13 +634,17 @@
     "name": "Blk Apricorn",
     "classification": "FILLER",
     "price": 200,
-    "tags": []
+    "tags": [
+      "Apricorn"
+    ]
   },
   "PNK_APRICORN": {
     "name": "Pnk Apricorn",
     "classification": "FILLER",
     "price": 200,
-    "tags": []
+    "tags": [
+      "Apricorn"
+    ]
   },
   "BLACKGLASSES": {
     "name": "Blackglasses",
@@ -1414,7 +1428,7 @@
     "classification": "PROGRESSION",
     "price": 0,
     "tags": [
-      "KeyItem"
+      "Tracker"
     ]
   },
   "AP_ITEM": {

@@ -5,10 +5,11 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import ItemClassification
 from .data import data as crystal_data, LogicalAccess, PokemonData, EncounterType
+from .items import get_random_filler_item
 from .moves import get_tmhm_compatibility, randomize_learnset, moves_convert_friendly_to_ids
 from .options import RandomizeTypes, RandomizePalettes, RandomizeBaseStats, RandomizeStarters, RandomizeTrades, \
     DexsanityStarters, EncounterGrouping, BreedingMethodsRequired, RandomizePokemonRequests
-from .utils import get_random_filler_item, evolution_in_logic
+from .utils import evolution_in_logic
 
 if TYPE_CHECKING:
     from . import PokemonCrystalWorld

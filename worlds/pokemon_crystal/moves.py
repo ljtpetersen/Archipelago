@@ -156,7 +156,7 @@ def randomize_tms(world: "PokemonCrystalWorld"):
         world.generated_tms[tm_name] = TMHMData(new_move.id, tm_data.tm_num, new_move.type, False, new_move.rom_id)
 
 
-def get_random_move_from_learnset(world: "PokemonCrystalWorld", pokemon, level):
+def get_random_move_from_learnset(world: "PokemonCrystalWorld", pokemon: str, level: int):
     move_pool = [learn_move.move for learn_move in world.generated_pokemon[pokemon].learnset if
                  learn_move.level <= level and learn_move.move != "NO_MOVE"]
     # double learnset pool to dilute HMs slightly
