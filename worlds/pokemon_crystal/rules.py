@@ -11,7 +11,7 @@ from .options import Goal, JohtoOnly, Route32Condition, UndergroundsRequirePower
     MtSilverRequirement, FreeFlyLocation, HMBadgeRequirements, EliteFourRequirement, RedRequirement, \
     Route44AccessRequirement, RandomizeBadges, RadioTowerRequirement, PokemonCrystalOptions, Shopsanity, FlyCheese
 from .pokemon import add_hm_compatibility
-from .utils import evolution_in_logic, evolution_location_name, get_fly_regions
+from .utils import evolution_in_logic, evolution_location_name, get_fly_regions, get_mart_slot_location_name
 
 if TYPE_CHECKING:
     from . import PokemonCrystalWorld
@@ -608,7 +608,7 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     set_rule(get_location("Azalea Town - Lure Ball from Kurt"),
              lambda state: state.has("EVENT_CLEARED_SLOWPOKE_WELL", world.player))
 
-    if world.options.shopsanity in (Shopsanity.option_johto, Shopsanity.option_both):
+    if Shopsanity.apricorns in world.options.shopsanity.value:
         set_rule(get_entrance("REGION_KURTS_HOUSE -> REGION_MART_KURTS_BALLS"),
                  lambda state: state.has("EVENT_CLEARED_SLOWPOKE_WELL", world.player))
         set_rule(get_location("Azalea Town - Kurt's Ball Shop - Red Apricorn"),
@@ -687,7 +687,7 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     if world.options.static_pokemon_required:
         set_rule(get_location("Static_Eevee_1"), lambda state: state.has("EVENT_MET_BILL", world.player))
 
-    if world.options.shopsanity in (Shopsanity.option_johto, Shopsanity.option_both):
+    if Shopsanity.johto_marts in world.options.shopsanity.value:
         set_rule(get_entrance("REGION_GOLDENROD_DEPT_STORE_ROOF -> REGION_MART_ROOFTOP_SALE"),
                  lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
 
@@ -714,7 +714,7 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         "REGION_GOLDENROD_UNDERGROUND_SWITCH_ROOM_ENTRANCES -> REGION_GOLDENROD_UNDERGROUND_SWITCH_ROOM_ENTRANCES:TAKEOVER"),
         has_rockets_requirement)
 
-    if world.options.shopsanity in (Shopsanity.option_johto, Shopsanity.option_both):
+    if Shopsanity.game_corners in world.options.shopsanity.value:
         set_rule(get_entrance("REGION_GOLDENROD_GAME_CORNER -> REGION_MART_GOLDENROD_GAME_CORNER"),
                  lambda state: state.has("Coin Case", world.player))
 
@@ -729,12 +729,17 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         set_rule(get_location("GoldenrodGameCorner2"), lambda state: state.has("Coin Case", world.player))
 
     # Radio Tower
-    set_rule(get_entrance("REGION_RADIO_TOWER_2F -> REGION_RADIO_TOWER_2F:TAKEOVER"),
-             has_rockets_requirement)
+    set_rule(get_entrance("REGION_RADIO_TOWER_2F -> REGION_RADIO_TOWER_2F:TAKEOVER"), has_rockets_requirement)
 
-    if world.options.shopsanity in (Shopsanity.option_johto, Shopsanity.option_both):
+    if Shopsanity.blue_card in world.options.shopsanity.value:
         set_rule(get_entrance("REGION_RADIO_TOWER_2F -> REGION_MART_BLUE_CARD"),
                  lambda state: state.has("Blue Card", world.player))
+
+        blue_card_points = (2, 2, 3, 3, 5, 5, 5, 5, 5)
+
+        for i, points in enumerate(blue_card_points):
+            set_rule(get_location(f"Radio Tower - Blue Card Shop - {get_mart_slot_location_name("MART_BLUE_CARD", i)}"),
+                     lambda state, num_points=points: state.has("Blue Card Point", world.player, count=num_points))
 
     set_rule(get_entrance("REGION_RADIO_TOWER_3F:NOCARDKEY -> REGION_RADIO_TOWER_3F:CARDKEY"),
              lambda state: state.has("Card Key", world.player))
@@ -1339,7 +1344,7 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         # Celadon
         set_rule(get_entrance("REGION_CELADON_CITY -> REGION_CELADON_GYM"), can_cut_kanto)
 
-        if world.options.shopsanity in (Shopsanity.option_kanto, Shopsanity.option_both):
+        if Shopsanity.game_corners in world.options.shopsanity.value:
             set_rule(
                 get_entrance("REGION_CELADON_GAME_CORNER_PRIZE_ROOM -> REGION_MART_CELADON_GAME_CORNER_PRIZE_ROOM"),
                 lambda state: state.has("Coin Case", world.player))

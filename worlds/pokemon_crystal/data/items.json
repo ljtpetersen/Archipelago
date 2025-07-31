@@ -1409,6 +1409,14 @@
       "Trap"
     ]
   },
+  "BLUE_CARD_PT": {
+    "name": "Blue Card Point",
+    "classification": "PROGRESSION",
+    "price": 0,
+    "tags": [
+      "KeyItem"
+    ]
+  },
   "AP_ITEM": {
     "name": "AP Item",
     "classification": "FILLER",

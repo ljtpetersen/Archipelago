@@ -66,27 +66,78 @@ CUSTOM_MART_SLOT_NAMES = {
     ]
 }
 
-JOHTO_MARTS = {
+MART_CATEGORIES = {
+    "Johto Marts": {
+        "MART_CHERRYGROVE",
+        "MART_VIOLET",
+        "MART_AZALEA",
+        "MART_CIANWOOD",
+        "MART_GOLDENROD_2F_1",
+        "MART_GOLDENROD_2F_2",
+        "MART_GOLDENROD_3F",
+        "MART_GOLDENROD_4F",
+        "MART_GOLDENROD_5F",
+        "MART_OLIVINE",
+        "MART_ECRUTEAK",
+        "MART_MAHOGANY_1",
+        "MART_MAHOGANY_2",
+        "MART_BLACKTHORN",
+        "MART_UNDERGROUND",
+        "MART_ROOFTOP_SALE",
+        "MART_BARGAIN_SHOP",
+    },
+    "Kanto Marts": {
+        "MART_VIRIDIAN",
+        "MART_PEWTER",
+        "MART_CERULEAN",
+        "MART_LAVENDER",
+        "MART_VERMILION",
+        "MART_CELADON_2F_1",
+        "MART_CELADON_2F_2",
+        "MART_CELADON_3F",
+        "MART_CELADON_4F",
+        "MART_CELADON_5F_1",
+        "MART_CELADON_5F_2",
+        "MART_FUCHSIA",
+        "MART_SAFFRON",
+        "MART_MT_MOON",
+        "MART_INDIGO_PLATEAU",
+    },
+    "Blue Card": {
+        "MART_BLUE_CARD",
+    },
+    "Apricorns": {
+        "MART_KURTS_BALLS"
+    },
+    "Game Corners": {
+        "MART_GOLDENROD_GAME_CORNER",
+        "MART_CELADON_GAME_CORNER_PRIZE_ROOM"
+    },
+    "invalid": {
+        "MART_GOLDENROD_1F_S"
+    }
+}
+
+BETTER_MART_MARTS = {
     "MART_CHERRYGROVE",
     "MART_VIOLET",
     "MART_AZALEA",
     "MART_CIANWOOD",
     "MART_GOLDENROD_2F_1",
-    "MART_GOLDENROD_2F_2",
-    "MART_GOLDENROD_3F",
-    "MART_GOLDENROD_4F",
-    "MART_GOLDENROD_5F",
-    "MART_OLVINE",
+    "MART_OLIVINE",
     "MART_ECRUTEAK",
     "MART_MAHOGANY_1",
     "MART_MAHOGANY_2",
-    "MART_BLACKHORN",
-    "MART_UNDERGROUND",
-    "MART_BARGAIN_SHOP",
-    "MART_ROOFTOP_SALE",
-    "MART_BLUE_CARD",
-    "MART_GOLDENROD_GAME_CORNER",
-    "MART_KURTS_BALLS"
+    "MART_BLACKTHORN",
+    "MART_VIRIDIAN",
+    "MART_PEWTER",
+    "MART_CERULEAN",
+    "MART_LAVENDER",
+    "MART_VERMILION",
+    "MART_CELADON_2F_1",
+    "MART_FUCHSIA",
+    "MART_SAFFRON",
+    "MART_INDIGO_PLATEAU",
 }
 
 REQUEST_POKEMON = [
@@ -222,7 +273,7 @@ class MartItemData:
 class MartData:
     index: int
     friendly_name: str
-    johto: bool
+    category: str
     items: Sequence[MartItemData]
 
 
@@ -788,10 +839,12 @@ def _init() -> None:
         move_data[tm_name]["id"]
     ) for tm_name, tm_data in tmhm_data.items()}
 
+    mart_categories = {mart: category for category, marts in MART_CATEGORIES.items() for mart in marts}
+
     marts = {mart_name: MartData(
         mart_data["index"],
         FRIENDLY_MART_NAMES[mart_name],
-        mart_name in JOHTO_MARTS,
+        mart_categories[mart_name],
         [MartItemData(entry["item"], entry["price"], event_flag_data[entry["flag"]] if "flag" in entry else None,
                       rom_address_data[mart_data["address"]] + (i * 5) + 1)
          for i, entry in enumerate(mart_data["items"])]

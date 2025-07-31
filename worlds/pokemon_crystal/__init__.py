@@ -25,7 +25,7 @@ from .music import randomize_music
 from .options import PokemonCrystalOptions, JohtoOnly, RandomizeBadges, Goal, HMBadgeRequirements, Route32Condition, \
     LevelScaling, RedGyaradosAccess, FreeFlyLocation, EliteFourRequirement, MtSilverRequirement, RedRequirement, \
     EarlyFly, Route44AccessRequirement, BlackthornDarkCaveAccess, RadioTowerRequirement, RequireItemfinder, \
-    OPTION_GROUPS, RandomizeFlyUnlocks
+    OPTION_GROUPS, RandomizeFlyUnlocks, Shopsanity
 from .phone import generate_phone_traps
 from .phone_data import PhoneScript
 from .pokemon import randomize_pokemon_data, randomize_starters, randomize_traded_pokemon, \
@@ -279,6 +279,9 @@ class PokemonCrystalWorld(World):
 
         if self.options.johto_only:
             add_items.append("SUPER_ROD")
+
+        if Shopsanity.blue_card in self.options.shopsanity.value:
+            add_items.extend(["BLUE_CARD_PT"] * 5)
 
         trap_names, trap_weights = zip(
             ("Phone Trap", self.options.phone_trap_weight.value),

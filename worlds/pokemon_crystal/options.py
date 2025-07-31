@@ -511,16 +511,20 @@ class EvolutionGymLevels(Range):
     range_end = 69
 
 
-class Shopsanity(Choice):
+class Shopsanity(OptionSet):
     """
     Adds Pokemart items as locations, items in Pokemarts are added to the item pool
     """
     display_name = "Shopsanity"
-    default = 0
-    option_off = 0
-    option_johto = 1
-    option_kanto = 2
-    option_both = 3
+    default = []
+    
+    johto_marts = "Johto Marts"
+    kanto_marts = "Kanto Marts"
+    blue_card = "Blue Card"
+    apricorns = "Apricorns"
+    game_corners = "Game Corners"
+
+    valid_keys = [johto_marts, kanto_marts, blue_card, apricorns, game_corners]
 
 
 class ShopsanityPrices(Choice):

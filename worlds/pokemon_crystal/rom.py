@@ -9,7 +9,7 @@ from settings import get_settings
 from worlds.Files import APProcedurePatch, APTokenMixin, APPatchExtension
 from .data import data, MiscOption, POKEDEX_COUNT_OFFSET, APWORLD_VERSION, POKEDEX_OFFSET, EncounterType, \
     FishingRodType, \
-    TreeRarity, FLY_UNLOCK_OFFSET
+    TreeRarity, FLY_UNLOCK_OFFSET, BETTER_MART_MARTS
 from .items import item_const_name_to_id
 from .moves import LOGIC_MOVES
 from .options import UndergroundsRequirePower, RequireItemfinder, Goal, Route2Access, \
@@ -172,14 +172,23 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
     write_bytes(patch, [0xFF], item_name_table_adr + item_name_table_length - 1)
     write_bytes(patch, [0xFF], shopsanity_name_table_adr + shopsanity_name_table_length - 1)
 
-    if world.options.shopsanity in (Shopsanity.option_johto, Shopsanity.option_both):
+    if Shopsanity.johto_marts in world.options.shopsanity.value:
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_JohtoShopsanityEnabled"] + 2)
         # the dw at +11 is the event flag.
         write_bytes(patch, [0xFF, 0xFF], data.rom_addresses["AP_Setting_Shopsanity_MahoganyMart_1"] + 11)
         write_bytes(patch, [0xFF, 0xFF], data.rom_addresses["AP_Setting_Shopsanity_MahoganyMart_2"] + 11)
 
-    if world.options.shopsanity in (Shopsanity.option_kanto, Shopsanity.option_both):
+    if Shopsanity.kanto_marts in world.options.shopsanity.value:
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_KantoShopsanityEnabled"] + 2)
+
+    if Shopsanity.blue_card in world.options.shopsanity.value:
+        write_bytes(patch, [1], data.rom_addresses["AP_Setting_BlueCardShopsanityEnabled"] + 2)
+
+    if Shopsanity.game_corners in world.options.shopsanity.value:
+        write_bytes(patch, [1], data.rom_addresses["AP_Setting_GameCornerShopsanityEnabled"] + 2)
+
+    if Shopsanity.apricorns in world.options.shopsanity.value:
+        write_bytes(patch, [1], data.rom_addresses["AP_Setting_ApricornShopsanityEnabled"] + 2)
 
     if world.options.shopsanity and world.options.shopsanity_prices:
 
@@ -615,23 +624,9 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         marts_end_address = data.rom_addresses["MartsEnd"]
         better_mart_address = data.rom_addresses["MartBetterMart"] - 0x10000
         better_mart_bytes = better_mart_address.to_bytes(2, "little")
-        ignore_indexes = [data.marts[mart].index for mart in (
-            "MART_GOLDENROD_2F_2",
-            "MART_GOLDENROD_3F",
-            "MART_GOLDENROD_4F",
-            "MART_GOLDENROD_5F",
-            "MART_CELADON_2F_2",
-            "MART_CELADON_3F",
-            "MART_CELADON_4F",
-            "MART_CELADON_5F_1",
-            "MART_CELADON_5F_2",
-            "MART_GOLDENROD_1F_S",
-            "MART_ROOFTOP_SALE",
-            "MART_BARGAIN_SHOP"
-        )]
+        better_mart_indexes = [data.marts[mart].index for mart in BETTER_MART_MARTS]
         for i in range((marts_end_address - mart_address) // 2):
-            # skip goldenrod and celadon
-            if i not in ignore_indexes:
+            if i in better_mart_indexes:
                 write_bytes(patch, better_mart_bytes, mart_address)
             mart_address += 2
 

@@ -6,7 +6,7 @@ from .data import data, RegionData, EncounterMon, StaticPokemon, LogicalAccess, 
     TreeRarity, EncounterType
 from .items import PokemonCrystalItem
 from .locations import PokemonCrystalLocation
-from .options import FreeFlyLocation, JohtoOnly, BlackthornDarkCaveAccess, Goal, Shopsanity, FlyCheese
+from .options import FreeFlyLocation, JohtoOnly, BlackthornDarkCaveAccess, Goal, FlyCheese
 from .utils import get_fly_regions
 
 if TYPE_CHECKING:
@@ -209,9 +209,7 @@ def create_regions(world: "PokemonCrystalWorld") -> dict[str, Region]:
     def setup_mart_regions(parent_region: Region, region_data: RegionData):
         for mart in region_data.marts:
             mart_data = data.marts[mart]
-            if (world.options.shopsanity == Shopsanity.option_both or (
-                    world.options.shopsanity == Shopsanity.option_johto and mart_data.johto) or (
-                    world.options.shopsanity == Shopsanity.option_kanto and not mart_data.johto)):
+            if mart_data.category in world.options.shopsanity.value:
                 region_name = f"REGION_{mart}"
                 new_region = Region(region_name, world.player, world.multiworld)
                 regions[region_name] = new_region

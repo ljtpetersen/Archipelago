@@ -305,8 +305,8 @@ def _starting_town_valid(world: "PokemonCrystalWorld", starting_town: StartingTo
     immediate_hiddens = world.options.randomize_hidden_items and not world.options.require_itemfinder
     full_johto_trainersanity = world.options.johto_trainersanity == JohtoTrainersanity.range_end
     full_kanto_trainersanity = world.options.kanto_trainersanity == KantoTrainersanity.range_end
-    johto_shopsanity = world.options.shopsanity in (Shopsanity.option_johto, Shopsanity.option_both)
-    kanto_shopsanity = world.options.shopsanity in (Shopsanity.option_kanto, Shopsanity.option_both)
+    johto_shopsanity = Shopsanity.johto_marts in world.options.shopsanity.value
+    kanto_shopsanity = Shopsanity.kanto_marts in world.options.shopsanity.value
 
     if starting_town.name == "Cianwood City":
         return world.options.static_pokemon_required and (
