@@ -480,25 +480,8 @@ class PokemonCrystalWorld(World):
         slot_data["tea_west"] = 1 if "West" in self.options.saffron_gatehouse_tea.value else 0
         slot_data["dexsanity_count"] = len(self.generated_dexsanity)
         slot_data["dexsanity_pokemon"] = [self.generated_pokemon[poke].id for poke in self.generated_dexsanity]
-        wild_encounters = dict[int, set[str]]()  # This should be defaultdict but pickle doesn't like it
-        for encounter_key, encounters in self.generated_wild.items():
-            for i, encounter in enumerate(encounters):
-                dex_id = self.generated_pokemon[encounter.pokemon].id
-                if dex_id not in wild_encounters:
-                    wild_encounters[dex_id] = set()
-                wild_encounters[dex_id].add(f"{encounter_key.region_name()}_{i + 1}")
-
-        for encounter_key, encounter in self.generated_static.items():
-            dex_id = self.generated_pokemon[encounter.pokemon].id
-            if dex_id not in wild_encounters:
-                wild_encounters[dex_id] = set()
-            wild_encounters[dex_id].add(f"{encounter_key.region_name()}_1")
-
-        slot_data["wild_encounters"] = wild_encounters
 
         region_encounters = dict[str, set[int]]()
-
-        # the tracker is very needy so we have to put this data in slot data twice
         for encounter_key, encounters in self.generated_wild.items():
             region_encounters[encounter_key.region_name()] = {self.generated_pokemon[enc.pokemon].id for enc in
                                                               encounters}
