@@ -2178,7 +2178,9 @@
     "trainers": [
       "CHAMPION_LANCE"
     ],
-    "locations": [],
+    "locations": [
+      "ITEM_FROM_CHAMPION_LANCE"
+    ],
     "events": []
   },
   "REGION_LAV_RADIO_TOWER_1F": {
