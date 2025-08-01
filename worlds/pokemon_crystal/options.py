@@ -324,13 +324,13 @@ class JohtoTrainersanity(NamedRange):
 
     Trainers are no longer missable. Each trainer will add a random filler item into the pool.
     """
-    display_name = "Trainersanity"
+    display_name = "Johto Trainersanity"
     default = 0
     range_start = 0
     range_end = len([loc_id for loc_id, loc_data in data.locations.items() if
                      "Trainersanity" in loc_data.tags and "Johto" in loc_data.tags])
     special_range_names = {
-        "off": 0,
+        "none": 0,
         "full": range_end
     }
 
@@ -343,13 +343,13 @@ class KantoTrainersanity(NamedRange):
 
     Trainers are no longer missable. Each trainer will add a random filler item into the pool.
     """
-    display_name = "Trainersanity"
+    display_name = "Kanto Trainersanity"
     default = 0
     range_start = 0
     range_end = len([loc_id for loc_id, loc_data in data.locations.items() if
                      "Trainersanity" in loc_data.tags and "Johto" not in loc_data.tags])
     special_range_names = {
-        "off": 0,
+        "none": 0,
         "full": range_end
     }
 

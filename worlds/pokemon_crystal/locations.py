@@ -54,6 +54,8 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
         exclude.add("VanillaClairOn")
     if not world.options.randomize_pokemon_requests:
         exclude.add("BillsGrandpa")
+    if not world.options.johto_trainersanity and not world.options.kanto_trainersanity:
+        exclude.add("Trainersanity")
 
     always_include = {"KeyItem"}
 

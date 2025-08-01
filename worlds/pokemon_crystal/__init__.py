@@ -227,13 +227,12 @@ class PokemonCrystalWorld(World):
                     if locs_to_remove <= 0:
                         break
 
-        if self.options.johto_trainersanity:
+        if self.options.johto_trainersanity or self.options.kanto_trainersanity:
             trainer_locations = [loc for loc in self.get_locations() if
                                  "Trainersanity" in loc.tags and "Johto" in loc.tags]
             locs_to_remove = len(trainer_locations) - self.options.johto_trainersanity.value
             remove_excess_trainersanity(trainer_locations, locs_to_remove)
 
-        if self.options.kanto_trainersanity:
             trainer_locations = [loc for loc in self.get_locations() if
                                  "Trainersanity" in loc.tags and "Johto" not in loc.tags]
             locs_to_remove = len(trainer_locations) - self.options.kanto_trainersanity.value
