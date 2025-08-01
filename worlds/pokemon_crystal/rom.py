@@ -190,7 +190,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
     if Shopsanity.apricorns in world.options.shopsanity.value:
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_ApricornShopsanityEnabled"] + 2)
 
-    if world.options.shopsanity and world.options.shopsanity_prices:
+    if world.options.shopsanity:
 
         min_shop_price = world.options.shopsanity_minimum_price.value
         max_shop_price = world.options.shopsanity_maximum_price.value
@@ -227,8 +227,10 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
                 item_min_shop_price = sphere_min_shop_price
                 item_max_shop_price = sphere_max_shop_price
 
+                item_price = location.item.price if location.item.player == world.player else 0
+                location_price = location.price
+
                 if by_item_price:
-                    item_price = location.item.price if location.item.player == world.player else 0
                     if item_price < item_min_shop_price:
                         item_price = item_min_shop_price
                     elif item_price > item_max_shop_price:
@@ -245,10 +247,16 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
                         item_max_shop_price = base_price + int(round(price_difference * 0.6))
                     else:
                         item_max_shop_price = base_price + int(round(price_difference * 0.2))
+                elif not by_spheres:
+                    item_min_shop_price = location_price
+                    item_max_shop_price = location_price
+
+                if item_min_shop_price < item_price // 2:
+                    item_min_shop_price = item_price // 2
 
                 address = location.rom_address + 1
                 shop_price = world.random.randint(item_min_shop_price, item_max_shop_price) \
-                    if item_max_shop_price != item_min_shop_price else item_min_shop_price
+                    if item_max_shop_price > item_min_shop_price else item_min_shop_price
                 logging.debug(f"Setting ¥{shop_price} for {location.name}")
                 shop_price_bytes = shop_price.to_bytes(2, "little")
                 write_bytes(patch, shop_price_bytes, address)
