@@ -7264,6 +7264,16 @@
     "default_item": "NO_ITEM",
     "script": "AP_NPC_Route35_OfficerDirk_NO_ITEM"
   },
+  "ITEM_FROM_COOLTRAINERM_KEVIN": {
+    "label": "Route 25 - Cooltrainer Kevin",
+    "flag": "EVENT_ITEM_FROM_COOLTRAINERM_KEVIN",
+    "type": "giveitem",
+    "tags": [
+      "Trainersanity"
+    ],
+    "default_item": "NO_ITEM",
+    "script": "AP_NPC_Route25_CooltrainerKevin_NO_ITEM"
+  },
   "FRUITTREE_ROUTE_29": {
     "label": "Route 29 - Berry Tree",
     "flag": "FRUITTREE_ROUTE_29",
