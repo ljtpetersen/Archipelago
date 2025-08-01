@@ -298,14 +298,10 @@ class PokemonCrystalWorld(World):
 
         for location in item_locations:
             item_code = location.default_item_code
-            if item_code > 0 and get_item_classification(item_code) != ItemClassification.filler:
+            if item_code > 0:
                 self.itempool.append(self.create_item_by_code(item_code))
-            elif add_items:
-                self.itempool.append(self.create_item_by_const_name(add_items.pop()))
-            elif item_code == 0:  # item is NO_ITEM, trainersanity checks
+            else:  # item is NO_ITEM, trainersanity checks
                 self.itempool.append(self.create_item_by_const_name(get_random_filler_item(self.random)))
-            else:
-                self.itempool.append(self.create_item_by_code(item_code))
 
         if self.options.dexsanity:
             self.itempool.extend(
@@ -327,9 +323,11 @@ class PokemonCrystalWorld(World):
         adjust_item_classifications(self)
 
         for i in range(len(self.itempool)):
-            if (self.itempool[i].classification == ItemClassification.filler
-                    and self.random.randint(0, 100) < total_trap_weight):
-                self.itempool[i] = get_random_trap()
+            if self.itempool[i].classification == ItemClassification.filler:
+                if add_items:
+                    self.itempool[i] = self.create_item_by_const_name(add_items.pop())
+                elif total_trap_weight and self.random.randint(0, 100) < total_trap_weight:
+                    self.itempool[i] = get_random_trap()
 
         self.multiworld.itempool.extend(self.itempool)
 
