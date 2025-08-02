@@ -180,7 +180,7 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
 
 def randomize_static_pokemon(world: "PokemonCrystalWorld"):
     if world.options.randomize_static_pokemon:
-        priority_pokemon = get_priority_dexsanity(world)
+        priority_pokemon = get_priority_dexsanity(world) - world.logic.available_pokemon
         blocklist = pokemon_convert_friendly_to_ids(world, world.options.static_blocklist)
         for static_name, pkmn_data in world.generated_static.items():
             pokemon = get_random_pokemon(world,
