@@ -131,7 +131,7 @@ def randomize_tms(world: "PokemonCrystalWorld"):
     if not world.options.randomize_tm_moves and not world.options.metronome_only: return
 
     ignored_moves = ["ROCK_SMASH", "NO_MOVE", "STRUGGLE", "HEADBUTT"]
-    if world.options.dexsanity:
+    if world.options.dexsanity or world.options.dexcountsanity:
         ignored_moves.append("SWEET_SCENT")
     global_move_pool = [move_data for move_name, move_data in world.generated_moves.items() if
                         not move_data.is_hm
