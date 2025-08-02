@@ -1,5 +1,4 @@
 from collections import defaultdict
-from collections.abc import Callable
 from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
@@ -34,7 +33,7 @@ class PokemonCrystalLogic:
     map_card_fly_unlocks: tuple
     expn_components: tuple
 
-    fishing_rod_rules: dict[FishingRodType, Callable[[CollectionState], bool]]
+    fishing_rod_rules: dict[FishingRodType, CollectionRule]
 
     player: int
     options: PokemonCrystalOptions
@@ -216,7 +215,7 @@ class PokemonCrystalLogic:
     def has_n_pokemon(self, state: CollectionState, n: int):
         return state.has_from_list_unique(self.all_pokemon, self.player, n)
 
-    def has_hm_badge_requirement(self, hm: str, kanto: bool) -> Callable[[CollectionState], bool]:
+    def has_hm_badge_requirement(self, hm: str, kanto: bool) -> CollectionRule:
         if kanto:
             return lambda state: state.has_any(
                 (self.badge_items[badge] for badge in self.hm_badge_requirements_kanto[hm]),
@@ -226,85 +225,85 @@ class PokemonCrystalLogic:
                 (self.badge_items[badge] for badge in self.hm_badge_requirements_johto[hm]),
                 self.player) if hm in self.hm_badge_requirements_johto else True
 
-    def can_cut(self, kanto: bool = False) -> Callable[[CollectionState], bool]:
+    def can_cut(self, kanto: bool = False) -> CollectionRule:
         badge_requirement = self.has_hm_badge_requirement("CUT", kanto=kanto)
         return lambda state: state.has_all(("HM01 Cut", "Teach CUT"), self.player) and badge_requirement(state)
 
-    def can_fly(self) -> Callable[[CollectionState], bool]:
+    def can_fly(self) -> CollectionRule:
         badge_requirement = self.has_hm_badge_requirement("FLY", kanto=False)
         return lambda state: state.has_all(("HM02 Fly", "Teach FLY"), self.player) and badge_requirement(state)
 
-    def can_surf(self, kanto: bool = False) -> Callable[[CollectionState], bool]:
+    def can_surf(self, kanto: bool = False) -> CollectionRule:
         badge_requirement = self.has_hm_badge_requirement("SURF", kanto=kanto)
         return lambda state: state.has_all(("HM03 Surf", "Teach SURF"), self.player) and badge_requirement(state)
 
-    def can_strength(self, kanto: bool = False) -> Callable[[CollectionState], bool]:
+    def can_strength(self, kanto: bool = False) -> CollectionRule:
         badge_requirement = self.has_hm_badge_requirement("STRENGTH", kanto=kanto)
         return lambda state: state.has_all(("HM04 Strength", "Teach STRENGTH"), self.player) and badge_requirement(
             state)
 
-    def can_flash(self, kanto: bool = False) -> Callable[[CollectionState], bool]:
+    def can_flash(self, kanto: bool = False) -> CollectionRule:
         badge_requirement = self.has_hm_badge_requirement("FLASH", kanto=kanto)
         return lambda state: state.has_all(("HM05 Flash", "Teach FLASH"), self.player) and badge_requirement(state)
 
-    def can_whirlpool(self, kanto: bool = False) -> Callable[[CollectionState], bool]:
+    def can_whirlpool(self, kanto: bool = False) -> CollectionRule:
         badge_requirement = self.has_hm_badge_requirement("WHIRLPOOL", kanto=kanto)
         can_surf = self.can_surf(kanto=kanto)
         return lambda state: state.has_all(("HM06 Whirlpool", "Teach WHIRLPOOL"), self.player) and badge_requirement(
             state)
 
-    def can_waterfall(self, kanto: bool = False) -> Callable[[CollectionState], bool]:
+    def can_waterfall(self, kanto: bool = False) -> CollectionRule:
         badge_requirement = self.has_hm_badge_requirement("WATERFALL", kanto=kanto)
         can_surf = self.can_surf(kanto=kanto)
         return lambda state: state.has_all(("HM07 Waterfall", "Teach WATERFALL"), self.player) and badge_requirement(
             state)
 
-    def can_headbutt(self) -> Callable[[CollectionState], bool]:
+    def can_headbutt(self) -> CollectionRule:
         return lambda state: state.has_all(("TM02", "Teach HEADBUTT"), self.player)
 
-    def can_rock_smash(self) -> Callable[[CollectionState], bool]:
+    def can_rock_smash(self) -> CollectionRule:
         return lambda state: state.has_all(("TM08", "Teach ROCK_SMASH"), self.player)
 
-    def has_tea(self) -> Callable[[CollectionState], bool]:
+    def has_tea(self) -> CollectionRule:
         return lambda state: state.has("Tea", self.player)
 
-    def can_map_card_fly(self) -> Callable[[CollectionState], bool]:
+    def can_map_card_fly(self) -> CollectionRule:
         return lambda state: state.has_all(self.map_card_fly_unlocks, self.player)
 
-    def has_expn(self) -> Callable[[CollectionState], bool]:
+    def has_expn(self) -> CollectionRule:
         return lambda state: state.has_all(self.expn_components, self.player)
 
-    def has_rockets_requirement(self) -> Callable[[CollectionState], bool]:
+    def has_rockets_requirement(self) -> CollectionRule:
         if self.options.radio_tower_requirement == RadioTowerRequirement.option_badges:
             return lambda state: self.has_n_badges(state, self.options.radio_tower_count.value)
         else:
             return lambda state: self.has_beaten_n_gyms(state, self.options.radio_tower_count.value)
 
-    def has_route_44_access(self) -> Callable[[CollectionState], bool]:
+    def has_route_44_access(self) -> CollectionRule:
         if self.options.route_44_access_requirement == Route44AccessRequirement.option_badges:
             return lambda state: self.has_n_badges(state, self.options.route_44_access_count.value)
         else:
             return lambda state: self.has_beaten_n_gyms(state, self.options.route_44_access_count.value)
 
-    def has_elite_four_requirement(self) -> Callable[[CollectionState], bool]:
+    def has_elite_four_requirement(self) -> CollectionRule:
         if self.options.elite_four_requirement == EliteFourRequirement.option_gyms:
             return lambda state: self.has_beaten_n_gyms(state, self.options.elite_four_count.value)
         else:
             return lambda state: self.has_n_badges(state, self.options.elite_four_count.value)
 
-    def has_red_requirement(self) -> Callable[[CollectionState], bool]:
+    def has_red_requirement(self) -> CollectionRule:
         if self.options.red_requirement == RedRequirement.option_gyms:
             return lambda state: self.has_beaten_n_gyms(state, self.options.red_count.value)
         else:
             return lambda state: self.has_n_badges(state, self.options.red_count.value)
 
-    def has_mt_silver_requirement(self) -> Callable[[CollectionState], bool]:
+    def has_mt_silver_requirement(self) -> CollectionRule:
         if self.options.mt_silver_requirement == MtSilverRequirement.option_gyms:
             return lambda state: self.has_beaten_n_gyms(state, self.options.mt_silver_count.value)
         else:
             return lambda state: self.has_n_badges(state, self.options.mt_silver_count.value)
 
-    def has_kanto_access_requirement(self) -> Callable[[CollectionState], bool]:
+    def has_kanto_access_requirement(self) -> CollectionRule:
         if self.options.kanto_access_requirement == KantoAccessRequirement.option_wake_snorlax:
             return lambda state: state.has("EVENT_FOUGHT_SNORLAX", self.player)
         elif self.options.kanto_access_requirement == KantoAccessRequirement.option_badges:
@@ -314,7 +313,7 @@ class PokemonCrystalLogic:
         else:
             return lambda state: state.has("EVENT_BEAT_ELITE_FOUR", self.player)
 
-    def has_route_32_condition(self) -> Callable[[CollectionState], bool] | None:
+    def has_route_32_condition(self) -> CollectionRule | None:
         if self.options.route_32_condition == Route32Condition.option_egg_from_aide:
             return lambda state: state.has("EVENT_GOT_TOGEPI_EGG_FROM_ELMS_AIDE", self.player)
         elif self.options.route_32_condition == Route32Condition.option_any_badge:
