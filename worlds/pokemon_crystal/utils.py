@@ -398,7 +398,7 @@ def get_mart_slot_location_name(mart: str, index: int):
     if mart in CUSTOM_MART_SLOT_NAMES:
         return CUSTOM_MART_SLOT_NAMES[mart][index]
     else:
-        return f"Item {index + 1}"
+        return f"Shop Item {index + 1}"
 
 
 def convert_to_ingame_text(text: str):

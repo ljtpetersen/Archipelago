@@ -514,7 +514,8 @@ class EvolutionGymLevels(Range):
 class Shopsanity(OptionSet):
     """
     Adds shop purchases as locations, items in shops are added to the item pool
-
+    - Johto Marts: Adds Johto Poke Marts, including the Goldenrod Dept. Store.
+    - Kanto Marts: Adds Kanto Poke Marts, including the Celadon Dept. Store.
     - Blue Card: Adds the Blue Card prize shop, accessing this shop requires the Blue Card and buying items requires
     points. Five Blue Card Points are added to the item pool. Points are not spent when purchasing.
     - Game Corners: The Game Corner TM shops are added.
