@@ -112,6 +112,7 @@ ITEM_GROUPS = {
     "Kanto Tickets": {"Pass", "S.S. Ticket"},
     "Ruins of Alph chamber unlocks": {"Water Stone", "HM05 Flash", "Escape Rope", "Rainbow Wing"},
     "Tin Tower access": {"Rainbow Wing", "Clear Bell"},
+    "Apricorns": {item.label for item in data.items.values() if "Apricorn" in item.tags},
     "HM01": {"HM01 Cut"},
     "HM02": {"HM02 Fly"},
     "HM03": {"HM03 Surf"},
