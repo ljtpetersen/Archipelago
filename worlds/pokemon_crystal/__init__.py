@@ -469,7 +469,6 @@ class PokemonCrystalWorld(World):
             "all_pokemon_seen",
             "dexcountsanity_leniency",
             "dexcountsanity_step",
-            "shopsanity",
             "provide_shop_hints",
             "randomize_fly_unlocks",
             "fly_cheese",
@@ -553,6 +552,12 @@ class PokemonCrystalWorld(World):
 
         slot_data["hiddenitem_logic"] = hidden_items_setting
         slot_data["trainersanity"] = [loc.address for loc in self.get_locations() if "Trainersanity" in loc.tags]
+
+        slot_data["shopsanity_apricorn"] = 1 if Shopsanity.apricorns in self.options.shopsanity.value else 0
+        slot_data["shopsanity_bluecard"] = 1 if Shopsanity.blue_card in self.options.shopsanity.value else 0
+        slot_data["shopsanity_gamecorners"] = 1 if Shopsanity.game_corners in self.options.shopsanity.value else 0
+        slot_data["shopsanity_johtomarts"] = 1 if Shopsanity.johto_marts in self.options.shopsanity.value else 0
+        slot_data["shopsanity_kantomarts"] = 1 if Shopsanity.kanto_marts in self.options.shopsanity.value else 0
 
         return slot_data
 
