@@ -283,6 +283,11 @@ class PokemonCrystalWorld(World):
         if Shopsanity.blue_card in self.options.shopsanity.value:
             add_items.extend(["BLUE_CARD_PT"] * 5)
 
+        if Shopsanity.apricorns in self.options.shopsanity.value and not self.options.randomize_berry_trees:
+            add_items.extend(
+                ["RED_APRICORN", "GRN_APRICORN", "BLU_APRICORN", "YLW_APRICORN", "PNK_APRICORN", "BLK_APRICORN",
+                 "WHT_APRICORN"])
+
         trap_names, trap_weights = zip(
             ("Phone Trap", self.options.phone_trap_weight.value),
             ("Sleep Trap", self.options.sleep_trap_weight.value),
@@ -329,6 +334,8 @@ class PokemonCrystalWorld(World):
                 elif total_trap_weight and self.random.randint(0, 100) < total_trap_weight:
                     self.itempool[i] = get_random_trap()
 
+        adjust_item_classifications(self)
+        
         self.multiworld.itempool.extend(self.itempool)
 
     def set_rules(self) -> None:
