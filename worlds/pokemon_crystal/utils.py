@@ -364,9 +364,10 @@ def get_free_fly_locations(world: "PokemonCrystalWorld"):
 
         # if the list after the blocked locations are removed is long enough to satisfy all the requested fly locations, set the location pool to it
         if len(location_pool_after_blocklist) >= locations_required:
+            location_pool = location_pool_after_blocklist
+        else:
             logging.warning("Pokemon Crystal: All valid free fly locations blocked for player %s (%s). "
                             "Using global list instead.", world.player, world.player_name)
-            location_pool = location_pool_after_blocklist
 
     world.random.shuffle(location_pool)
     if world.options.free_fly_location.value in (FreeFlyLocation.option_free_fly,
