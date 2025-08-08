@@ -567,22 +567,22 @@ class PokemonCrystalWorld(World):
         slot_data["shopsanity_johtomarts"] = 1 if Shopsanity.johto_marts in self.options.shopsanity.value else 0
         slot_data["shopsanity_kantomarts"] = 1 if Shopsanity.kanto_marts in self.options.shopsanity.value else 0
 
-        # If you are here and wondering why these are not structured data, please DM @palex00 on Discord to express
-        # your displeasure
-        evolution_data = list[str]()
+        evolution_data = dict()
 
         for pokemon_id, pokemon_data in self.generated_pokemon.items():
+            evo_data = list()
             for evo in pokemon_data.evolutions:
-                evo_type = str(evo.evo_type)
-                if evo.evo_type is EvolutionType.Level:
-                    condition = evo.level
-                else:
-                    condition = evo.condition
-                evo_id = self.generated_pokemon[evo.pokemon].id
-                evolution_data.append(f"{pokemon_data.id}:{evo_type}:{condition}:{evo_id}")
+                evo_data.append({
+                    "into": self.generated_pokemon[evo.pokemon].id,
+                    "method": str(evo.evo_type),
+                    "condition": evo.level if evo.evo_type is EvolutionType.Level else evo.condition
+                })
+            if evo_data: evolution_data[self.generated_pokemon[pokemon_id].id] = evo_data
 
         slot_data["evolution_info"] = evolution_data
 
+        # If you are here and wondering why this is not structured data, please DM @palex00 on Discord to express
+        # your displeasure
         breeding_data = list[str]()
 
         for base, evolutions in self.generated_breeding.items():
