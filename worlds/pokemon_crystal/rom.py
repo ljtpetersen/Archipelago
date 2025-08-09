@@ -220,6 +220,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
             ShopsanityPrices.option_classification,
             ShopsanityPrices.option_spheres_and_classification
         )
+        by_location = world.options.shopsanity_prices == ShopsanityPrices.option_vanilla
 
         if world.options.shopsanity_minimum_price > world.options.shopsanity_maximum_price:
             logging.info("Pokemon Crystal: Minimum Shopsanity Price for player %s (%s)"
@@ -261,7 +262,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
                         item_max_shop_price = base_price + int(round(price_difference * 0.6))
                     else:
                         item_max_shop_price = base_price + int(round(price_difference * 0.2))
-                elif not by_spheres:
+                elif by_location:
                     item_min_shop_price = location_price
                     item_max_shop_price = location_price
 
