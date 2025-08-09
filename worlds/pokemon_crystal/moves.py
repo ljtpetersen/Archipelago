@@ -232,4 +232,4 @@ def randomize_move_types(world: "PokemonCrystalWorld"):
 
 
 def moves_convert_friendly_to_ids(world: "PokemonCrystalWorld", moves: Iterable[str]) -> set[str]:
-    return {move_id for move_id, move_data in world.generated_moves.items() if move_data.name.upper() in moves}
+    return {move_id for move_id, move_data in world.generated_moves.items() if move_data.name.title() in moves}
