@@ -210,6 +210,8 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         max_shop_price = world.options.shopsanity_maximum_price.value
         total_shop_spheres = len(world.shop_locations_by_spheres)
 
+        remote_items = world.options.remote_items.value
+
         by_item_price = world.options.shopsanity_prices == ShopsanityPrices.option_item_price
 
         by_spheres = world.options.shopsanity_prices in (
@@ -266,7 +268,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
                     item_min_shop_price = location_price
                     item_max_shop_price = location_price
 
-                if item_min_shop_price < item_price // 2:
+                if not remote_items and item_min_shop_price < item_price // 2:
                     item_min_shop_price = item_price // 2
 
                 address = location.rom_address + 1
