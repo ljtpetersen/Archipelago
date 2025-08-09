@@ -880,6 +880,9 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         set_rule(get_entrance("REGION_OLIVINE_PORT -> REGION_FAST_SHIP_1F"),
                  lambda state: state.has("S.S. Ticket", world.player))
 
+        set_rule(get_entrance("REGION_FAST_SHIP_1F -> REGION_OLIVINE_PORT"),
+                 lambda state: state.has("EVENT_FAST_SHIP_LAZY_SAILOR", world.player))
+
         if hidden():
             set_rule(get_location("Olivine Port - Hidden Item in Buoy"),
                      lambda state: state.has("S.S. Ticket", world.player) and can_surf(state))
@@ -1296,6 +1299,9 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
         set_rule(get_entrance("REGION_VERMILION_PORT_PASSAGE -> REGION_VERMILION_PORT"),
                  lambda state: state.has("S.S. Ticket", world.player))
+
+        set_rule(get_entrance("REGION_FAST_SHIP_1F -> REGION_VERMILION_PORT"),
+                 lambda state: state.has("EVENT_FAST_SHIP_LAZY_SAILOR", world.player))
 
         # Saffron
         set_rule(get_location("Copycat's House - Pass from Copycat"),
