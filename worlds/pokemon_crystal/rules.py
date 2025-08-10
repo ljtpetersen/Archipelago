@@ -430,7 +430,7 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     #          lambda state: state.has("EVENT_GOT_TOGEPI_EGG_FROM_ELMS_AIDE", world.player))
 
     set_rule(get_location("Elm's Lab - Gift from Aide after returning Mystery Egg"),
-             lambda state: state.has("Mystery Egg", world.player))
+             lambda state: state.has_all(("Mystery Egg", "EVENT_GOT_MYSTERY_EGG_FROM_MR_POKEMON"), world.player))
 
     set_rule(get_location("Elm's Lab - Master Ball from Elm"), lambda state: world.logic.has_badge(state, "rising"))
 
