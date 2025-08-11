@@ -251,6 +251,13 @@ class EvolutionType(IntEnum):
         if self is EvolutionType.Trade: return "EVOLVE_TRADE"
         raise ValueError(f"Invalid evolution type")
 
+    def friendly_name(self):
+        if self is EvolutionType.Level: return "Level "
+        if self is EvolutionType.Item: return "Use "
+        if self is EvolutionType.Happiness: return "Happiness"
+        if self is EvolutionType.Stats: return "Stats - "
+        if self is EvolutionType.Trade: return "Trade"
+
 
 @dataclass(frozen=True)
 class EvolutionData:
