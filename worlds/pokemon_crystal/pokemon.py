@@ -222,22 +222,22 @@ def fill_wild_encounter_locations(world: "PokemonCrystalWorld"):
 
                 if not target_encounters: continue
 
-                if world.options.encounter_grouping.value == EncounterGrouping.option_one_per_method:
+                if (world.options.encounter_grouping == EncounterGrouping.option_one_to_one
+                        or not world.options.randomize_wilds):
                     pokemon_to_swap = target_encounters[0].pokemon
-                    target_encounters = [replace(mon, pokemon=starter) for mon in target_encounters]
-                    source_encounters = [replace(mon, pokemon=pokemon_to_swap) for mon in source_encounters]
+                    target_indexes = [i for i, enc in enumerate(target_encounters) if enc.pokemon == pokemon_to_swap]
+                    source_indexes = [i for i, enc in enumerate(source_encounters) if enc.pokemon == starter]
+                    for i in target_indexes:
+                        target_encounters[i] = replace(target_encounters[i], pokemon=starter)
+                    for i in source_indexes:
+                        source_encounters[i] = replace(source_encounters[i], pokemon=pokemon_to_swap)
                 elif world.options.encounter_grouping.value == EncounterGrouping.option_all_split:
                     source_encounters[0] = replace(source_encounters[0], pokemon=target_encounters[0].pokemon)
                     target_encounters[0] = replace(target_encounters[0], pokemon=starter)
                 else:
                     pokemon_to_swap = target_encounters[0].pokemon
-                    target_indexes = [i for i, enc in enumerate(target_encounters) if enc.pokemon == pokemon_to_swap]
-                    source_indexes = [i for i, enc in enumerate(source_encounters) if enc.pokemon == starter]
-
-                    for i in target_indexes:
-                        target_encounters[i] = replace(target_encounters[i], pokemon=starter)
-                    for i in source_indexes:
-                        source_encounters[i] = replace(source_encounters[i], pokemon=pokemon_to_swap)
+                    target_encounters = [replace(mon, pokemon=starter) for mon in target_encounters]
+                    source_encounters = [replace(mon, pokemon=pokemon_to_swap) for mon in source_encounters]
                 world.generated_wild[source_region.key] = source_encounters
                 world.generated_wild[target_region.key] = target_encounters
 
