@@ -1,10 +1,11 @@
 from random import Random
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Dict, Set
 
 from . import options
 from BaseClasses import Item, ItemClassification
 from .data import data
 from .options import Shopsanity, ItemPoolFill
+
 
 if TYPE_CHECKING:
     from . import PokemonCrystalWorld
@@ -127,28 +128,15 @@ def adjust_item_classifications(world: "PokemonCrystalWorld"):
                 item.classification = ItemClassification.progression
 
 
-ITEM_GROUPS = {
-    "Badges": {item.label for item in data.items.values() if "Badge" in item.tags},
-    "Johto Badges": {item.label for item in data.items.values() if "JohtoBadge" in item.tags},
-    "Kanto Badges": {item.label for item in data.items.values() if "KantoBadge" in item.tags},
-    "HMs": {item.label for item in data.items.values() if "HM" in item.tags},
-    "TMs": {item.label for item in data.items.values() if "TM" in item.tags},
-    "Gear": {item.label for item in data.items.values() if "Gear" in item.tags},
-    "Traps": {item.label for item in data.items.values() if "Trap" in item.tags},
-    "Rods": {item.label for item in data.items.values() if "Rod" in item.tags},
-    "Key Items": {item.label for item in data.items.values() if "KeyItem" in item.tags},
-    "Fly Unlocks": {item.label for item in data.items.values() if "Fly" in item.tags},
-    "Kanto Tickets": {"Pass", "S.S. Ticket"},
-    "Ruins of Alph chamber unlocks": {"Water Stone", "HM05 Flash", "Escape Rope", "Rainbow Wing"},
-    "Tin Tower access": {"Rainbow Wing", "Clear Bell"},
-    "Apricorns": {item.label for item in data.items.values() if "Apricorn" in item.tags},
-    "HM01": {"HM01 Cut"},
-    "HM02": {"HM02 Fly"},
-    "HM03": {"HM03 Surf"},
-    "HM04": {"HM04 Strength"},
-    "HM05": {"HM05 Flash"},
-    "HM06": {"HM06 Whirlpool"},
-    "HM07": {"HM07 Waterfall"},
-    "TM02 Headbutt": {"TM02"},
-    "TM08 Rock Smash": {"TM08"}
-}
+ITEM_GROUPS: Dict[str, Set[str]] = {}
+
+excluded_item_tags = ("INVALID", "Tracker", "Fly", "Badge", "HM", "Trap", "JohtoBadge", "KantoBadge", "TM", "Rod", "Apricorn", "KeyItem", "Ball")
+
+for item in data.items.values():
+    for tag in item.tags:
+        if tag in excluded_item_tags:
+            continue
+        if tag not in ITEM_GROUPS:
+            ITEM_GROUPS[tag] = set()
+        ITEM_GROUPS[tag].add(item.label)
+
