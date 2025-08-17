@@ -213,6 +213,7 @@ class ItemPoolFill(Choice):
     option_youngster = 2
     option_cooltrainer = 3
 
+
 class Route32Condition(Choice):
     """
     Sets the condition required to pass between the north and south parts of Route 32
@@ -938,6 +939,22 @@ class RandomizeMoveTypes(Toggle):
     display_name = "Randomize Move Types"
 
 
+class PhysicalSpecialSplit(Choice):
+    """
+    Sets how moves are determined to be Physical or Special
+    - Vanilla: Determined by move type, for example: all Fire moves are Special
+    - Modern: Determined by the move, for example: Flame Wheel is Physical and Ember is Special
+    - Random by type: Vanilla, but shuffled randomly for each type
+    - Random by move: Modern, but shuffled randomly for each move
+    """
+    display_name = "Physical/Special Split"
+    default = 0
+    option_vanilla = 0
+    option_modern = 1
+    option_random_by_type = 2
+    option_random_by_move = 3
+
+
 class RandomizeTMMoves(Toggle):
     """
     Randomizes the moves available as TMs
@@ -1477,7 +1494,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     randomize_badges: RandomizeBadges
     randomize_hidden_items: RandomizeHiddenItems
     require_itemfinder: RequireItemfinder
-    item_pool_fill:ItemPoolFill
+    item_pool_fill: ItemPoolFill
     route_32_condition: Route32Condition
     kanto_access_requirement: KantoAccessRequirement
     kanto_access_count: KantoAccessCount
@@ -1533,6 +1550,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     learnset_type_bias: LearnsetTypeBias
     randomize_move_values: RandomizeMoveValues
     randomize_move_types: RandomizeMoveTypes
+    physical_special_split: PhysicalSpecialSplit
     randomize_tm_moves: RandomizeTMMoves
     tm_compatibility: TMCompatibility
     hm_compatibility: HMCompatibility
@@ -1662,6 +1680,7 @@ OPTION_GROUPS = [
          MetronomeOnly,
          RandomizeMoveTypes,
          RandomizeMoveValues,
+         PhysicalSpecialSplit,
          HMPowerCap,
          RandomizeTMMoves,
          TMCompatibility,

@@ -14,7 +14,8 @@ from .items import item_const_name_to_id
 from .moves import LOGIC_MOVES
 from .options import UndergroundsRequirePower, RequireItemfinder, Goal, Route2Access, \
     BlackthornDarkCaveAccess, NationalParkAccess, Route3Access, EncounterSlotDistribution, KantoAccessRequirement, \
-    FreeFlyLocation, HMBadgeRequirements, ShopsanityPrices, WildEncounterMethodsRequired, FlyCheese, Shopsanity
+    FreeFlyLocation, HMBadgeRequirements, ShopsanityPrices, WildEncounterMethodsRequired, FlyCheese, Shopsanity, \
+    RandomizeMoveValues
 from .utils import convert_to_ingame_text, write_bytes, replace_map_tiles
 
 if TYPE_CHECKING:
@@ -435,28 +436,23 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         # 0xC9 = ret
         write_bytes(patch, [0xC9], data.rom_addresses["AP_Setting_FruitTreesReset"])
 
-    if world.options.randomize_move_values or world.options.randomize_move_types:
-        for move_name, move in world.generated_moves.items():  # effect modification is also possible but not included
-            if move_name in ("NO_MOVE", "CURSE"):
-                continue
-            if world.options.randomize_move_types:
-                address = data.rom_addresses["AP_MoveData_Type_" + move_name]
-                move_type_id = [data.type_ids[move.type]]
-                write_bytes(patch, move_type_id, address)  # uses same type id conversion that pkmn type randomizer
-            if world.options.randomize_move_values > 0:
-                address = data.rom_addresses["AP_MoveData_Power_" + move_name]
-                write_bytes(patch, [move.power], address)  # power 20-150
-                address = data.rom_addresses["AP_MoveData_PP_" + move_name]
-                write_bytes(patch, [move.pp], address)  # 5-40 PP
-                if world.options.randomize_move_values == 3:
-                    address = data.rom_addresses["AP_MoveData_Accuracy_" + move_name]
-                    acc = int(move.accuracy * 255 / 100)
-                    write_bytes(patch, [acc], address)  # accuracy 30-100
+    for move_name, move in world.generated_moves.items():  # effect modification is also possible but not included
+        if move_name in ("NO_MOVE", "CURSE"):
+            continue
 
-    elif world.options.hm_power_cap.value != world.options.hm_power_cap.range_end:
-        for move_name in LOGIC_MOVES:
-            address = data.rom_addresses["AP_MoveData_Power_" + move_name]
-            write_bytes(patch, [world.generated_moves[move_name].power], address)
+        address = data.rom_addresses["AP_MoveData_Type_" + move_name]
+        move_category_type = [data.type_ids[move.type] | move.category]
+        write_bytes(patch, move_category_type, address)
+
+        address = data.rom_addresses["AP_MoveData_Power_" + move_name]
+        write_bytes(patch, [move.power], address)  # power 20-150
+        
+        address = data.rom_addresses["AP_MoveData_PP_" + move_name]
+        write_bytes(patch, [move.pp], address)  # 5-40 PP
+
+        address = data.rom_addresses["AP_MoveData_Accuracy_" + move_name]
+        acc = int(move.accuracy * 255 / 100)
+        write_bytes(patch, [acc], address)  # accuracy 30-100
 
     for pkmn_name, pkmn_data in world.generated_pokemon.items():
         address = data.rom_addresses["AP_Stats_Types_" + pkmn_name]

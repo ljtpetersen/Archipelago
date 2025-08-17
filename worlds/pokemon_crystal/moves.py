@@ -2,8 +2,8 @@ from collections.abc import Iterable
 from dataclasses import replace
 from typing import TYPE_CHECKING
 
-from .data import data as crystal_data, LearnsetData, TMHMData
-from .options import RandomizeLearnsets, RandomizeMoveValues
+from .data import data as crystal_data, LearnsetData, TMHMData, MoveCategory
+from .options import RandomizeLearnsets, RandomizeMoveValues, PhysicalSpecialSplit
 
 if TYPE_CHECKING:
     from . import PokemonCrystalWorld
@@ -22,6 +22,18 @@ MOVE_POWER_RATIO = {
     "SPIKE_CANNON": 3,
     "BONE_RUSH": 3,
     "ROLLOUT": 2
+}
+
+PHYSICAL_TYPES = {
+    "NORMAL",
+    "FIGHTING",
+    "FLYING",
+    "POISON",
+    "GROUND",
+    "ROCK",
+    "BUG",
+    "GHOST",
+    "STEEL"
 }
 
 BAD_DAMAGING_MOVES = ["EXPLOSION", "SELFDESTRUCT", "STRUGGLE", "SNORE", "DREAM_EATER"]
@@ -167,43 +179,70 @@ def get_random_move_from_learnset(world: "PokemonCrystalWorld", pokemon: str, le
 
 
 def randomize_move_values(world: "PokemonCrystalWorld"):
-    if not world.options.randomize_move_values: return
+    if world.options.randomize_move_values:
 
-    acc100 = 70  # Moves have a 70% chance to get 100% accuracy
-    for move_name, move_data in world.generated_moves.items():
-        if move_name in ("NO_MOVE", "CURSE", "DRAGON_RAGE", "SONICBOOM"):
-            continue
-        new_power = move_data.power
-        new_acc = move_data.accuracy
-        new_pp = move_data.pp
-        if new_power > 1:
-            if world.options.randomize_move_values.value == RandomizeMoveValues.option_restricted:
-                new_power = int(new_power * (world.random.random() + 0.5))
-                if new_power > 255: new_power = 255
-                new_pp = new_pp + world.random.choice((-10, -5, 0, 5, 10))
-                if new_pp < 5: new_pp = 5
-                if new_pp > 40: new_pp = 40
-            else:
-                new_power = world.random.randint(20, 150)
-                new_power //= MOVE_POWER_RATIO.get(move_name, 1)
-                new_pp = world.random.randint(5, 40)
-
-            if world.options.randomize_move_values.value == RandomizeMoveValues.option_full:
-                if world.random.randint(1, 100) <= acc100:
-                    new_acc = 100
+        acc100 = 70  # Moves have a 70% chance to get 100% accuracy
+        for move_name, move_data in world.generated_moves.items():
+            if move_name in ("NO_MOVE", "CURSE", "DRAGON_RAGE", "SONICBOOM"):
+                continue
+            new_power = move_data.power
+            new_acc = move_data.accuracy
+            new_pp = move_data.pp
+            if new_power > 1:
+                if world.options.randomize_move_values == RandomizeMoveValues.option_restricted:
+                    new_power = int(new_power * (world.random.random() + 0.5))
+                    if new_power > 255: new_power = 255
+                    new_pp = new_pp + world.random.choice((-10, -5, 0, 5, 10))
+                    if new_pp < 5: new_pp = 5
+                    if new_pp > 40: new_pp = 40
                 else:
-                    # 30 is 76,5 so actual lowest accuracy is a bit lower than 30
-                    new_acc = world.random.randint(30, 100)
+                    new_power = world.random.randint(20, 150)
+                    new_power //= MOVE_POWER_RATIO.get(move_name, 1)
+                    new_pp = world.random.randint(5, 40)
 
-            if move_name in DAMAGING_STATUS_MOVES and new_acc > 75:
-                new_acc = 75
+                if world.options.randomize_move_values == RandomizeMoveValues.option_full:
+                    if world.random.randint(1, 100) <= acc100:
+                        new_acc = 100
+                    else:
+                        # 30 is 76,5 so actual lowest accuracy is a bit lower than 30
+                        new_acc = world.random.randint(30, 100)
 
-        world.generated_moves[move_name] = replace(
-            world.generated_moves[move_name],
-            power=new_power,
-            accuracy=new_acc,
-            pp=new_pp
-        )
+                if move_name in DAMAGING_STATUS_MOVES and new_acc > 75:
+                    new_acc = 75
+
+            world.generated_moves[move_name] = replace(
+                world.generated_moves[move_name],
+                power=new_power,
+                accuracy=new_acc,
+                pp=new_pp
+            )
+
+    if world.options.physical_special_split == PhysicalSpecialSplit.option_vanilla:
+        physical_types = PHYSICAL_TYPES
+    elif world.options.physical_special_split == PhysicalSpecialSplit.option_random_by_type:
+        physical_types = {type for type in crystal_data.types if world.random.randint(0, 1)}
+    else:
+        physical_types = set()
+
+    if world.options.physical_special_split in (PhysicalSpecialSplit.option_vanilla,
+                                                PhysicalSpecialSplit.option_random_by_type):
+        for move_name, move_data in world.generated_moves.items():
+            if move_data.category is MoveCategory.Status: continue
+
+            if move_data.type in physical_types:
+                new_category = MoveCategory.Physical
+            else:
+                new_category = MoveCategory.Special
+
+            world.generated_moves[move_name] = replace(move_data, category=new_category)
+
+    elif world.options.physical_special_split == PhysicalSpecialSplit.option_random_by_move:
+        for move_name, move_data in world.generated_moves.items():
+            if move_data.category is MoveCategory.Status: continue
+
+            new_category = MoveCategory.Physical if world.random.randint(0, 1) else MoveCategory.Special
+
+            world.generated_moves[move_name] = replace(move_data, category=new_category)
 
 
 def cap_hm_move_power(world: "PokemonCrystalWorld"):

@@ -303,6 +303,19 @@ class PokemonData:
     growth_rate: GrowthRate
 
 
+class MoveCategory(IntEnum):
+    Physical = 0b01000000
+    Special = 0b10000000
+    Status = 0b11000000
+
+    @staticmethod
+    def from_string(move_category_string):
+        if move_category_string == "PHYSICAL": return MoveCategory.Physical
+        if move_category_string == "SPECIAL": return MoveCategory.Special
+        if move_category_string == "STATUS": return MoveCategory.Status
+        raise ValueError(f"Invalid move category: {move_category_string}")
+
+
 @dataclass(frozen=True)
 class MoveData:
     id: str
@@ -313,6 +326,7 @@ class MoveData:
     pp: int
     is_hm: bool
     name: str
+    category: MoveCategory
 
 
 @dataclass(frozen=True)
@@ -860,6 +874,7 @@ def _init() -> None:
             move_attributes["pp"],
             move_attributes["is_hm"],
             move_attributes["name"],
+            MoveCategory.from_string(move_attributes["category"]),
         ) for move_name, move_attributes in move_data.items()
     }
 
