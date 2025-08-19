@@ -1079,6 +1079,7 @@ def _init() -> None:
         "ap_item_sound": PokemonCrystalGameSetting(4, 3, 1, ON_OFF, 1),
         "_death_link": PokemonCrystalGameSetting(4, 4, 1, ON_OFF, 0),
         "trainersanity_indication": PokemonCrystalGameSetting(4, 5, 1, ON_OFF, 0),
+        "more_uncaught_encounters": PokemonCrystalGameSetting(4, 6, 1, ON_OFF, 0),
     }
 
     map_sizes = {map_name: (map_size[0], map_size[1]) for map_name, map_size in

@@ -1451,6 +1451,7 @@ class GameOptions(OptionDict):
     guaranteed_catch: off/on - Sets whether balls have a 100% success rate
     low_hp_beep: on/off - Sets whether the low HP beep is played in battle
     menu_account: on/off - Sets whether your start menu selection is remembered
+    more_uncaught_encounters: on/off - Sets whether wild encounters of Pokemon you have not caught are more likely
     poison_flicker: on/off - Sets whether the overworld poison flash effect is played
     rods_always_work: off/on - Sets whether the fishing rods always succeed
     short_fanfares: off/on - Sets whether item receive fanfares are shortened
@@ -1495,6 +1496,7 @@ class GameOptions(OptionDict):
         "guaranteed_catch": "off",
         "ap_item_sound": "on",
         "trainersanity_indication": "off",
+        "more_uncaught_encounters": "off",
     }
 
 
