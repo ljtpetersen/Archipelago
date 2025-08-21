@@ -6349,10 +6349,24 @@
     "locations": [],
     "events": []
   },
+  "REGION_VICTORY_ROAD:ENTRANCE": {
+    "johto": true,
+    "exits": [
+      "REGION_VICTORY_ROAD",
+      "REGION_VICTORY_ROAD_GATE"
+    ],
+    "locations": [
+      "VICTORY_ROAD_HIDDEN_FULL_HEAL"
+    ],
+    "events": [],
+    "wild_encounters": {
+      "grass": "VICTORY_ROAD"
+    }
+  },
   "REGION_VICTORY_ROAD": {
     "johto": true,
     "exits": [
-      "REGION_VICTORY_ROAD_GATE",
+      "REGION_VICTORY_ROAD:ENTRANCE",
       "REGION_ROUTE_23"
     ],
     "trainers": [
@@ -6363,7 +6377,6 @@
     "locations": [
       "VICTORY_ROAD_FULL_HEAL",
       "VICTORY_ROAD_FULL_RESTORE",
-      "VICTORY_ROAD_HIDDEN_FULL_HEAL",
       "VICTORY_ROAD_HIDDEN_MAX_POTION",
       "VICTORY_ROAD_HP_UP",
       "VICTORY_ROAD_MAX_REVIVE",
@@ -6381,7 +6394,7 @@
     "exits": [
       "REGION_ROUTE_22",
       "REGION_ROUTE_26",
-      "REGION_VICTORY_ROAD",
+      "REGION_VICTORY_ROAD:ENTRANCE",
       "REGION_ROUTE_28"
     ],
     "locations": [],

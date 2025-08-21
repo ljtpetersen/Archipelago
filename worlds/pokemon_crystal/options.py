@@ -334,6 +334,18 @@ class MountMortarAccess(Choice):
     option_rock_smash = 1
 
 
+class VictoryRoadAccess(Choice):
+    """
+    Sets the requirement to pass through Victory Road to Indigo Plateau
+    - Vanilla: No requirement
+    - Strength: Strength is required
+    """
+    display_name = "Victory Road Access"
+    default = 0
+    option_vanilla = 0
+    option_strength = 1
+
+
 class JohtoTrainersanity(NamedRange):
     """
     Adds checks for defeating Johto trainers.
@@ -1527,6 +1539,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     require_itemfinder: RequireItemfinder
     item_pool_fill: ItemPoolFill
     route_32_condition: Route32Condition
+    victory_road_access: VictoryRoadAccess
     kanto_access_requirement: KantoAccessRequirement
     kanto_access_count: KantoAccessCount
     red_gyarados_access: RedGyaradosAccess
@@ -1642,6 +1655,7 @@ OPTION_GROUPS = [
          RadioTowerRequirement, RadioTowerCount,
          Route44AccessRequirement, Route44AccessCount,
          KantoAccessRequirement, KantoAccessCount,
+         VictoryRoadAccess,
          Route32Condition,
          Route2Access,
          Route3Access,

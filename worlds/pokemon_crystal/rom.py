@@ -848,6 +848,9 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
     if world.options.vanilla_clair:
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_VanillaClair"] + 2)
 
+    if world.options.victory_road_access:
+        write_bytes(patch, [0], data.rom_addresses["AP_Setting_VictoryRoadBoulder"] + 2)
+
     if world.options.shopsanity_restrict_rare_candies:
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_ShopsanityRestrictRareCandies"] + 1)
 
