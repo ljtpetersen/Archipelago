@@ -931,6 +931,33 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
     if world.options.better_marts:
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_BetterMarts"] + 1)
 
+    if world.options.build_a_mart:
+        custom_mart_base = data.rom_addresses["AP_Setting_CustomBetterMart"]
+
+        available_items = {item.label: item.item_const for item in data.items.values()
+                           if "CustomShop" in item.tags}
+
+        selected_items = []
+        for item_name in world.options.build_a_mart:
+            if item_name in available_items:
+                selected_items.append(available_items[item_name])
+
+        if len(selected_items) > 14:
+            selected_items = selected_items[:14]
+
+        total_items = len(selected_items) + 2
+        write_bytes(patch, [total_items], custom_mart_base)
+
+        current_address = custom_mart_base + 11
+        for item_const in selected_items:
+            item_id = item_const_name_to_id(item_const)
+            item_data = data.items[item_id]
+            price_bytes = item_data.price.to_bytes(2, "little")
+            write_bytes(patch, [item_id, *price_bytes, 0xFF, 0xFF], current_address)
+            current_address += 5
+
+        write_bytes(patch, [0xFF], current_address)
+
     if world.options.enforce_wild_encounter_methods_logic:
         methods = [method in world.options.wild_encounter_methods_required.value for method in
                    WildEncounterMethodsRequired.valid_keys]

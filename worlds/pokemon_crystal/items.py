@@ -45,7 +45,7 @@ def get_item_price(item_code: int) -> int:
     return data.items[item_code].price
 
 
-def item_const_name_to_id(const_name):
+def item_const_name_to_id(const_name) -> int:
     ids = [item_id for item_id, item_data in data.items.items() if item_data.item_const == const_name]
     if ids:
         return ids[0]
@@ -168,7 +168,7 @@ def place_x_items(world: "PokemonCrystalWorld") -> list[str]:
 ITEM_GROUPS: Dict[str, Set[str]] = {}
 
 excluded_item_tags = ("INVALID", "Tracker", "Fly", "Badge", "HM", "Trap", "JohtoBadge", "KantoBadge", "TM", "Rod",
-                      "Apricorn", "KeyItem", "Ball")
+                      "Apricorn", "KeyItem", "Ball", "CustomShop")
 
 for item in data.items.values():
     for tag in item.tags:

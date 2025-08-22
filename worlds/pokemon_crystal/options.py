@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from Options import Toggle, Choice, DefaultOnToggle, Range, PerGameCommonOptions, NamedRange, OptionSet, \
-    StartInventoryPool, OptionDict, Visibility, DeathLink, OptionGroup
+    StartInventoryPool, OptionDict, Visibility, DeathLink, OptionGroup, OptionList
 from .data import data
 
 
@@ -1278,6 +1278,22 @@ class BetterMarts(Toggle):
     display_name = "Better Marts"
 
 
+class BuildAMart(OptionList):
+    """
+    Create a custom shop in place of the better mart with your own item selection, this also affects the final upgraded
+    Pokecenter 2F mart.
+    The first two shop items will always be Poke Ball and Escape Rope.
+    Maximum of 14 items, any extra items will be discarded.
+    
+    Available items: Antidote, Awakening, Burn Heal, Calcium, Carbos, Dire Hit, Elixer, Ether, Fresh Water, 
+    Full Heal, Full Restore, Great Ball, Guard Spec, HP Up, Hyper Potion, Ice Heal, Iron, Lemonade, Max Elixer, 
+    Max Ether, Max Potion, Max Repel, Max Revive, Parlyz Heal, Potion, Protein, PP Up, Rare Candy, Repel, 
+    Revive, Soda Pop, Super Potion, Super Repel, Ultra Ball, X Accuracy, X Attack, X Defend, X Special, X Speed.
+    """
+    display_name = "Build-a-Mart"
+    valid_keys = sorted(item.label for item in data.items.values() if "CustomShop" in item.tags)
+
+
 class ExpModifier(NamedRange):
     """
     Scale the amount of Experience Points given in battle
@@ -1624,6 +1640,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     minimum_catch_rate: MinimumCatchRate
     skip_elite_four: SkipEliteFour
     better_marts: BetterMarts
+    build_a_mart: BuildAMart
     experience_modifier: ExpModifier
     starting_money: StartingMoney
     all_pokemon_seen: AllPokemonSeen
@@ -1784,6 +1801,7 @@ OPTION_GROUPS = [
          AllPokemonSeen,
          StartingMoney,
          BetterMarts,
+         BuildAMart,
          ExpModifier,
          SkipEliteFour,
          MinimumCatchRate,

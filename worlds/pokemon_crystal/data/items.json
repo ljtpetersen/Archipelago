@@ -22,7 +22,8 @@
     "price": 1200,
     "tags": [
       "Balls",
-      "Ball"
+      "Ball",
+      "CustomShop"
     ]
   },
   "BRIGHTPOWDER": {
@@ -37,7 +38,8 @@
     "price": 600,
     "tags": [
       "Balls",
-      "Ball"
+      "Ball",
+      "CustomShop"
     ]
   },
   "POKE_BALL": {
@@ -73,7 +75,8 @@
     "classification": "FILLER",
     "price": 100,
     "tags": [
-      "Healing Items"
+      "Healing Items",
+      "CustomShop"
     ]
   },
   "BURN_HEAL": {
@@ -81,7 +84,8 @@
     "classification": "FILLER",
     "price": 250,
     "tags": [
-      "Healing Items"
+      "Healing Items",
+      "CustomShop"
     ]
   },
   "ICE_HEAL": {
@@ -89,7 +93,8 @@
     "classification": "FILLER",
     "price": 250,
     "tags": [
-      "Healing Items"
+      "Healing Items",
+      "CustomShop"
     ]
   },
   "AWAKENING": {
@@ -97,7 +102,8 @@
     "classification": "FILLER",
     "price": 250,
     "tags": [
-      "Healing Items"
+      "Healing Items",
+      "CustomShop"
     ]
   },
   "PARLYZ_HEAL": {
@@ -105,7 +111,8 @@
     "classification": "FILLER",
     "price": 200,
     "tags": [
-      "Healing Items"
+      "Healing Items",
+      "CustomShop"
     ]
   },
   "FULL_RESTORE": {
@@ -113,7 +120,8 @@
     "classification": "FILLER",
     "price": 3000,
     "tags": [
-      "Healing Items"
+      "Healing Items",
+      "CustomShop"
     ]
   },
   "MAX_POTION": {
@@ -121,7 +129,8 @@
     "classification": "FILLER",
     "price": 2500,
     "tags": [
-      "Healing Items"
+      "Healing Items",
+      "CustomShop"
     ]
   },
   "HYPER_POTION": {
@@ -129,7 +138,8 @@
     "classification": "FILLER",
     "price": 1200,
     "tags": [
-      "Healing Items"
+      "Healing Items",
+      "CustomShop"
     ]
   },
   "SUPER_POTION": {
@@ -137,7 +147,8 @@
     "classification": "FILLER",
     "price": 700,
     "tags": [
-      "Healing Items"
+      "Healing Items",
+      "CustomShop"
     ]
   },
   "POTION": {
@@ -145,7 +156,8 @@
     "classification": "FILLER",
     "price": 300,
     "tags": [
-      "Healing Items"
+      "Healing Items",
+      "CustomShop"
     ]
   },
   "ESCAPE_ROPE": {
@@ -161,14 +173,15 @@
     "name": "Repel",
     "classification": "FILLER",
     "price": 350,
-    "tags": []
+    "tags": ["CustomShop"]
   },
   "MAX_ELIXER": {
     "name": "Max Elixer",
     "classification": "FILLER",
     "price": 4500,
     "tags": [
-      "Healing Items"
+      "Healing Items",
+      "CustomShop"
     ]
   },
   "FIRE_STONE": {
@@ -202,7 +215,8 @@
     "classification": "FILLER",
     "price": 9800,
     "tags": [
-      "Stat Items"
+      "Stat Items",
+      "CustomShop"
     ]
   },
   "PROTEIN": {
@@ -210,7 +224,8 @@
     "classification": "FILLER",
     "price": 9800,
     "tags": [
-      "Stat Items"
+      "Stat Items",
+      "CustomShop"
     ]
   },
   "IRON": {
@@ -218,7 +233,8 @@
     "classification": "FILLER",
     "price": 9800,
     "tags": [
-      "Stat Items"
+      "Stat Items",
+      "CustomShop"
     ]
   },
   "CARBOS": {
@@ -226,7 +242,8 @@
     "classification": "FILLER",
     "price": 9800,
     "tags": [
-      "Stat Items"
+      "Stat Items",
+      "CustomShop"
     ]
   },
   "LUCKY_PUNCH": {
@@ -240,14 +257,15 @@
     "classification": "FILLER",
     "price": 9800,
     "tags": [
-      "Stat Items"
+      "Stat Items",
+      "CustomShop"
     ]
   },
   "RARE_CANDY": {
     "name": "Rare Candy",
     "classification": "USEFUL",
     "price": 4800,
-    "tags": []
+    "tags": ["CustomShop"]
   },
   "X_ACCURACY": {
     "name": "X Accuracy",
@@ -255,7 +273,8 @@
     "price": 950,
     "tags": [
       "Battle Items",
-      "X Items"
+      "X Items",
+      "CustomShop"
     ]
   },
   "LEAF_STONE": {
@@ -289,7 +308,8 @@
     "classification": "FILLER",
     "price": 600,
     "tags": [
-      "Healing Items"
+      "Healing Items",
+      "CustomShop"
     ]
   },
   "REVIVE": {
@@ -297,7 +317,8 @@
     "classification": "FILLER",
     "price": 1500,
     "tags": [
-      "Healing Items"
+      "Healing Items",
+      "CustomShop"
     ]
   },
   "MAX_REVIVE": {
@@ -305,7 +326,8 @@
     "classification": "FILLER",
     "price": 4000,
     "tags": [
-      "Healing Items"
+      "Healing Items",
+      "CustomShop"
     ]
   },
   "GUARD_SPEC": {
@@ -314,20 +336,21 @@
     "price": 700,
     "tags": [
       "Battle Items",
-      "X Items"
+      "X Items",
+      "CustomShop"
     ]
   },
   "SUPER_REPEL": {
     "name": "Super Repel",
     "classification": "FILLER",
     "price": 500,
-    "tags": []
+    "tags": ["CustomShop"]
   },
   "MAX_REPEL": {
     "name": "Max Repel",
     "classification": "FILLER",
     "price": 700,
-    "tags": []
+    "tags": ["CustomShop"]
   },
   "DIRE_HIT": {
     "name": "Dire Hit",
@@ -335,7 +358,8 @@
     "price": 650,
     "tags": [
       "Battle Items",
-      "X Items"
+      "X Items",
+      "CustomShop"
     ]
   },
   "FRESH_WATER": {
@@ -343,7 +367,8 @@
     "classification": "FILLER",
     "price": 200,
     "tags": [
-      "Healing Items"
+      "Healing Items",
+      "CustomShop"
     ]
   },
   "SODA_POP": {
@@ -351,7 +376,8 @@
     "classification": "FILLER",
     "price": 300,
     "tags": [
-      "Healing Items"
+      "Healing Items",
+      "CustomShop"
     ]
   },
   "LEMONADE": {
@@ -359,7 +385,8 @@
     "classification": "FILLER",
     "price": 350,
     "tags": [
-      "Healing Items"
+      "Healing Items",
+      "CustomShop"
     ]
   },
   "X_ATTACK": {
@@ -368,7 +395,8 @@
     "price": 500,
     "tags": [
       "Battle Items",
-      "X Items"
+      "X Items",
+      "CustomShop"
     ]
   },
   "X_DEFEND": {
@@ -377,7 +405,8 @@
     "price": 550,
     "tags": [
       "Battle Items",
-      "X Items"
+      "X Items",
+      "CustomShop"
     ]
   },
   "X_SPEED": {
@@ -386,7 +415,8 @@
     "price": 350,
     "tags": [
       "Battle Items",
-      "X Items"
+      "X Items",
+      "CustomShop"
     ]
   },
   "X_SPECIAL": {
@@ -395,7 +425,8 @@
     "price": 350,
     "tags": [
       "Battle Items",
-      "X Items"
+      "X Items",
+      "CustomShop"
     ]
   },
   "COIN_CASE": {
@@ -475,7 +506,8 @@
     "classification": "FILLER",
     "price": 9800,
     "tags": [
-      "Stat Items"
+      "Stat Items",
+      "CustomShop"
     ]
   },
   "ETHER": {
@@ -483,7 +515,8 @@
     "classification": "FILLER",
     "price": 1200,
     "tags": [
-      "Healing Items"
+      "Healing Items",
+      "CustomShop"
     ]
   },
   "MAX_ETHER": {
@@ -491,7 +524,8 @@
     "classification": "FILLER",
     "price": 2000,
     "tags": [
-      "Healing Items"
+      "Healing Items",
+      "CustomShop"
     ]
   },
   "ELIXER": {
@@ -499,7 +533,8 @@
     "classification": "FILLER",
     "price": 3000,
     "tags": [
-      "Healing Items"
+      "Healing Items",
+      "CustomShop"
     ]
   },
   "RED_SCALE": {
