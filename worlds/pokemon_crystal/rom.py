@@ -976,6 +976,9 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
                 write_bytes(patch, [pokemon_id],
                             data.rom_addresses[f"AP_Setting_BillsGrandpaRequested{pokemon_index + 1}_{i + 1}"] + 1)
 
+    if world.options.always_unlock_fly_destinations:
+        write_bytes(patch, [1], data.rom_addresses["AP_Setting_FlyUnlocksQoLEnabled"] + 2)
+
     # Set slot auth
     ap_version_text = convert_to_ingame_text(APWORLD_VERSION)[:19]
     ap_version_text.append(0x50)

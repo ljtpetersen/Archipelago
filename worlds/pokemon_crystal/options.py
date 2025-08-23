@@ -672,7 +672,7 @@ class RandomizeFlyUnlocks(Choice):
 
     Indigo Plateau is not included.
     """
-    display_name = "Shuffle Fly Unlocks"
+    display_name = "Randomize Fly Unlocks"
     default = 0
     option_off = 0
     option_on = 1
@@ -1451,6 +1451,13 @@ class RemoteItems(Toggle):
     display_name = "Remote Items"
 
 
+class AlwaysUnlockFly(Toggle):
+    """
+    Always unlock Fly destinations when entering a town, even if Randomize Fly Unlocks is enabled
+    """
+    display_name = "Always Unlock Fly Destinations"
+
+
 class GameOptions(OptionDict):
     """
     Presets in-game options. These can be changed in-game later. Any omitted options will use their default.
@@ -1655,6 +1662,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     enable_mischief: EnableMischief
     start_inventory_from_pool: StartInventoryPool
     death_link: PokemonCrystalDeathLink
+    always_unlock_fly_destinations: AlwaysUnlockFly
 
 
 OPTION_GROUPS = [
@@ -1805,6 +1813,7 @@ OPTION_GROUPS = [
          ExpModifier,
          SkipEliteFour,
          MinimumCatchRate,
+         AlwaysUnlockFly,
          PokemonCrystalDeathLink]
     ),
     OptionGroup(
