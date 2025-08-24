@@ -8,7 +8,8 @@ from .data import data, EvolutionType, EvolutionData, FishingRodType, EncounterK
 from .options import Goal, JohtoOnly, Route32Condition, UndergroundsRequirePower, Route2Access, \
     BlackthornDarkCaveAccess, NationalParkAccess, KantoAccessRequirement, Route3Access, BreedingMethodsRequired, \
     MtSilverRequirement, FreeFlyLocation, HMBadgeRequirements, EliteFourRequirement, RedRequirement, \
-    Route44AccessRequirement, RandomizeBadges, RadioTowerRequirement, PokemonCrystalOptions, Shopsanity, FlyCheese
+    Route44AccessRequirement, RandomizeBadges, RadioTowerRequirement, PokemonCrystalOptions, Shopsanity, FlyCheese, \
+    RequireFlash
 from .pokemon import add_hm_compatibility
 from .utils import evolution_in_logic, evolution_location_name, get_fly_regions, get_mart_slot_location_name
 
@@ -243,6 +244,8 @@ class PokemonCrystalLogic:
             state)
 
     def can_flash(self, kanto: bool = False) -> CollectionRule:
+        if self.options.require_flash == RequireFlash.option_not_required:
+            return lambda _: True
         badge_requirement = self.has_hm_badge_requirement("FLASH", kanto=kanto)
         return lambda state: state.has_all(("HM05 Flash", "Teach FLASH"), self.player) and badge_requirement(state)
 

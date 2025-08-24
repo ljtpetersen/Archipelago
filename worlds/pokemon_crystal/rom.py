@@ -989,6 +989,9 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
             palette_byte = (map_data.phone_service << 4) | resolved_palette
             write_bytes(patch, [palette_byte], data.rom_addresses[f"AP_MapPalette_{map}"])
 
+    if world.options.require_flash:
+        write_bytes(patch, [1], data.rom_addresses["AP_Setting_FlashHardRequired"] + 1)
+
     # Set slot auth
     ap_version_text = convert_to_ingame_text(APWORLD_VERSION)[:19]
     ap_version_text.append(0x50)

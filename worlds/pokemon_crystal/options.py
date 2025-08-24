@@ -187,9 +187,9 @@ class RequireItemfinder(Choice):
     """
     Hidden items require Itemfinder in logic
 
-    Not Required: Hidden items do not require the Itemfinder at all
-    Logically Required: Hidden items will expect you to have Itemfinder for logic but can be picked up without it
-    Hard Required: Hidden items cannot be picked up without the Itemfinder
+    - Not Required: Hidden items do not require the Itemfinder at all
+    - Logically Required: Hidden items will expect you to have Itemfinder for logic but can be picked up without it
+    - Hard Required: Hidden items cannot be picked up without the Itemfinder
     """
     display_name = "Require Itemfinder"
     default = 1
@@ -1222,6 +1222,21 @@ class RemoveBadgeRequirement(OptionSet):
     valid_keys = ["Cut", "Fly", "Surf", "Strength", "Flash", "Whirlpool", "Waterfall"]
 
 
+class RequireFlash(Choice):
+    """
+    Determines if the ability to use Flash is required to traverse dark areas
+
+    - Not Required: Dark areas do not require Flash at all
+    - Logically Required: Dark areas will expect you to be able to use Flash for logic, but you can traverse them without
+    - Hard Required: You will not be able to traverse dark areas without the ability to use Flash there
+    """
+    display_name = "Require Itemfinder"
+    default = 1
+    option_not_required = 0
+    option_logically_required = 1
+    option_hard_required = 2
+
+
 class RemoveIlexCutTree(DefaultOnToggle):
     """
     Removes the Cut tree in Ilex Forest
@@ -1650,6 +1665,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     free_fly_blocklist: FlyLocationBlocklist
     early_fly: EarlyFly
     fly_cheese: FlyCheese
+    require_flash: RequireFlash
     hm_badge_requirements: HMBadgeRequirements
     remove_badge_requirement: RemoveBadgeRequirement
     remove_ilex_cut_tree: RemoveIlexCutTree
@@ -1735,6 +1751,7 @@ OPTION_GROUPS = [
         [HMCompatibility,
          HMBadgeRequirements,
          RemoveBadgeRequirement,
+         RequireFlash,
          FreeFlyLocation,
          FlyLocationBlocklist,
          EarlyFly,
