@@ -3,7 +3,7 @@ from collections.abc import Iterable
 from typing import TYPE_CHECKING
 
 from Options import Toggle
-from .data import data, EvolutionData, EvolutionType, StartingTown, FlyRegion, CUSTOM_MART_SLOT_NAMES
+from .data import data, StartingTown, FlyRegion, CUSTOM_MART_SLOT_NAMES
 from .options import FreeFlyLocation, Route32Condition, JohtoOnly, RandomizeBadges, UndergroundsRequirePower, \
     Route3Access, EliteFourRequirement, Goal, Route44AccessRequirement, BlackthornDarkCaveAccess, RedRequirement, \
     MtSilverRequirement, HMBadgeRequirements, RedGyaradosAccess, EarlyFly, RadioTowerRequirement, \
@@ -11,7 +11,7 @@ from .options import FreeFlyLocation, Route32Condition, JohtoOnly, RandomizeBadg
 from ..Files import APTokenTypes
 
 if TYPE_CHECKING:
-    from . import PokemonCrystalWorld
+    from .world import PokemonCrystalWorld
 
 
 def adjust_options(world: "PokemonCrystalWorld"):

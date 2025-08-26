@@ -5,7 +5,7 @@ from .options import RandomizeBreeding, BreedingMethodsRequired
 from .utils import pokemon_convert_friendly_to_ids
 
 if TYPE_CHECKING:
-    from . import PokemonCrystalWorld
+    from .world import PokemonCrystalWorld
 
 
 def randomize_breeding(world: "PokemonCrystalWorld", preevolutions: dict[str, list[str]]) -> None:

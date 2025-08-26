@@ -12,7 +12,7 @@ from .options import RandomizeTypes, RandomizePalettes, RandomizeBaseStats, Rand
 from .utils import pokemon_convert_friendly_to_ids
 
 if TYPE_CHECKING:
-    from . import PokemonCrystalWorld
+    from .world import PokemonCrystalWorld
 
 
 def randomize_pokemon_data(world: "PokemonCrystalWorld"):

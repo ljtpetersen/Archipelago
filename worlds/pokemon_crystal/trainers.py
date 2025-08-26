@@ -9,7 +9,7 @@ from .pokemon import get_random_pokemon, get_random_nezumi
 from .utils import pokemon_convert_friendly_to_ids
 
 if TYPE_CHECKING:
-    from . import PokemonCrystalWorld
+    from .world import PokemonCrystalWorld
 
 
 def is_rival_starter_pokemon(trainer_name, trainer_data, index):

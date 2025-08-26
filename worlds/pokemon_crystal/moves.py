@@ -6,7 +6,7 @@ from .data import data as crystal_data, LearnsetData, TMHMData, MoveCategory
 from .options import RandomizeLearnsets, RandomizeMoveValues, PhysicalSpecialSplit
 
 if TYPE_CHECKING:
-    from . import PokemonCrystalWorld
+    from .world import PokemonCrystalWorld
 
 MOVE_POWER_RATIO = {
     "BARRAGE": 3,

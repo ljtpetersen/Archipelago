@@ -6,7 +6,7 @@ from .data import data
 from .options import Shopsanity, ItemPoolFill, ShopsanityXItems
 
 if TYPE_CHECKING:
-    from . import PokemonCrystalWorld
+    from .world import PokemonCrystalWorld
 
 
 class PokemonCrystalItem(Item):

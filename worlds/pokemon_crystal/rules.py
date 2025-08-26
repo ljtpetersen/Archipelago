@@ -15,7 +15,7 @@ from .pokemon import add_hm_compatibility
 from .utils import get_fly_regions, get_mart_slot_location_name
 
 if TYPE_CHECKING:
-    from . import PokemonCrystalWorld
+    from .world import PokemonCrystalWorld
 
 
 class PokemonCrystalLogic:
