@@ -512,7 +512,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
             for _, matchup in sorted(
                     list(type_data.matchups.items()), key=lambda matchup: world.generated_types[matchup[0]].rom_id):
                 address += 3
-                write_bytes(patch, matchup, address)
+                write_bytes(patch, [matchup], address)
 
     if world.options.randomize_breeding:
         base_address = data.rom_addresses["AP_Setting_EggMons"]
