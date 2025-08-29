@@ -2,8 +2,8 @@ from collections.abc import Iterable
 from dataclasses import replace
 from typing import TYPE_CHECKING
 
-from .data import data as crystal_data, LearnsetData, TMHMData, MoveCategory
-from .options import RandomizeLearnsets, RandomizeMoveValues, PhysicalSpecialSplit
+from .data import data as crystal_data, LearnsetData, TMHMData, MoveCategory, TypeMatchup
+from .options import RandomizeLearnsets, RandomizeMoveValues, PhysicalSpecialSplit, RandomizeTypeChart
 
 if TYPE_CHECKING:
     from .world import PokemonCrystalWorld
@@ -260,14 +260,35 @@ def cap_hm_move_power(world: "PokemonCrystalWorld"):
 def randomize_move_types(world: "PokemonCrystalWorld"):
     if not world.options.randomize_move_types: return
 
+    all_types = list(crystal_data.types.keys())
+
     for move_name, move_data in world.generated_moves.items():
         if move_name in ("NO_MOVE", "CURSE"):
             continue
-        new_type = world.random.choice(crystal_data.types)
+        new_type = world.random.choice(all_types)
         world.generated_moves[move_name] = replace(
             world.generated_moves[move_name],
             type=new_type
         )
+
+
+def randomize_type_chart(world: "PokemonCrystalWorld"):
+    if not world.options.randomize_type_chart: return
+
+    if world.options.randomize_type_chart == RandomizeTypeChart.option_shuffle:
+        matchup_pool = [
+            matchup for _, type_data in world.generated_types.items() for _, matchup in type_data.matchups.items()
+        ]
+        world.random.shuffle(matchup_pool)
+    else:
+        all_matchups = list(TypeMatchup)
+        matchup_pool = [world.random.choice(all_matchups) for _ in
+                        range(len(crystal_data.types) * len(crystal_data.types))]
+
+    for type_id, type_data in world.generated_types.items():
+        world.generated_types[type_id] = replace(type_data,
+                                                 matchups={matchup_type: matchup_pool.pop() for matchup_type in
+                                                           type_data.matchups.keys()})
 
 
 def moves_convert_friendly_to_ids(world: "PokemonCrystalWorld", moves: Iterable[str]) -> set[str]:

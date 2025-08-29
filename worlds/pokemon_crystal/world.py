@@ -12,7 +12,7 @@ from worlds.AutoWorld import World, WebWorld
 from .breeding import randomize_breeding, generate_breeding_data, can_breed
 from .data import PokemonData, TrainerData, MiscData, TMHMData, data as crystal_data, StaticPokemon, \
     MusicData, MoveData, FlyRegion, TradeData, MiscOption, APWORLD_VERSION, POKEDEX_OFFSET, StartingTown, \
-    LogicalAccess, EncounterType, EncounterKey, EncounterMon, EvolutionType
+    LogicalAccess, EncounterType, EncounterKey, EncounterMon, EvolutionType, TypeData
 from .evolution import randomize_evolution, generate_evolution_data, evolution_in_logic
 from .items import PokemonCrystalItem, create_item_label_to_code_map, get_item_classification, ITEM_GROUPS, \
     item_const_name_to_id, item_const_name_to_label, adjust_item_classifications, get_random_filler_item, \
@@ -20,7 +20,7 @@ from .items import PokemonCrystalItem, create_item_label_to_code_map, get_item_c
 from .level_scaling import perform_level_scaling
 from .locations import create_locations, PokemonCrystalLocation, create_location_label_to_id_map, LOCATION_GROUPS
 from .misc import randomize_mischief, get_misc_spoiler_log
-from .moves import randomize_tms, randomize_move_values, randomize_move_types, cap_hm_move_power
+from .moves import randomize_tms, randomize_move_values, randomize_move_types, cap_hm_move_power, randomize_type_chart
 from .music import randomize_music
 from .options import PokemonCrystalOptions, JohtoOnly, RandomizeBadges, HMBadgeRequirements, FreeFlyLocation, \
     EliteFourRequirement, MtSilverRequirement, RedRequirement, \
@@ -92,6 +92,7 @@ class PokemonCrystalWorld(World):
     starting_town: StartingTown
 
     generated_moves: dict[str, MoveData]
+    generated_types: dict[str, TypeData]
     generated_pokemon: dict[str, PokemonData]
 
     generated_trainers: dict[str, TrainerData]
@@ -136,6 +137,7 @@ class PokemonCrystalWorld(World):
     def __init__(self, multiworld: MultiWorld, player: int):
         super().__init__(multiworld, player)
         self.generated_moves = dict(crystal_data.moves)
+        self.generated_types = dict(crystal_data.types)
         self.generated_pokemon = dict(crystal_data.pokemon)
         self.generated_trainers = dict(crystal_data.trainers)
         self.generated_tms = dict(crystal_data.tmhm)
@@ -331,6 +333,7 @@ class PokemonCrystalWorld(World):
         randomize_music(self)
         randomize_mischief(self)
         randomize_tms(self)
+        randomize_type_chart(self)
 
         self.auth = self.random.randbytes(16)
 

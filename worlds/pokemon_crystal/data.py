@@ -334,6 +334,28 @@ class MoveData:
     category: MoveCategory
 
 
+class TypeMatchup(IntEnum):
+    NoEffect = 0
+    NotVeryEffective = 5
+    Effective = 10
+    SuperEffective = 20
+
+    @staticmethod
+    def from_string(type_matchup_string: str):
+        if type_matchup_string == "NO_EFFECT": return TypeMatchup.NoEffect
+        if type_matchup_string == "NOT_VERY_EFFECTIVE": return TypeMatchup.NotVeryEffective
+        if type_matchup_string == "EFFECTIVE": return TypeMatchup.Effective
+        if type_matchup_string == "SUPER_EFFECTIVE": return TypeMatchup.SuperEffective
+        raise ValueError(f"Invalid type matchup: {type_matchup_string}")
+
+
+@dataclass(frozen=True)
+class TypeData:
+    id: str
+    rom_id: int
+    matchups: dict[str, TypeMatchup]
+
+
 @dataclass(frozen=True)
 class TMHMData:
     id: str
@@ -376,10 +398,6 @@ class MiscOption(IntEnum):
     WhirlDexLocations = auto()
     Farfetchd = auto()
 
-    @staticmethod
-    def all():
-        return list(map(lambda c: c.value, MiscOption))
-
 
 @dataclass(frozen=True)
 class MiscWarp:
@@ -406,7 +424,7 @@ class MiscData:
     saffron_gym_warps: MiscSaffronWarps
     radio_channel_addresses: Sequence[int]
     mom_items: Sequence[MiscMomItem]
-    selected: Sequence[MiscOption] = field(default_factory=lambda: MiscOption.all())
+    selected: Sequence[MiscOption] = field(default_factory=lambda: list(MiscOption))
 
 
 @dataclass(frozen=True)
@@ -743,9 +761,8 @@ class PokemonCrystalData:
     trainers: Mapping[str, TrainerData]
     pokemon: Mapping[str, PokemonData]
     moves: Mapping[str, MoveData]
+    types: Mapping[str, TypeData]
     wild: Mapping[EncounterKey, Sequence[EncounterMon]]
-    types: Sequence[str]
-    type_ids: Mapping[str, int]
     tmhm: Mapping[str, TMHMData]
     maps: Mapping[str, MapData]
     marts: Mapping[str, MartData]
@@ -788,7 +805,6 @@ def _init() -> None:
     move_data = data_json["moves"]
     trainer_data = data_json["trainers"]
     wild_data = data_json["wilds"]
-    type_data = data_json["types"]
     fuchsia_data = data_json["misc"]["fuchsia_gym_trainers"]
     saffron_data = data_json["misc"]["saffron_gym_warps"]
     radio_addr_data = data_json["misc"]["radio_channel_addresses"]
@@ -994,6 +1010,17 @@ def _init() -> None:
         ) for move_name, move_attributes in move_data.items()
     }
 
+    types = {
+        type_id: TypeData(
+            id=type_id,
+            rom_id=type_data["id"],
+            matchups={
+                matchup_id: TypeMatchup.from_string(matchup) for matchup_id, matchup in type_data["matchups"].items()
+            }
+
+        ) for type_id, type_data in data_json["types"].items()
+    }
+
     wild = dict[EncounterKey, Sequence[EncounterMon]]()
 
     for grass_name, grass_data in wild_data["grass"].items():
@@ -1024,9 +1051,6 @@ def _init() -> None:
 
     misc = MiscData(fuchsia_data, radio_tower_data, MiscSaffronWarps(saffron_warps, saffron_data["pairs"]),
                     radio_addr_data, mom_items)
-
-    types = type_data["types"]
-    type_ids = type_data["ids"]
 
     tmhm = {tm_name: TMHMData(
         tm_name,
@@ -1176,7 +1200,6 @@ def _init() -> None:
         moves=moves,
         wild=wild,
         types=types,
-        type_ids=type_ids,
         tmhm=tmhm,
         maps=maps,
         marts=marts,

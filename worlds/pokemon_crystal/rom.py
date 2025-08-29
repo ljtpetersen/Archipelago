@@ -439,7 +439,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
             continue
 
         address = data.rom_addresses["AP_MoveData_Type_" + move_name]
-        move_category_type = [data.type_ids[move.type] | move.category]
+        move_category_type = [world.generated_types[move.type].rom_id | move.category]
         write_bytes(patch, move_category_type, address)
 
         address = data.rom_addresses["AP_MoveData_Power_" + move_name]
@@ -456,7 +456,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         address = data.rom_addresses["AP_Stats_Types_" + pkmn_name]
         if world.options.randomize_types.value:
             pkmn_types = [pkmn_data.types[0], pkmn_data.types[-1]]
-            type_ids = [data.type_ids[pkmn_types[0]], data.type_ids[pkmn_types[1]]]
+            type_ids = [world.generated_types[pkmn_types[0]].rom_id, world.generated_types[pkmn_types[1]].rom_id]
             write_bytes(patch, type_ids, address)
 
         address += 15  # growth rate lives 15 bytes after type1
@@ -505,6 +505,14 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
             tm_bytes[int((tm_num - 1) / 8)] |= 1 << (tm_num - 1) % 8
         tm_address = data.rom_addresses["AP_Stats_TMHM_" + pkmn_name]
         write_bytes(patch, tm_bytes, tm_address)
+
+    if world.options.randomize_type_chart:
+        for type_id, type_data in world.generated_types.items():
+            address = data.rom_addresses["AP_Setting_TypeMatchups_" + type_id] - 1
+            for _, matchup in sorted(
+                    list(type_data.matchups.items()), key=lambda matchup: world.generated_types[matchup[0]].rom_id):
+                address += 3
+                write_bytes(patch, matchup, address)
 
     if world.options.randomize_breeding:
         base_address = data.rom_addresses["AP_Setting_EggMons"]

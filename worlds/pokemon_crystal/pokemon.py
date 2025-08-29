@@ -365,10 +365,11 @@ def get_random_base_stats(random, bst=None):
 
 
 def get_random_types(random):
-    new_types = [random.choice(crystal_data.types)]
+    all_types = list(crystal_data.types.keys())
+    new_types = [random.choice(all_types)]
     # approx. 110/251 Pokemon are dual type in gen 2
     if random.randint(0, 24) < 11:
-        new_types.append(random.choice([t for t in crystal_data.types if t not in new_types]))
+        new_types.append(random.choice([t for t in all_types if t not in new_types]))
     return new_types
 
 

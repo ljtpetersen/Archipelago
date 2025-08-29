@@ -980,6 +980,20 @@ class RandomizeMoveTypes(Toggle):
     display_name = "Randomize Move Types"
 
 
+class RandomizeTypeChart(Choice):
+    """
+    Randomizes the type matchup chart
+    - Vanilla: Type matchups are unchanged
+    - Shuffle: Shuffles type matchups around, keeping the same number of each possible matchup
+    - Completely Random: Generates a random matchup for each type pair. WARNING: This can result in a lot of immunities
+    """
+    display_name = "Randomize Type Chart"
+    default = 0
+    option_vanilla = 0
+    option_shuffle = 1
+    option_completely_random = 2
+
+
 class PhysicalSpecialSplit(Choice):
     """
     Sets how moves are determined to be Physical or Special
@@ -1675,6 +1689,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     learnset_type_bias: LearnsetTypeBias
     randomize_move_values: RandomizeMoveValues
     randomize_move_types: RandomizeMoveTypes
+    randomize_type_chart: RandomizeTypeChart
     physical_special_split: PhysicalSpecialSplit
     randomize_tm_moves: RandomizeTMMoves
     tm_compatibility: TMCompatibility
@@ -1818,6 +1833,7 @@ OPTION_GROUPS = [
          MetronomeOnly,
          RandomizeMoveTypes,
          RandomizeMoveValues,
+         RandomizeTypeChart,
          PhysicalSpecialSplit,
          HMPowerCap,
          RandomizeTMMoves,
