@@ -13,7 +13,8 @@ from .items import item_const_name_to_id
 from .maps import FLASH_MAP_GROUPS
 from .options import UndergroundsRequirePower, RequireItemfinder, Goal, Route2Access, \
     BlackthornDarkCaveAccess, NationalParkAccess, Route3Access, EncounterSlotDistribution, KantoAccessRequirement, \
-    FreeFlyLocation, HMBadgeRequirements, ShopsanityPrices, WildEncounterMethodsRequired, FlyCheese, Shopsanity
+    FreeFlyLocation, HMBadgeRequirements, ShopsanityPrices, WildEncounterMethodsRequired, FlyCheese, Shopsanity, \
+    RequireFlash
 from .utils import convert_to_ingame_text, write_bytes, replace_map_tiles
 
 if TYPE_CHECKING:
@@ -1004,7 +1005,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
             palette_byte = (map_data.phone_service << 4) | resolved_palette
             write_bytes(patch, [palette_byte], data.rom_addresses[f"AP_MapPalette_{map}"])
 
-    if world.options.require_flash:
+    if world.options.require_flash == RequireFlash.option_hard_required:
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_FlashHardRequired"] + 1)
 
     # Set slot auth
