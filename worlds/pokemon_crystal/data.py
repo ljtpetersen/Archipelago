@@ -194,6 +194,7 @@ ADHOC_TRAINERSANITY_TRAINERS = [
     "JANINE",
     "BLAINE",
     "BLUE"
+    "ROCKET_GRUNTM_1",
 ]
 
 

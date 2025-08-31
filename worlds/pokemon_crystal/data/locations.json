@@ -7620,15 +7620,15 @@
     "script": "AP_Trainer_GRUNTF_GRUNTF_1"
   },
   "ITEM_FROM_ROCKET_GRUNTM_1": {
-    "label": "Slowpoke Well B1F - Grunt 2 (final grunt)",
+    "label": "Slowpoke Well B1F - Grunt 4",
     "flag": "EVENT_ITEM_FROM_ROCKET_GRUNTM_1",
-    "type": "trainer",
+    "type": "giveitem",
     "tags": [
       "Trainersanity",
       "Slowpoke Well"
     ],
     "default_item": "NO_ITEM",
-    "script": "AP_Trainer_GRUNTM_GRUNTM_1"
+    "script": "AP_NPC_SlowpokeWellB1F_GruntM1_NO_ITEM"
   },
   "ITEM_FROM_ROCKET_GRUNTM_2": {
     "label": "Slowpoke Well B1F - Grunt 3",
