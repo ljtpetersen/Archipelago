@@ -6,7 +6,7 @@ from threading import Event
 from typing import ClassVar, Any
 
 import settings
-from BaseClasses import Tutorial, ItemClassification, MultiWorld, CollectionState
+from BaseClasses import Tutorial, ItemClassification, MultiWorld, CollectionState, Item
 from Fill import fill_restrictive, FillError
 from worlds.AutoWorld import World, WebWorld
 from .breeding import randomize_breeding, generate_breeding_data, can_breed
@@ -787,7 +787,7 @@ class PokemonCrystalWorld(World):
                 pre_fill_items.append(self.create_event(f"Teach {hm}"))
         return pre_fill_items
 
-    def collect(self, state: "CollectionState", item: "Item") -> bool:
+    def collect(self, state: CollectionState, item: Item) -> bool:
         changed = super().collect(state, item)
         if changed:
             item_name = item.name
@@ -797,7 +797,7 @@ class PokemonCrystalWorld(World):
         else:
             return False
 
-    def remove(self, state: "CollectionState", item: "Item") -> bool:
+    def remove(self, state: CollectionState, item: Item) -> bool:
         changed = super().remove(state, item)
         if changed:
             item_name = item.name
