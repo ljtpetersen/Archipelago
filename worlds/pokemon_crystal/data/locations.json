@@ -426,7 +426,8 @@
     "flag": "EVENT_ITEM_FROM_ERIKA",
     "type": "giveitem",
     "tags": [
-      "Trainersanity"
+      "Trainersanity",
+      "Celadon City"
     ],
     "default_item": "NO_ITEM",
     "script": "AP_NPC_CeladonGym_Erika_NO_ITEM"
@@ -483,7 +484,8 @@
     "flag": "EVENT_ITEM_FROM_MISTY",
     "type": "giveitem",
     "tags": [
-      "Trainersanity"
+      "Trainersanity",
+      "Cerulean City"
     ],
     "default_item": "NO_ITEM",
     "script": "AP_NPC_CeruleanGym_Misty_NO_ITEM"
@@ -1277,7 +1279,8 @@
     "flag": "EVENT_ITEM_FROM_JANINE",
     "type": "giveitem",
     "tags": [
-      "Trainersanity"
+      "Trainersanity",
+      "Fuchsia City"
     ],
     "default_item": "NO_ITEM",
     "script": "AP_NPC_FuchsiaGym_Janine_NO_ITEM"
@@ -3042,7 +3045,8 @@
     "flag": "EVENT_ITEM_FROM_BROCK",
     "type": "giveitem",
     "tags": [
-      "Trainersanity"
+      "Trainersanity",
+      "Pewter City"
     ],
     "default_item": "NO_ITEM",
     "script": "AP_NPC_PewterGym_Brock_NO_ITEM"
@@ -7401,7 +7405,8 @@
     "flag": "EVENT_ITEM_FROM_SABRINA",
     "type": "giveitem",
     "tags": [
-      "Trainersanity"
+      "Trainersanity",
+      "Saffron City"
     ],
     "default_item": "NO_ITEM",
     "script": "AP_NPC_SaffronGym_Sabrina_NO_ITEM"
@@ -8340,7 +8345,8 @@
     "flag": "EVENT_ITEM_FROM_LTSURGE",
     "type": "giveitem",
     "tags": [
-      "Trainersanity"
+      "Trainersanity",
+      "Vermilion City"
     ],
     "default_item": "NO_ITEM",
     "script": "AP_NPC_VermilionGym_LtSurge_NO_ITEM"
@@ -8567,7 +8573,8 @@
     "flag": "EVENT_ITEM_FROM_BLUE",
     "type": "giveitem",
     "tags": [
-      "Trainersanity"
+      "Trainersanity",
+      "Viridian City"
     ],
     "default_item": "NO_ITEM",
     "script": "AP_NPC_ViridianGym_Blue_NO_ITEM"
