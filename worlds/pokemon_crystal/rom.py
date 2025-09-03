@@ -472,18 +472,18 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
             for evo in pkmn_data.evolutions:
                 evo_pkmn_id = data.pokemon[evo.pokemon].id
                 if evo_pkmn_id == pkmn_name:
-                    if evo.length < 4:
+                    if len(evo.evo_type) < 4:
                         # Edge case: no valid evolution found, is not Tyrogue
                         write_bytes(patch, [evo.evo_type.value, evo.condition, evo_pkmn_id], address)
-                        address += evo.length
+                        address += len(evo.evo_type)
                     else:
                         # Edge case: no valid evolution found, is Tyrogue
                         write_bytes(patch, [evo.evo_type.value, evo.level], address)
                         write_bytes(patch, [evo_pkmn_id], address + 3)
-                        address += evo.length
+                        address += len(evo.evo_type)
                 else:
                     # Normal case
-                    address += evo.length - 1
+                    address += len(evo.evo_type) - 1
                     # Enums over evolution conditions would be needed to write the whole evolution data for all cases
                     write_bytes(patch, [evo_pkmn_id], address)
                     address += 1

@@ -283,6 +283,11 @@ class EvolutionType(IntEnum):
         if self is EvolutionType.Stats: return "EVOLVE_STAT"
         if self is EvolutionType.Trade: return "EVOLVE_TRADE"
 
+    def __len__(self) -> int:
+        if self is EvolutionType.Stats:
+            return 4
+        return 3
+
     def friendly_name(self):
         if self is EvolutionType.Level: return "Level "
         if self is EvolutionType.Item: return "Use "
@@ -297,7 +302,6 @@ class EvolutionData:
     level: int | None
     condition: str | None
     pokemon: str
-    length: int
 
 
 class GrowthRate(IntEnum):
@@ -529,8 +533,6 @@ class EncounterKey:
             return f"{str(self.encounter_type)}_{self.region_id}_{str(self.rarity)}"
         elif self.encounter_type is EncounterType.RockSmash:
             return f"{str(self.encounter_type)}"
-        else:
-            raise ValueError(f"Invalid encounter type: {self.encounter_type}")
 
     def friendly_region_name(self):
         if (self.encounter_type is EncounterType.Grass
@@ -621,6 +623,39 @@ class EncounterKey:
     @staticmethod
     def static(name: str):
         return EncounterKey(EncounterType.Static, name)
+
+    @staticmethod
+    def from_string(keystring: str):
+
+        def resolve_components(expected_length: int) -> list[str]:
+            components = keystring.split("_")
+            if len(components) > expected_length:
+                components = [components[0], "_".join(components[1:-1]), components[-1]]
+
+            if len(components) > expected_length:
+                components = [components[0], "_".join(components[1:])]
+            return components
+
+        if keystring.startswith(EncounterType.Grass):
+            components = resolve_components(2)
+            return EncounterKey.grass(components[-1])
+        elif keystring.startswith(EncounterType.Water):
+            components = resolve_components(2)
+            return EncounterKey.water(components[-1])
+        elif keystring.startswith(EncounterType.Fish):
+            components = resolve_components(3)
+            return EncounterKey.fish(components[1], next(rod for rod in FishingRodType if rod == components[2]))
+        elif keystring.startswith(EncounterType.Tree):
+            components = resolve_components(3)
+            return EncounterKey.tree(components[1],
+                                     next(rarity for rarity in TreeRarity if rarity == components[2]))
+        elif keystring.startswith(EncounterType.RockSmash):
+            return EncounterKey.rock_smash()
+        elif keystring.startswith(EncounterType.Static):
+            components = resolve_components(2)
+            return EncounterKey.static(components[-1])
+        else:
+            raise ValueError(f"Invalid encounter type: {keystring}")
 
 
 class LogicalAccess(Enum):
@@ -1003,11 +1038,12 @@ def _init() -> None:
         for evo in pokemon_data["evolutions"]:
             evo_type = EvolutionType.from_string(evo[0])
             if len(evo) == 4:
-                evolutions.append(EvolutionData(evo_type, int(evo[1]), evo[2], evo[3], len(evo)))
+                evolutions.append(EvolutionData(evo_type, int(evo[1]), evo[2], evo[3]))
             elif evo_type is EvolutionType.Level:
-                evolutions.append(EvolutionData(evo_type, int(evo[1]), None, evo[2], len(evo)))
+                evolutions.append(EvolutionData(evo_type, int(evo[1]), None, evo[2]))
             else:
-                evolutions.append(EvolutionData(evo_type, None, evo[1], evo[2], len(evo)))
+                evolutions.append(EvolutionData(evo_type, None, evo[1], evo[2]))
+
         pokemon[pokemon_name] = PokemonData(
             pokemon_data["id"],
             pokemon_data["friendly_name"],

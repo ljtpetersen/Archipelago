@@ -84,22 +84,23 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
                 region.locations.append(location)
 
     if world.options.dexsanity:
-        pokemon_items = list(world.logic.available_pokemon)
-        priority_pokemon = get_priority_dexsanity(world)
-        excluded_pokemon = get_excluded_dexsanity(world)
+        if not world.is_universal_tracker:
+            pokemon_items = list(world.logic.available_pokemon)
+            priority_pokemon = get_priority_dexsanity(world)
+            excluded_pokemon = get_excluded_dexsanity(world)
 
-        if world.options.dexsanity_starters.value == DexsanityStarters.option_block:
-            excluded_pokemon.update(starter[0] for starter in world.generated_starters)
-        pokemon_items = [pokemon_id for pokemon_id in pokemon_items if pokemon_id not in excluded_pokemon]
-        world.random.shuffle(pokemon_items)
-        for _ in range(min(world.options.dexsanity.value, len(pokemon_items))):
-            if priority_pokemon:
-                pokemon = priority_pokemon.pop()
-                if pokemon in pokemon_items:
-                    world.generated_dexsanity.add(pokemon)
-                    pokemon_items.remove(pokemon)
-                    continue
-            world.generated_dexsanity.add(pokemon_items.pop())
+            if world.options.dexsanity_starters.value == DexsanityStarters.option_block:
+                excluded_pokemon.update(starter[0] for starter in world.generated_starters)
+            pokemon_items = [pokemon_id for pokemon_id in pokemon_items if pokemon_id not in excluded_pokemon]
+            world.random.shuffle(pokemon_items)
+            for _ in range(min(world.options.dexsanity.value, len(pokemon_items))):
+                if priority_pokemon:
+                    pokemon = priority_pokemon.pop()
+                    if pokemon in pokemon_items:
+                        world.generated_dexsanity.add(pokemon)
+                        pokemon_items.remove(pokemon)
+                        continue
+                world.generated_dexsanity.add(pokemon_items.pop())
 
         pokedex_region = regions["Pokedex"]
 
@@ -116,15 +117,16 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
             pokedex_region.locations.append(new_location)
 
     if world.options.dexcountsanity:
-        total_pokemon = len(world.logic.available_pokemon)
-        dexcountsanity_total = min(world.options.dexcountsanity.value, total_pokemon)
-        dexcountsanity_step = world.options.dexcountsanity_step.value
+        if not world.is_universal_tracker:
+            total_pokemon = len(world.logic.available_pokemon)
+            dexcountsanity_total = min(world.options.dexcountsanity.value, total_pokemon)
+            dexcountsanity_step = world.options.dexcountsanity_step.value
 
-        world.generated_dexcountsanity = [i for i in
-                                          range(dexcountsanity_step, dexcountsanity_total, dexcountsanity_step)]
+            world.generated_dexcountsanity = [i for i in
+                                              range(dexcountsanity_step, dexcountsanity_total, dexcountsanity_step)]
 
-        if dexcountsanity_total not in world.generated_dexcountsanity:
-            world.generated_dexcountsanity.append(dexcountsanity_total)
+            if dexcountsanity_total not in world.generated_dexcountsanity:
+                world.generated_dexcountsanity.append(dexcountsanity_total)
 
         pokedex_region = regions["Pokedex"]
 
@@ -239,7 +241,7 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
                 if locs_to_remove <= 0:
                     break
 
-    if world.options.johto_trainersanity or world.options.kanto_trainersanity:
+    if world.options.johto_trainersanity or world.options.kanto_trainersanity and not world.is_universal_tracker:
         trainer_locations = [loc for loc in world.get_locations() if
                              "Trainersanity" in loc.tags and "Johto" in loc.tags]
         locs_to_remove = len(trainer_locations) - world.options.johto_trainersanity.value

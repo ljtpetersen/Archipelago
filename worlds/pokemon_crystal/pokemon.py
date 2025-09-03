@@ -177,7 +177,8 @@ def randomize_requested_pokemon(world: "PokemonCrystalWorld"):
 
 
 def fill_wild_encounter_locations(world: "PokemonCrystalWorld"):
-    if world.options.dexsanity_starters.value == DexsanityStarters.option_available_early:
+    if (world.options.dexsanity_starters.value == DexsanityStarters.option_available_early
+            and not world.is_universal_tracker):
 
         locations = world.multiworld.get_reachable_locations(world.multiworld.state, world.player)
         early_wild_regions = [loc.parent_region for loc in locations if "wild encounter" in loc.tags]
@@ -351,6 +352,10 @@ def get_priority_dexsanity(world: "PokemonCrystalWorld") -> set[str]:
 
 def get_excluded_dexsanity(world: "PokemonCrystalWorld") -> set[str]:
     return _locations_to_pokemon(world, world.options.exclude_locations.value)
+
+
+def get_pokemon_id_by_rom_id(id: int) -> str:
+    return next(poke_id for poke_id, poke_data in crystal_data.pokemon.items() if poke_data.id == id)
 
 
 def get_random_base_stats(random, bst=None):
