@@ -4,6 +4,7 @@
 
 - [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases)
 - An English (UE) Pokémon Crystal v1.0 or v1.1 ROM. The Archipelago community cannot provide this.
+    - A valid v1.1 ROM can be extracted from the 3DS eShop release of the game.
 - One of the following:
     - [BizHawk](https://tasvideos.org/BizHawk/ReleaseHistory) 2.7 or later. 2.10 is recommended.
     - [mGBA](https://mgba.io) 0.10.3 or later.
