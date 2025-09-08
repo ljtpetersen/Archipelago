@@ -1216,6 +1216,9 @@ def _init() -> None:
         "_death_link": PokemonCrystalGameSetting(4, 4, 1, ON_OFF, 0),
         "trainersanity_indication": PokemonCrystalGameSetting(4, 5, 1, ON_OFF, 0),
         "more_uncaught_encounters": PokemonCrystalGameSetting(4, 6, 1, ON_OFF, 0),
+        "auto_hms": PokemonCrystalGameSetting(4, 7, 1, ON_OFF, 0),
+
+        "hms_require_teaching": PokemonCrystalGameSetting(5, 0, 1, ON_OFF, 1),
     }
 
     phone_scripts = []

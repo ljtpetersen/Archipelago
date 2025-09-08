@@ -1576,6 +1576,7 @@ class GameOptions(OptionDict):
     Allowed options and values, with default first:
 
     ap_item_sound: on/off - Sets whether a sound is played when a remote item is received
+    auto_hms: off/on - HMs will be used automatically where possible, if their usage conditions are met
     auto_run: off/on - Sets whether run activates automatically, if on you can hold B to walk
     battle_animations: all/no_scene/no_bars/speedy - Sets which battle animations are played:
         all: All animations play, including entry and moves
@@ -1596,6 +1597,7 @@ class GameOptions(OptionDict):
     fast_egg_hatch: off/on - Sets whether eggs take a single cycle to hatch
     fast_egg_make: off/on - Sets whether eggs are guaranteed after one cycle at the day care
     guaranteed_catch: off/on - Sets whether balls have a 100% success rate
+    hms_require_teaching: on/off - Sets whether it is required to teach field moves to use them in the field
     low_hp_beep: on/off - Sets whether the low HP beep is played in battle
     menu_account: on/off - Sets whether your start menu selection is remembered
     more_uncaught_encounters: on/off - Sets whether wild encounters of Pokemon you have not caught are more likely
