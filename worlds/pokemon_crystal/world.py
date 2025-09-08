@@ -201,9 +201,10 @@ class PokemonCrystalWorld(World):
         if not self.is_universal_tracker:
             preevolutions = randomize_evolution(self)
             randomize_breeding(self, preevolutions)
-            randomize_wild_pokemon(self)
-            randomize_static_pokemon(self)
             randomize_starters(self)
+
+        randomize_wild_pokemon(self)
+        randomize_static_pokemon(self)
 
         previous_logically_available_pokemon_count = 0
         while previous_logically_available_pokemon_count != len(self.logic.available_pokemon):
@@ -595,6 +596,7 @@ class PokemonCrystalWorld(World):
                 evo_data.append({
                     "into": self.generated_pokemon[evo.pokemon].id,
                     "method": str(evo.evo_type),
+                    "level": evo.level,
                     "condition": evo.level if evo.evo_type is EvolutionType.Level else evo.condition
                 })
             if evo_data: evolution_data[self.generated_pokemon[pokemon_id].id] = evo_data
