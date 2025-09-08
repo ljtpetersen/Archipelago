@@ -418,7 +418,7 @@ class PokemonCrystalWorld(World):
         for sphere in multiworld.get_spheres():
             shop_locations_in_sphere = defaultdict(set)
             for location in sphere:
-                if location.game == "Pokemon Crystal":
+                if location.game == cls.game:
                     assert isinstance(location, PokemonCrystalLocation)
                     if "shopsanity" in location.tags and location.parent_region.name not in exclude_shops:
                         shop_locations_in_sphere[location.player].add(location)
@@ -426,7 +426,7 @@ class PokemonCrystalWorld(World):
             for player, locations in shop_locations_in_sphere.items():
                 shop_locations[player].append(locations)
 
-        for world in multiworld.get_game_worlds("Pokemon Crystal"):
+        for world in multiworld.get_game_worlds(cls.game):
             if world.options.shopsanity:
                 world.shop_locations_by_spheres = shop_locations[world.player]
 
