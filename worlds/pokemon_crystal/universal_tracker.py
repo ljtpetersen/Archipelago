@@ -13,8 +13,10 @@ def load_ut_slot_data(world: "PokemonCrystalWorld"):
     if not world.is_universal_tracker: return
 
     for key, value in world.ut_slot_data.items():
-        if hasattr(world.options, key):
+        try:
             getattr(world.options, key).value = value
+        except AttributeError:
+            pass
 
     world.generated_dexcountsanity = world.ut_slot_data["dexcountsanity_counts"]
     dexsanity_slot_data = world.ut_slot_data["dexsanity_pokemon"]
