@@ -3975,7 +3975,7 @@
     "wild_encounters": {
       "surfing": "ROUTE_27",
       "fishing": "Ocean",
-      "headbutt": "Kanto"
+      "headbutt": "Border"
     }
   },
   "REGION_ROUTE_27:WESTWATER": {
@@ -4034,7 +4034,7 @@
       "grass": "ROUTE_27",
       "surfing": "ROUTE_27",
       "fishing": "Ocean",
-      "headbutt": "Kanto"
+      "headbutt": "Border"
     }
   },
   "REGION_ROUTE_27:EASTWHIRLPOOL": {
@@ -4292,7 +4292,7 @@
       "grass": "ROUTE_32",
       "surfing": "ROUTE_32",
       "fishing": "Qwilfish",
-      "headbutt": "Kanto"
+      "headbutt": "Border"
     }
   },
   "REGION_ROUTE_32_POKECENTER_1F": {
