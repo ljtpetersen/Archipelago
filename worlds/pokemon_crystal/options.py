@@ -6,6 +6,19 @@ from .data import data, MapPalette
 from .maps import FLASH_MAP_GROUPS
 
 
+class EnhancedOptionSet(OptionSet):
+
+    def __init__(self, value):
+        if isinstance(value, list) and "_All" in value:
+            value = [k for k in self.valid_keys if not k.startswith("_")]
+        super().__init__(value)
+
+    def __init_subclass__(cls, **kwargs):
+        super.__init_subclass__()
+        cls.valid_keys += ["_Random", "_All"]
+        cls._valid_keys = frozenset(set(cls.valid_keys) | {"_Random", "_All"})
+
+
 class Goal(Choice):
     """
     Elite Four: Defeat the Champion and enter the Hall of Fame
@@ -262,9 +275,12 @@ class KantoAccessCount(Range):
     range_end = 16
 
 
-class DarkAreas(OptionSet):
+class DarkAreas(EnhancedOptionSet):
     """
     Sets which areas are dark until Flash is used
+
+    - "_All" includes all areas
+    - "_Random" has a 50% chance to include each area that is not already included
     """
     display_name = "Dark Areas"
     default = sorted(area for area, maps in FLASH_MAP_GROUPS.items() if data.maps[maps[0]].palette is MapPalette.Dark)
@@ -491,9 +507,12 @@ class DexsanityStarters(Choice):
     option_available_early = 2
 
 
-class WildEncounterMethodsRequired(OptionSet):
+class WildEncounterMethodsRequired(EnhancedOptionSet):
     """
     Sets which wild encounter types may be logically required
+
+    "_Random" has a 50% chance to include types which are not already included
+    "_All" will include all types
 
     Swarms and roamers are NEVER in logic
     """
@@ -512,9 +531,12 @@ class EnforceWildEncounterMethodsLogic(Toggle):
     display_name = "Enforce Wild Encounter Methods Logic"
 
 
-class EvolutionMethodsRequired(OptionSet):
+class EvolutionMethodsRequired(EnhancedOptionSet):
     """
     Sets which types of evolutions may be logically required
+
+    "_Random" has a 50% chance to include types which are not already included
+    "_All" will include all types
     """
     display_name = "Evolution Methods Required"
     valid_keys = ["Level", "Level Tyrogue", "Use Item", "Happiness"]
@@ -553,7 +575,7 @@ class EvolutionGymLevels(Range):
     range_end = 69
 
 
-class Shopsanity(OptionSet):
+class Shopsanity(EnhancedOptionSet):
     """
     Adds shop purchases as locations, items in shops are added to the item pool
     - Johto Marts: Adds Johto Poke Marts, including the Goldenrod Dept. Store.
@@ -563,6 +585,7 @@ class Shopsanity(OptionSet):
     - Game Corners: The Game Corner TM shops are added.
     - Apricorns: Kurt's Apricorn Ball shop is added, each slot requires a different Apricorn. Apricorns are progression.
     - "_All": Includes all valid options.
+    - "_Random": Each option that is not included has a 50% chance to be additionally included.
 
     IMPORTANT NOTE: There is a non-randomized shop on Pokecenter 2F, you can always buy Poke Balls, and Escape Ropes there.
     """
@@ -575,13 +598,7 @@ class Shopsanity(OptionSet):
     apricorns = "Apricorns"
     game_corners = "Game Corners"
 
-    valid_keys = [johto_marts, kanto_marts, blue_card, apricorns, game_corners, "_All"]
-
-    def __init__(self, value):
-        # If _all is selected, expand it into all the real shops
-        if isinstance(value, list) and "_All" in value:
-            value = [k for k in self.valid_keys if k != "_All"]
-        super().__init__(value)
+    valid_keys = [johto_marts, kanto_marts, blue_card, apricorns, game_corners]
 
 
 class ShopsanityPrices(Choice):
@@ -1289,9 +1306,12 @@ class HMBadgeRequirements(Choice):
     option_regional = 3
 
 
-class RemoveBadgeRequirement(OptionSet):
+class RemoveBadgeRequirement(EnhancedOptionSet):
     """
     Specify which HMs do not require a badge to use. This overrides the HM Badge Requirements setting.
+
+    "_Random" has a 50% chance to include HMs which are not already included
+    "_All" will include all HMs
 
     HMs should be provided in the form: "Fly".
     """
@@ -1321,7 +1341,7 @@ class RemoveIlexCutTree(DefaultOnToggle):
     display_name = "Remove Ilex Forest Cut Tree"
 
 
-class SaffronGatehouseTea(OptionSet):
+class SaffronGatehouseTea(EnhancedOptionSet):
     """
     Sets which Saffron City gatehouses require Tea to pass. Obtaining the Tea will unlock them all.
     If any gatehouses are enabled, adds a new location in Celadon Mansion 1F and adds Tea to the item pool.
@@ -1330,14 +1350,7 @@ class SaffronGatehouseTea(OptionSet):
     _All is shorthand for all valid options except _Random of course.
     """
     display_name = "Saffron Gatehouse Tea"
-    valid_keys = ["North", "East", "South", "West", "_Random", "_All"]
-
-    def __init__(self, value):
-        # If the user selected _all, replace it with all real keys
-        if isinstance(value, list) and "_All" in value:
-            # everything except _Random and _all itself
-            value = [k for k in self.valid_keys if k not in ("_Random", "_All")]
-        super().__init__(value)
+    valid_keys = ["North", "East", "South", "West"]
 
 
 class EastWestUnderground(Toggle):
@@ -1656,6 +1669,8 @@ class GameOptions(OptionDict):
         "ap_item_sound": "on",
         "trainersanity_indication": "off",
         "more_uncaught_encounters": "off",
+        "auto_hms": "off",
+        "hms_require_teaching": "on"
     }
 
 
