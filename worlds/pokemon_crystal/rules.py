@@ -504,7 +504,7 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     # Cherrygrove
     set_rule(get_location("Cherrygrove City - Mystic Water from Island Man"), can_surf)
 
-    safe_set_location_rule("Cherrygrove City - Item from Rival",
+    safe_set_location_rule("Cherrygrove City - Rival",
                            lambda state: state.has("EVENT_GOT_MYSTERY_EGG_FROM_MR_POKEMON", world.player))
 
     # Route 31
@@ -659,7 +659,7 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     set_rule(get_entrance("REGION_AZALEA_TOWN -> REGION_AZALEA_GYM"),
              lambda state: state.has("EVENT_CLEARED_SLOWPOKE_WELL", world.player))
 
-    safe_set_location_rule("Azalea Town - Item from Rival",
+    safe_set_location_rule("Azalea Town - Rival",
                            lambda state: state.has("EVENT_CLEARED_SLOWPOKE_WELL", world.player))
 
     set_rule(get_location("Azalea Town - Lure Ball from Kurt"),
