@@ -1063,12 +1063,6 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     set_rule(get_entrance("REGION_MOUNT_MORTAR_1F_OUTSIDE:CENTER -> REGION_MOUNT_MORTAR_2F_OUTSIDE"),
              can_surf_and_waterfall)
 
-    if "Mount Mortar" in world.options.dark_areas:
-        set_rule(get_entrance("REGION_MOUNT_MORTAR_1F_OUTSIDE:WEST -> REGION_MOUNT_MORTAR_1F_INSIDE:FRONT"), can_flash)
-        set_rule(get_entrance("REGION_MOUNT_MORTAR_1F_OUTSIDE:EAST -> REGION_MOUNT_MORTAR_1F_INSIDE:FRONT"), can_flash)
-        set_rule(get_entrance("REGION_MOUNT_MORTAR_2F_OUTSIDE -> REGION_MOUNT_MORTAR_2F_INSIDE"), can_flash)
-        set_rule(get_entrance("REGION_MOUNT_MORTAR_1F_OUTSIDE:CENTER -> REGION_MOUNT_MORTAR_B1F"), can_flash)
-
     if world.options.mount_mortar_access:
         set_rule(get_entrance("REGION_MOUNT_MORTAR_1F_OUTSIDE:WEST:ENTRANCE -> REGION_MOUNT_MORTAR_1F_OUTSIDE:WEST"),
                  can_rock_smash)
@@ -1091,6 +1085,12 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     # Behind boulder, need to come down from 2F for this
     set_rule(get_entrance("REGION_MOUNT_MORTAR_B1F:BACK -> REGION_MOUNT_MORTAR_B1F"),
              lambda state: can_strength(state) and can_surf_and_waterfall(state))
+    
+    if "Mount Mortar" in world.options.dark_areas:
+        add_rule(get_entrance("REGION_MOUNT_MORTAR_1F_OUTSIDE:WEST -> REGION_MOUNT_MORTAR_1F_INSIDE:FRONT"), can_flash)
+        add_rule(get_entrance("REGION_MOUNT_MORTAR_1F_OUTSIDE:EAST -> REGION_MOUNT_MORTAR_1F_INSIDE:FRONT"), can_flash)
+        add_rule(get_entrance("REGION_MOUNT_MORTAR_2F_OUTSIDE -> REGION_MOUNT_MORTAR_2F_INSIDE"), can_flash)
+        add_rule(get_entrance("REGION_MOUNT_MORTAR_1F_OUTSIDE:CENTER -> REGION_MOUNT_MORTAR_B1F"), can_flash)
 
     # Mahogany Town
     if Shopsanity.johto_marts in world.options.shopsanity.value:
