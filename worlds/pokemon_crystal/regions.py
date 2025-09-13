@@ -328,11 +328,11 @@ def create_regions(world: "PokemonCrystalWorld") -> dict[str, Region]:
         pokedex_region = Region("Pokedex", world.player, world.multiworld)
         regions["Pokedex"] = pokedex_region
         regions["Menu"].connect(regions["Pokedex"])
-    if world.options.evolution_methods_required:
+    if world.options.evolution_methods_required or world.is_universal_tracker:
         evolution_region = Region("Evolutions", world.player, world.multiworld)
         regions["Evolutions"] = evolution_region
         regions["Menu"].connect(regions["Evolutions"])
-    if world.options.breeding_methods_required:
+    if world.options.breeding_methods_required or world.is_universal_tracker:
         breeding_region = Region("Breeding", world.player, world.multiworld)
         regions["Breeding"] = breeding_region
         regions["Menu"].connect(regions["Breeding"])
