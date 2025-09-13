@@ -23,12 +23,12 @@ def adjust_options(world: "PokemonCrystalWorld"):
 def __adjust_meta_options(world: "PokemonCrystalWorld"):
     for option_name in dir(world.options):
         option = getattr(world.options, option_name)
-        if option is EnhancedOptionSet:
+        if isinstance(option, EnhancedOptionSet):
             if "_Random" in option.value:
                 option.value.remove("_Random")
-                for value in [opt for opt in option.allowed_keys if not opt.startswith("_")]:
+                for value in [opt for opt in option.valid_keys if not opt.startswith("_")]:
                     if value not in option.value and world.random.randint(0, 1):
-                        option.value.append(value)
+                        option.value.add(value)
 
 
 def __adjust_option_problems(world: "PokemonCrystalWorld"):
