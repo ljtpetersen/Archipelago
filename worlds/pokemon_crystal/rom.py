@@ -977,7 +977,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
 
     if world.options.enforce_wild_encounter_methods_logic:
         methods = [method in world.options.wild_encounter_methods_required.value for method in
-                   WildEncounterMethodsRequired.valid_keys]
+                   [key for key in WildEncounterMethodsRequired.valid_keys if not key.startswith("_")]]
 
         write_bytes(patch, methods, data.rom_addresses["AP_Setting_AllowedCatchTypes"])
 
