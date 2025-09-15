@@ -8,7 +8,7 @@ Możesz zapoznać się ze wszystkimi opcjami i wygenerować plik YAML [tutaj](..
 
 W podstawowej wersji gry wprowadzono pewne zmiany związane z losowością:
 
-- Walka trenerów na trasie 30 kończy się zaraz po rozmowie z panem Pokémonem, pomijając wizytę u profesora Elma.
+- Walka trenerów na trasie 30 kończy się zaraz po rozmowie z panem Pokémonem, pomijając wizytę u profesora Elm.
 - Dyrektor zawsze przebywa w podziemnym magazynie, nawet gdy wieża radiowa nie jest zajęta.
 - Drzwi na kartę w domu towarowym Goldenrod na poziomie B1F otwierają się za pomocą karty znajdującej się w plecaku.
 - Kontrole oparte na czasie, takie jak rodzeństwo z dnia tygodnia i facet na dachu rezydencji Celadon, są zawsze dostępne.
@@ -92,4 +92,5 @@ Jeśli opcja „Dźwięk otrzymania przedmiotu” jest włączona, po otrzymaniu
 
 Tak, gra nie wymaga połączenia z klientem w przypadku nasion solo. Połączenie jest wymagane tylko do wysyłania i
 odbierania przedmiotów. Nie dotyczy to sytuacji, gdy włączona jest opcja `remote_items`.
+
 
