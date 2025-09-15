@@ -69,6 +69,10 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
                                   not exclude.intersection(set(data.locations[loc].tags))]
             for location_name in filtered_locations:
                 location_data = data.locations[location_name]
+                progress_type = LocationProgressType.EXCLUDED \
+                    if (world.options.goal == Goal.option_elite_four
+                        and "PostE4" in location_data.tags
+                        and world.options.exclude_post_goal_locations) else LocationProgressType.DEFAULT
                 location = PokemonCrystalLocation(
                     world.player,
                     location_data.label,
@@ -77,9 +81,7 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
                     location_data.rom_address,
                     location_data.default_item,
                     location_data.tags,
-                    LocationProgressType.DEFAULT if world.options.goal != Goal.option_elite_four or "PostE4"
-                                                    not in location_data.tags else LocationProgressType.EXCLUDED
-
+                    progress_type
                 )
                 region.locations.append(location)
 
@@ -198,6 +200,10 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
                 region = regions[region_name]
 
                 for i, item in enumerate(mart_data.items):
+                    progress_type = LocationProgressType.EXCLUDED \
+                        if (world.options.goal == Goal.option_elite_four
+                            and mart == "MART_ROOFTOP_SALE"
+                            and world.options.exclude_post_goal_locations) else LocationProgressType.DEFAULT
                     new_location = PokemonCrystalLocation(
                         world.player,
                         f"{mart_data.friendly_name} - {get_mart_slot_location_name(mart, i)}",

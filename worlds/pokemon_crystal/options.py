@@ -1674,6 +1674,12 @@ class GameOptions(OptionDict):
     }
 
 
+class ExcludePostGoalLocations(DefaultOnToggle):
+    """
+    Excludes locations which require becoming champion when goal is becoming champion
+    """
+
+
 class PokemonCrystalDeathLink(DeathLink):
     __doc__ = DeathLink.__doc__ + "\n\n    In Pokemon Crystal, whiting out sends a death and receiving a death causes you to white out."
 
@@ -1809,6 +1815,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     start_inventory_from_pool: StartInventoryPool
     death_link: PokemonCrystalDeathLink
     always_unlock_fly_destinations: AlwaysUnlockFly
+    exclude_post_goal_locations: ExcludePostGoalLocations
 
 
 OPTION_GROUPS = [
@@ -1851,7 +1858,8 @@ OPTION_GROUPS = [
          RandomizeFlyUnlocks,
          RequireItemfinder,
          RemoteItems,
-         ItemPoolFill]
+         ItemPoolFill,
+         ExcludePostGoalLocations]
     ),
     OptionGroup(
         "Shopsanity",
