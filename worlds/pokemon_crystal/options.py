@@ -916,6 +916,7 @@ class LockKantoGyms(Choice):
     - Lugia
     - Suicune
     - Silver Cave entrance
+    - Victory Road
 
     You can still enter gyms without access to any of these.
 
