@@ -9,9 +9,10 @@ import yaml
 
 from BaseClasses import ItemClassification
 
-APWORLD_VERSION = "5.1.2"
+APWORLD_VERSION = "5.2.0-alpha.1"
 POKEDEX_OFFSET = 10000
 POKEDEX_COUNT_OFFSET = 20000
+GRASS_OFFSET = 30000
 FLY_UNLOCK_OFFSET = 512
 
 FRIENDLY_MART_NAMES = {
@@ -812,6 +813,15 @@ class MapData:
 
 
 @dataclass(frozen=True)
+class GrassTile:
+    name: str
+    xcoord: int
+    ycoord: int
+    rom_address: int
+    flag: int
+
+
+@dataclass(frozen=True)
 class PokemonCrystalData:
     rom_version: int
     rom_version_11: int
@@ -840,6 +850,7 @@ class PokemonCrystalData:
     phone_scripts: Sequence[PhoneScriptData]
     request_pokemon: Sequence[str]
     adhoc_trainersanity: Mapping[int, int]
+    grass_tiles: Mapping[str, list[GrassTile]]
 
 
 def load_json_data(data_name: str) -> list[Any] | Mapping[str, Any]:
@@ -1252,6 +1263,31 @@ def _init() -> None:
             size[1]
         )
 
+    grass_tiles = {}
+
+    grass_base_rom_addr = rom_address_data["AP_Setting_GrassTable"]
+
+    for region, tile_data in data_json["grasssanity"].items():
+        region_name = region.split(":")[0][7:]  # delete REGION_
+        region_name = region_name.lower().replace("_", " ").title()
+        region_name = f"Grass - {region_name}"
+        tiles = []
+        for tile in tile_data:
+            index = tile["index"]
+            x = tile["x"]
+            y = tile["y"]
+            tiles.append(
+                GrassTile(
+                    name=f"{region_name} ({x}, {y})",
+                    xcoord=x,
+                    ycoord=y,
+                    rom_address=grass_base_rom_addr + (index * 5) + 4,
+                    flag=GRASS_OFFSET + index,
+                )
+            )
+
+        grass_tiles[region] = tiles
+
     global data
     data = PokemonCrystalData(
         rom_version=data_json["rom_version"],
@@ -1281,6 +1317,7 @@ def _init() -> None:
         phone_scripts=phone_scripts,
         request_pokemon=REQUEST_POKEMON,
         adhoc_trainersanity=adhoc_trainersanity,
+        grass_tiles=grass_tiles
     )
 
 

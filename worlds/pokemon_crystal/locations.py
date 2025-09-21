@@ -234,6 +234,22 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
 
             parent_region.locations.append(location)
 
+    if world.options.grasssanity:
+        for region_id, grass in data.grass_tiles.items():
+            if region_id not in regions: continue
+            grass_region = regions[f"{region_id}:GRASS"]
+
+            for grass_tile in grass:
+                grass_region.locations.append(
+                    PokemonCrystalLocation(
+                        player=world.player,
+                        name=grass_tile.name,
+                        parent=grass_region,
+                        rom_address=grass_tile.rom_address,
+                        flag=grass_tile.flag,
+                        tags=frozenset({"grass"}), )
+                )
+
     # Delete trainersanity locations if there are more than the amount specified in the settings
     def remove_excess_trainersanity(trainer_locations: Sequence[PokemonCrystalLocation], locs_to_remove: int):
         if locs_to_remove:
@@ -273,6 +289,10 @@ def create_location_label_to_id_map() -> dict[str, int]:
             location_data = data.locations[location_name]
             label_to_id_map[location_data.label] = location_data.flag
 
+        if region_data.name in data.grass_tiles:
+            for tile in data.grass_tiles[region_data.name]:
+                label_to_id_map[tile.name] = tile.flag
+
     for mart, mart_data in data.marts.items():
         for i, item in enumerate(mart_data.items):
             if item.flag:
@@ -304,6 +324,7 @@ LOCATION_GROUPS: dict[str, set[str]] = {
                    data.marts.items() for i, item in
                    enumerate(mart_data.items) if item.flag},
     "Fly Unlocks": {f"Visit {region.name}" for region in data.fly_regions},
+    "Grass": {grass.name for region in data.grass_tiles.values() for grass in region}
 }
 
 excluded_location_tags = ("VanillaClairOn", "VanillaClairOff", "RequiresSaffronGatehouses", "Badge", "NPCGift",

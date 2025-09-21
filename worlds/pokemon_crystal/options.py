@@ -1681,6 +1681,14 @@ class ExcludePostGoalLocations(DefaultOnToggle):
     """
 
 
+class Grasssanity(Toggle):
+    """
+    Adds Cutting grass tiles as locations, each one adds a Grass to the item pool, Grass smells good and sells for ¥1
+
+    WARNING: This option is dumb, it can add over 700 locations and over 700 useless filler items
+    """
+
+
 class PokemonCrystalDeathLink(DeathLink):
     __doc__ = DeathLink.__doc__ + "\n\n    In Pokemon Crystal, whiting out sends a death and receiving a death causes you to white out."
 
@@ -1817,6 +1825,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     death_link: PokemonCrystalDeathLink
     always_unlock_fly_destinations: AlwaysUnlockFly
     exclude_post_goal_locations: ExcludePostGoalLocations
+    grasssanity: Grasssanity
 
 
 OPTION_GROUPS = [
@@ -1860,7 +1869,8 @@ OPTION_GROUPS = [
          RequireItemfinder,
          RemoteItems,
          ItemPoolFill,
-         ExcludePostGoalLocations]
+         ExcludePostGoalLocations,
+         Grasssanity]
     ),
     OptionGroup(
         "Shopsanity",

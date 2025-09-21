@@ -6,7 +6,7 @@ import worlds._bizhawk as bizhawk
 from BaseClasses import ItemClassification
 from NetUtils import ClientStatus
 from worlds._bizhawk.client import BizHawkClient
-from .data import data, APWORLD_VERSION, POKEDEX_OFFSET, POKEDEX_COUNT_OFFSET, FLY_UNLOCK_OFFSET
+from .data import data, APWORLD_VERSION, POKEDEX_OFFSET, POKEDEX_COUNT_OFFSET, FLY_UNLOCK_OFFSET, GRASS_OFFSET
 from .items import item_const_name_to_id
 from .options import Goal, ProvideShopHints
 
@@ -316,7 +316,8 @@ class PokemonCrystalClient(BizHawkClient):
                 ctx.bizhawk_ctx,
                 [(data.ram_addresses["wEventFlags"], EVENT_BYTES, "WRAM"),  # Flags
                  (data.ram_addresses["wArchipelagoPokedexCaught"], 0x20, "WRAM"),
-                 (data.ram_addresses["wArchipelagoPokedexSeen"], 0x20, "WRAM")],
+                 (data.ram_addresses["wArchipelagoPokedexSeen"], 0x20, "WRAM"),
+                 (data.ram_addresses["wArchipelagoGrassFlags"], 0x58, "WRAM")],
                 [overworld_guard]
             )
 
@@ -325,6 +326,7 @@ class PokemonCrystalClient(BizHawkClient):
 
             pokedex_caught_bytes = read_result[1]
             pokedex_seen_bytes = read_result[2]
+            grass_cut_bytes = read_result[3]
 
             game_clear = False
             local_checked_locations = set()
@@ -381,6 +383,13 @@ class PokemonCrystalClient(BizHawkClient):
                     if byte & (1 << i):
                         dex_number = (byte_i * 8 + i) + 1
                         local_pokemon["seen"].append(dex_number)
+
+            for byte_i, byte in enumerate(grass_cut_bytes):
+                for i in range(8):
+                    if byte & (1 << i):
+                        location_id = (byte_i * 8 + i) + GRASS_OFFSET
+                        if location_id in ctx.server_locations:
+                            local_checked_locations.add(location_id)
 
             if local_pokemon != self.local_pokemon and ctx.slot is not None:
                 await ctx.send_msgs([{

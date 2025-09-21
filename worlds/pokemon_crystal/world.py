@@ -314,6 +314,12 @@ class PokemonCrystalWorld(World):
                 self.random.randint(0, 100) >= total_trap_weight else get_random_trap()
                 for _ in self.generated_dexcountsanity)
 
+        if self.options.grasssanity:
+            self.itempool.extend(
+                self.create_item_by_const_name("GRASS_ITEM") if
+                self.random.randint(0, 100) >= total_trap_weight else get_random_trap()
+                for _ in [loc for loc in self.multiworld.get_locations(self.player) if "grass" in loc.tags])
+
         if self.options.johto_only.value != JohtoOnly.option_off:
             # Replace the S.S. Ticket with the Silver Wing for Johto only seeds
             self.itempool = [item if item.name != "S.S. Ticket" else self.create_item_by_const_name("SILVER_WING")
