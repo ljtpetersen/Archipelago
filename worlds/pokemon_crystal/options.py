@@ -1671,6 +1671,7 @@ class ExcludePostGoalLocations(DefaultOnToggle):
     """
     Excludes locations which require becoming champion when goal is becoming champion
     """
+    display_name = "Exclude Post Goal Locations"
 
 
 class Grasssanity(Toggle):
@@ -1679,6 +1680,7 @@ class Grasssanity(Toggle):
 
     WARNING: This option is dumb, it can add over 700 locations and over 700 useless filler items
     """
+    display_name = "Grasssanity"
 
 
 class PokemonCrystalDeathLink(DeathLink):
