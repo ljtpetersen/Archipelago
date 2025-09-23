@@ -95,7 +95,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
                 write_item(item_const_name_to_id("FLY_UNLOCK"), location_address)
 
                 if location.address > GRASS_OFFSET:
-                    event_id = location.address
+                    event_id = 0xFC00 + (location.address - GRASS_OFFSET)
                 elif location.address > POKEDEX_COUNT_OFFSET:
                     event_id = 0xFE00 + (location.address - POKEDEX_COUNT_OFFSET) - 1
                 elif location.address > POKEDEX_OFFSET:
