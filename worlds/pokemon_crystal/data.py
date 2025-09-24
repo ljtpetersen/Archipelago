@@ -897,7 +897,6 @@ def _init() -> None:
     mom_items_data = data_json["misc"]["mom_items"]
     tmhm_data = data_json["tmhm"]
     mart_data = data_json["marts"]
-    map_size_data = data_json["map_sizes"]
 
     claimed_locations: set[str] = set()
 
@@ -1264,7 +1263,7 @@ def _init() -> None:
     maps = {}
 
     for map_name, map_data in data_json["maps"].items():
-        size = map_size_data[map_name]
+        size = map_data["size"]
         maps[map_name] = MapData(
             map_name,
             MapEnvironment.from_string(map_data["environment"]),
