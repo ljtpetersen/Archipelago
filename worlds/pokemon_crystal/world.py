@@ -648,7 +648,7 @@ class PokemonCrystalWorld(World):
             = multidata["connect_names"][self.player_name]
 
     def write_spoiler(self, spoiler_handle) -> None:
-        spoiler_handle.write(f"\nPokemon Crystal ({self.multiworld.player_name[self.player]}):\n")
+        spoiler_handle.write(f"\nPokemon Crystal ({self.player_name}):\n")
 
         if self.options.free_fly_location.value in (FreeFlyLocation.option_free_fly,
                                                     FreeFlyLocation.option_free_fly_and_map_card):
@@ -683,7 +683,7 @@ class PokemonCrystalWorld(World):
             encounters_per_pokemon[odd_egg.pokemon].append(key.friendly_region_name())
 
         if encounters_per_pokemon:
-            spoiler_handle.write("\nRandomized Pokemon:\n")
+            spoiler_handle.write(f"\nRandomized Pokemon ({self.player_name}):\n")
             lines = [f"{self.generated_pokemon[pokemon_id].friendly_name}: {', '.join(locations)}\n"
                      for pokemon_id, locations in encounters_per_pokemon.items()]
             lines.sort()
@@ -691,7 +691,7 @@ class PokemonCrystalWorld(World):
                 spoiler_handle.write(line)
 
         if self.options.randomize_evolution:
-            spoiler_handle.write("\nEvolutions:\n")
+            spoiler_handle.write(f"\nEvolutions ({self.player_name}):\n")
 
             for pokemon_id, pokemon_data in self.generated_pokemon.items():
                 for evo in pokemon_data.evolutions:
@@ -718,7 +718,7 @@ class PokemonCrystalWorld(World):
                     spoiler_handle.write(f"{pokemon_name} -> {method} -> {evo_name}\n")
 
         if breeding_is_randomized(self):
-            spoiler_handle.write("\nBreeding:\n")
+            spoiler_handle.write(f"\nBreeding ({self.player_name}):\n")
             for pokemon, data in self.generated_pokemon.items():
                 if not can_breed(self, pokemon): continue
                 parent_name = self.generated_pokemon[pokemon].friendly_name
@@ -729,15 +729,15 @@ class PokemonCrystalWorld(World):
         if self.options.randomize_pokemon_requests:
             request_pokemon = ", ".join(
                 self.generated_pokemon[pokemon].friendly_name for pokemon in self.generated_request_pokemon)
-            spoiler_handle.write(f"\nBill's Grandpa Pokemon: {request_pokemon}\n")
+            spoiler_handle.write(f"\nBill's Grandpa Pokemon ({self.player_name}): {request_pokemon}\n")
 
         if self.options.grasssanity == Grasssanity.option_one_per_area:
-            spoiler_handle.write("\nGrass locations:\n")
+            spoiler_handle.write(f"\nGrass locations ({self.player_name}):\n")
             for loc_id in self.grass_location_mapping.keys():
                 spoiler_handle.write(f"{self.location_id_to_name[int(loc_id)]}\n")
 
         if self.options.enable_mischief:
-            spoiler_handle.write(f"\nMischief:\n")
+            spoiler_handle.write(f"\nMischief ({self.player_name}):\n")
             get_misc_spoiler_log(self, spoiler_handle.write)
 
     def extend_hint_information(self, hint_data: dict[int, dict[int, str]]):
