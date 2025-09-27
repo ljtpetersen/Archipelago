@@ -260,7 +260,11 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
 
             if not region_grass: continue
 
-            region_tile, region_id = world.random.choice(region_grass)
+            if world.is_universal_tracker:
+                region_tile, region_id = next(
+                    (tile, id) for tile, id in region_grass if str(tile.flag) in world.grass_location_mapping)
+            else:
+                region_tile, region_id = world.random.choice(region_grass)
 
             flag = world.location_name_to_id[location_name]
             world.grass_location_mapping[str(region_tile.flag)] = flag
