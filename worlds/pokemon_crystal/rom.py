@@ -94,7 +94,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
             if item_id >= FLY_UNLOCK_OFFSET:
                 write_item(item_const_name_to_id("FLY_UNLOCK"), location_address)
 
-                if location.address > GRASS_OFFSET:
+                if location.address >= GRASS_OFFSET:
                     if hasattr(location, "original_grass_flag"):
                         grass_address = location.original_grass_flag
                     else:
