@@ -99,7 +99,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
                         grass_address = location.original_grass_flag
                     else:
                         grass_address = location.address
-                    event_id = 0xFC00 + (grass_address - GRASS_OFFSET)
+                    event_id = 0xF000 + (grass_address - GRASS_OFFSET)
                 elif location.address > POKEDEX_COUNT_OFFSET:
                     event_id = 0xFE00 + (location.address - POKEDEX_COUNT_OFFSET) - 1
                 elif location.address > POKEDEX_OFFSET:
