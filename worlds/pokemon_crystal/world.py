@@ -651,6 +651,12 @@ class PokemonCrystalWorld(World):
     def write_spoiler(self, spoiler_handle) -> None:
         spoiler_handle.write(f"\nPokemon Crystal ({self.player_name}):\n")
 
+        if self.options.randomize_starters:
+            spoiler_handle.write("Starters: ")
+            spoiler_handle.write(
+                ", ".join([self.generated_pokemon[line[0]].friendly_name for line in self.generated_starters]))
+            spoiler_handle.write("\n")
+
         if self.options.free_fly_location.value in (FreeFlyLocation.option_free_fly,
                                                     FreeFlyLocation.option_free_fly_and_map_card):
             spoiler_handle.write(f"Free Fly Location: {self.free_fly_location.name}\n")
