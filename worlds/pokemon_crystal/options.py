@@ -219,6 +219,7 @@ class ItemPoolFill(Choice):
     - Balanced: all filler items uniformly randomized.
     - Youngster: item pool filled with items reflecting that of a young trainer.
     - Cooltrainer: item pool filled with items reflecting that of a cooltrainer.
+    - Shuckle: item pool filled with items reflecting that of a Shuckle.
     """
     display_name = "Item Pool Fill"
     default = 0
@@ -226,6 +227,7 @@ class ItemPoolFill(Choice):
     option_balanced = 1
     option_youngster = 2
     option_cooltrainer = 3
+    option_shuckle = 4
 
 
 class Route32Condition(Choice):
