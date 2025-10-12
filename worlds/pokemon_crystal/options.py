@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from Options import Toggle, Choice, DefaultOnToggle, Range, PerGameCommonOptions, NamedRange, OptionList, OptionSet, \
-    StartInventoryPool, OptionDict, Visibility, DeathLink, OptionGroup, OptionList, FreeText , OptionError
+from Options import Toggle, Choice, DefaultOnToggle, Range, PerGameCommonOptions, NamedRange, OptionSet, \
+    StartInventoryPool, OptionDict, Visibility, DeathLink, OptionGroup, OptionList, FreeText, OptionError
 from .data import data, MapPalette
 from .maps import FLASH_MAP_GROUPS
 
@@ -293,12 +293,16 @@ class DarkAreas(EnhancedOptionSet):
 
 class RedGyaradosAccess(Choice):
     """
-    Sets whether the Red Gyarados requires Whirlpool to access
+    Sets the access requirement for the red Gyarados
+    - Vanilla requires Surf
+    - Whirlpool requires Surf and Whirlpool
+    - Shore requires nothing
     """
     display_name = "Red Gyarados Access"
     default = 0
     option_vanilla = 0
     option_whirlpool = 1
+    option_shore = 2
 
 
 class Route2Access(Choice):
@@ -1066,7 +1070,12 @@ class TMPlando(OptionDict):
     display_name = "TM Plando"
     valid_keys = set(range(1, 51)) - {2, 8}
     valid_values = set(sorted(move.name.title() for id, move in data.moves.items() if id not in ("NO_MOVE", "STRUGGLE",
-        "HEADBUTT", "ROCK_SMASH", "CUT", "FLY", "SURF", "STRENGTH", "FLASH", "WHIRLPOOL", "WATERFALL")))
+                                                                                                 "HEADBUTT",
+                                                                                                 "ROCK_SMASH", "CUT",
+                                                                                                 "FLY", "SURF",
+                                                                                                 "STRENGTH", "FLASH",
+                                                                                                 "WHIRLPOOL",
+                                                                                                 "WATERFALL")))
 
     def verify_keys(self) -> None:
         super(OptionDict, self).verify_keys()
@@ -1697,7 +1706,7 @@ class FieldMoveMenuOrder(OptionList):
     """
     display_name = "Field Move Menu Order"
     valid_keys = ["Cut", "Fly", "Surf", "Strength", "Flash", "Whirlpool", "Waterfall", "Rock Smash", "Headbutt",
-            "Dig", "Teleport", "Sweet Scent"]
+                  "Dig", "Teleport", "Sweet Scent"]
     default = valid_keys
 
     def __init__(self, value):

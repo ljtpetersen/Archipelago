@@ -10,7 +10,7 @@ from .options import Goal, JohtoOnly, Route32Condition, UndergroundsRequirePower
     BlackthornDarkCaveAccess, NationalParkAccess, KantoAccessRequirement, Route3Access, BreedingMethodsRequired, \
     MtSilverRequirement, FreeFlyLocation, HMBadgeRequirements, EliteFourRequirement, RedRequirement, \
     Route44AccessRequirement, RandomizeBadges, RadioTowerRequirement, PokemonCrystalOptions, Shopsanity, FlyCheese, \
-    RequireFlash, RequireItemfinder
+    RequireFlash, RequireItemfinder, RedGyaradosAccess
 from .pokemon import add_hm_compatibility
 from .utils import get_fly_regions, get_mart_slot_location_name
 
@@ -1145,9 +1145,9 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
                          lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
 
     # Lake of Rage
-    if world.options.red_gyarados_access:
+    if world.options.red_gyarados_access == RedGyaradosAccess.option_whirlpool:
         set_rule(get_entrance("REGION_LAKE_OF_RAGE -> REGION_LAKE_OF_RAGE:WATER"), can_surf_and_whirlpool)
-    else:
+    elif world.options.red_gyarados_access == RedGyaradosAccess.option_vanilla:
         set_rule(get_entrance("REGION_LAKE_OF_RAGE -> REGION_LAKE_OF_RAGE:WATER"), can_surf)
 
     set_rule(get_entrance("REGION_LAKE_OF_RAGE -> REGION_LAKE_OF_RAGE:CUT"), can_cut)

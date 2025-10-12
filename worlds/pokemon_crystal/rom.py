@@ -14,7 +14,7 @@ from .maps import FLASH_MAP_GROUPS
 from .options import UndergroundsRequirePower, RequireItemfinder, Goal, Route2Access, \
     BlackthornDarkCaveAccess, NationalParkAccess, Route3Access, EncounterSlotDistribution, KantoAccessRequirement, \
     FreeFlyLocation, HMBadgeRequirements, ShopsanityPrices, WildEncounterMethodsRequired, FlyCheese, Shopsanity, \
-    RequireFlash, FieldMoveMenuOrder
+    RequireFlash, FieldMoveMenuOrder, RedGyaradosAccess
 from .utils import convert_to_ingame_text, write_bytes, replace_map_tiles
 
 if TYPE_CHECKING:
@@ -886,7 +886,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
     if tiles:
         replace_map_tiles(patch, "Route2", 5, 1, tiles)
 
-    if world.options.red_gyarados_access:
+    if world.options.red_gyarados_access == RedGyaradosAccess.option_whirlpool:
         whirlpool_tile = 0x07
         rock_tile = 0x0A
         water_tile = 0x35
@@ -894,6 +894,8 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         replace_map_tiles(patch, map_name, 8, 10, [rock_tile, whirlpool_tile, 0x39])
         replace_map_tiles(patch, map_name, 7, 11, [0x30, water_tile, water_tile, rock_tile])
         replace_map_tiles(patch, map_name, 7, 12, [0x31, whirlpool_tile, 0x3A, 0x31])
+    elif world.options.red_gyarados_access == RedGyaradosAccess.option_shore:
+        write_bytes(patch, [31], data.rom_addresses["AP_Setting_LakeOfRage_RED_GYARADOS"] + 1)
 
     if world.options.blackthorn_dark_cave_access.value == BlackthornDarkCaveAccess.option_waterfall:
         map_name = "DarkCaveVioletEntrance"
@@ -1023,8 +1025,8 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
 
     if world.options.field_move_menu_order.value != FieldMoveMenuOrder.default:
         write_bytes(patch,
-                [FieldMoveMenuOrder.default.index(val) for val in world.options.field_move_menu_order.value],
-                data.rom_addresses["AP_Setting_Field_Move_Order"])
+                    [FieldMoveMenuOrder.default.index(val) for val in world.options.field_move_menu_order.value],
+                    data.rom_addresses["AP_Setting_Field_Move_Order"])
 
     if world.options.trainer_name:
         name_bytes = convert_to_ingame_text(world.options.trainer_name.value[:7])
