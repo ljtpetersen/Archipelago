@@ -4702,7 +4702,8 @@
       "REGION_ROUTE_39"
     ],
     "locations": [
-      "TM13_SNORE_FROM_MOOMOO_FARM"
+      "TM13_SNORE_FROM_MOOMOO_FARM",
+      "MOOMOO_MILK_FROM_MOOMOO_FARM"
     ],
     "events": []
   },
