@@ -808,10 +808,10 @@ class PokemonCrystalWorld(World):
                 if child in self.generated_dexsanity:
                     dexsanity_hint_data[child].add(f"Breed {parent_name}")
 
-        def get_dexsanity_trade_hint_data(dexsanity_hint_data: dict[str, list[str]]):
+        def get_dexsanity_trade_hint_data(dexsanity_hint_data: dict[str, set[str]]):
             for trade in self.generated_trades.values():
                 requested = self.generated_pokemon[trade.requested_pokemon].friendly_name
-                dexsanity_hint_data[trade.received_pokemon].append(f"{trade.friendly_name} - Trade for {requested}")
+                dexsanity_hint_data[trade.received_pokemon].add(f"{trade.friendly_name} - Trade for {requested}")
 
         player_hint_data = dict()
         if self.options.dexsanity:
@@ -823,8 +823,7 @@ class PokemonCrystalWorld(World):
                 get_dexsanity_evolution_hint_data(dexsanity_hint_data)
             if self.options.breeding_methods_required and breeding_is_randomized(self):
                 get_dexsanity_breeding_hint_data(dexsanity_hint_data)
-            if self.options.trades_required:
-                get_dexsanity_trade_hint_data(dexsanity_hint_data)
+            get_dexsanity_trade_hint_data(dexsanity_hint_data)
             player_hint_data |= {
                 self.location_name_to_id[f"Pokedex - {self.generated_pokemon[pokemon_id].friendly_name}"]: ", ".join(
                     methods)
