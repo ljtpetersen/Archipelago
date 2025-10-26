@@ -1039,6 +1039,8 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_VanillaMagnetTrain_1"] + 1)
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_VanillaMagnetTrain_2"] + 1)
 
+    write_bytes(patch, [world.options.default_pokedex_mode.value], data.rom_addresses["AP_Setting_DefaultDexMode"] + 1)
+
     # Set slot auth
     ap_version_text = convert_to_ingame_text(data.manifest.world_version)[:19]
     ap_version_text.append(0x50)

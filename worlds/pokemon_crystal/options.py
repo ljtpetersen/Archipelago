@@ -1775,6 +1775,17 @@ class Grasssanity(Choice):
     option_full = 2
 
 
+class DefaultPokedexMode(Choice):
+    """
+    Sets the default Pokedex mode
+    """
+    display_name = "Default Pokedex Mode"
+    default = 0
+    option_new = 0
+    option_old = 1
+    option_a_to_z = 2
+
+
 class PokemonCrystalDeathLink(DeathLink):
     __doc__ = DeathLink.__doc__ + "\n\n    In Pokemon Crystal, whiting out sends a death and receiving a death causes you to white out."
 
@@ -1915,6 +1926,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     always_unlock_fly_destinations: AlwaysUnlockFly
     exclude_post_goal_locations: ExcludePostGoalLocations
     grasssanity: Grasssanity
+    default_pokedex_mode: DefaultPokedexMode
 
 
 OPTION_GROUPS = [
@@ -2080,6 +2092,7 @@ OPTION_GROUPS = [
          AlwaysUnlockFly,
          TrainerName,
          FieldMoveMenuOrder,
+         DefaultPokedexMode,
          PokemonCrystalDeathLink]
     ),
     OptionGroup(
