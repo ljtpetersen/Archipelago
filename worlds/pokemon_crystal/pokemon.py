@@ -132,7 +132,7 @@ def randomize_starters(world: "PokemonCrystalWorld"):
 
 
 def randomize_traded_pokemon(world: "PokemonCrystalWorld"):
-    if world.options.randomize_trades and not world.is_universal_tracker:
+    if not world.is_universal_tracker:
 
         randomize_received = world.options.randomize_trades.value in (RandomizeTrades.option_received,
                                                                       RandomizeTrades.option_both)
@@ -149,12 +149,17 @@ def randomize_traded_pokemon(world: "PokemonCrystalWorld"):
 
         for trade_id, trade in world.generated_trades.items():
             received_pokemon = get_random_pokemon(world) if randomize_received else trade.received_pokemon
+            if randomize_requested:
+                requested_pokemon = logically_available_pokemon.pop()
+            else:
+                requested_pokemon = trade.requested_pokemon \
+                    if trade.requested_pokemon in logically_available_pokemon else logically_available_pokemon.pop()
 
             world.generated_trades[trade_id] = replace(
                 trade,
-                requested_gender=0,  # no gender
+                requested_gender=0 if world.options.randomize_trades else trade.requested_gender,  # no gender
                 held_item=get_random_filler_item(world) if received_pokemon != "ABRA" else "TM_9",
-                requested_pokemon=logically_available_pokemon.pop() if randomize_requested else trade.requested_pokemon,
+                requested_pokemon=requested_pokemon,
                 received_pokemon=received_pokemon
             )
 
