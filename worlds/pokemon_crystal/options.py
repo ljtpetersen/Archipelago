@@ -1586,6 +1586,15 @@ class ParalysisTrapWeight(Range):
     range_end = 8
 
 
+class TrapLink(Toggle):
+    """
+    Games that support traplink will all receive similar traps when a matching trap is sent from another traplink game
+
+    This only applies to traps you have enabled
+    """
+    display_name = "Trap Link"
+
+
 class EnableMischief(Toggle):
     """
     If I told you what this does, it would ruin the surprises :)
@@ -1930,6 +1939,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     exclude_post_goal_locations: ExcludePostGoalLocations
     grasssanity: Grasssanity
     default_pokedex_mode: DefaultPokedexMode
+    trap_link: TrapLink
 
 
 OPTION_GROUPS = [
@@ -2078,7 +2088,8 @@ OPTION_GROUPS = [
          PoisonTrapWeight,
          BurnTrapWeight,
          FreezeTrapWeight,
-         ParalysisTrapWeight]
+         ParalysisTrapWeight,
+         TrapLink]
     ),
     OptionGroup(
         "Quality of Life",

@@ -154,6 +154,8 @@ KEY_ITEM_FLAG_MAP = {data.event_flags[event]: event for event in TRACKER_KEY_ITE
 
 DEATH_LINK_MASK = 0b00010000
 DEATH_LINK_SETTING_ADDR = data.ram_addresses["wArchipelagoOptions"] + 4
+TRAP_LINK_MASK = 0b00001000
+TRAP_LINK_SETTING_ADDR = data.ram_addresses["wArchipelagoOptions"] + 5
 COUNT_ALL_POKEMON = len(data.pokemon)
 
 INVERTED_EVENTS = {
@@ -166,6 +168,9 @@ HINT_FLAGS = {f"EVENT_SEEN_{mart_name}": [item.flag for item in mart_data.items 
               in data.marts.items()}
 
 HINT_FLAG_MAP = {data.event_flags[flag_name]: flag_name for flag_name in HINT_FLAGS.keys()}
+
+TRAP_ID_TO_NAME = {item.item_id: item.label for item in data.items.values() if "Trap" in item.tags}
+TRAP_NAME_TO_ID = {item_name: item_id for item_id, item_name in TRAP_ID_TO_NAME.items()}
 
 
 class PokemonCrystalClient(BizHawkClient):
@@ -188,6 +193,7 @@ class PokemonCrystalClient(BizHawkClient):
     current_map: list[int]
     last_death_link: float
     grass_location_mapping: dict[str, int]
+    trap_link_queue: list[int]
 
     def initialize_client(self) -> None:
         self.local_checked_locations = set()
@@ -205,6 +211,7 @@ class PokemonCrystalClient(BizHawkClient):
         self.current_map = [0, 0]
         self.last_death_link = 0
         self.grass_location_mapping = dict()
+        self.trap_link_queue = list()
 
     async def validate_rom(self, ctx: "BizHawkClientContext") -> bool:
         from CommonClient import logger
@@ -300,10 +307,12 @@ class PokemonCrystalClient(BizHawkClient):
             overworld_guard = (data.ram_addresses["wArchipelagoSafeWrite"], [1], "WRAM")
 
             read_result = await bizhawk.guarded_read(
-                ctx.bizhawk_ctx, [(data.ram_addresses["wArchipelagoItemReceived"], 5, "WRAM")], [overworld_guard])
+                ctx.bizhawk_ctx, [(data.ram_addresses["wArchipelagoItemReceived"], 6, "WRAM")], [overworld_guard])
 
             if read_result is None:  # Not in overworld
                 return
+
+            await self.handle_trap_link_setting(ctx, overworld_guard)
 
             num_received_items = int.from_bytes([read_result[0][1], read_result[0][2]], "little")
             received_item_is_empty = read_result[0][0] == 0
@@ -322,6 +331,11 @@ class PokemonCrystalClient(BizHawkClient):
                     (data.ram_addresses["wArchipelagoItemReceived"],
                      next_item.to_bytes(1, "little"), "WRAM")
                 ])
+                await self.send_trap_link(ctx, next_item)
+            elif self.trap_link_queue and not read_result[0][5]:
+                await bizhawk.write(ctx.bizhawk_ctx, [(data.ram_addresses["wArchipelagoTrapReceived"],
+                                                       self.trap_link_queue.pop().to_bytes(1, "little"),
+                                                       "WRAM")])
 
             read_result = await bizhawk.guarded_read(
                 ctx.bizhawk_ctx,
@@ -473,6 +487,11 @@ class PokemonCrystalClient(BizHawkClient):
                         local_checked_locations.add(location_id)
 
             if local_checked_locations != self.local_checked_locations:
+                for location in local_checked_locations:
+                    if location not in ctx.checked_locations:
+                        if str(location) in ctx.slot_data["trap_locations"]:
+                            await self.send_trap_link(ctx, ctx.slot_data["trap_locations"][str(location)])
+
                 await ctx.send_msgs([{
                     "cmd": "LocationChecks",
                     "locations": list(local_checked_locations)
@@ -641,7 +660,7 @@ class PokemonCrystalClient(BizHawkClient):
             # Exit handler and return to main loop to reconnect
             pass
 
-    async def handle_death_link(self, ctx: "BizHawkClientContext", guard):
+    async def handle_death_link(self, ctx: "BizHawkClientContext", guard) -> None:
 
         death_link_setting_status = await bizhawk.guarded_read(
             ctx.bizhawk_ctx,
@@ -675,3 +694,63 @@ class PokemonCrystalClient(BizHawkClient):
         elif "DeathLink" in ctx.tags:
             await ctx.update_death_link(False)
             self.last_death_link = 0
+
+    @staticmethod
+    async def handle_trap_link_setting(ctx: "BizHawkClientContext", guard) -> None:
+        trap_link_setting_status = await bizhawk.guarded_read(
+            ctx.bizhawk_ctx,
+            [(TRAP_LINK_SETTING_ADDR, 1, "WRAM")],
+            [guard]
+        )
+
+        old_tags = ctx.tags.copy()
+
+        if trap_link_setting_status:
+            if trap_link_setting_status[0][0] & TRAP_LINK_MASK:
+                ctx.tags.add("TrapLink")
+            else:
+                ctx.tags -= {"TrapLink"}
+
+        if old_tags != ctx.tags and ctx.server and not ctx.server.socket.closed:
+            await ctx.send_msgs([{"cmd": "ConnectUpdate", "tags": ctx.tags}])
+
+    @staticmethod
+    async def send_trap_link(ctx: "BizHawkClientContext", trap_id: int):
+        if "TrapLink" not in ctx.tags or ctx.slot is None:
+            return
+
+        if trap_id not in TRAP_ID_TO_NAME: return
+
+        await ctx.send_msgs([{
+            "cmd": "Bounce", "tags": ["TrapLink"],
+            "data": {
+                "time": time.time(),
+                "source": ctx.player_names[ctx.slot],
+                "trap_name": TRAP_ID_TO_NAME[trap_id],
+            }
+        }])
+
+    def on_package(self, ctx: "BizHawkClientContext", cmd: str, args: dict) -> None:
+        super().on_package(ctx, cmd, args)
+
+        if cmd != "Bounced":
+            return
+        if "tags" not in args:
+            return
+
+        source_name = args["data"]["source"]
+        if "TrapLink" in ctx.tags and "TrapLink" in args["tags"] and source_name != ctx.slot_info[ctx.slot].name:
+            trap_name: str = args["data"]["trap_name"]
+            if trap_name not in TRAP_NAME_TO_ID:
+                return
+
+            if "trap_weights" not in ctx.slot_data:
+                return
+
+            if trap_name not in ctx.slot_data["trap_weights"]:
+                return
+
+            if ctx.slot_data["trap_weights"][trap_name] == 0:
+                return
+
+            self.trap_link_queue.append(TRAP_NAME_TO_ID[trap_name])

@@ -528,6 +528,7 @@ class PokemonCrystalWorld(World):
             "enforce_wild_encounter_methods_logic",
             "randomize_trades",
             "trades_required",
+            "trap_link",
         )
         slot_data["apworld_version"] = self.apworld_version
         slot_data["tea_north"] = 1 if "North" in self.options.saffron_gatehouse_tea.value else 0
@@ -649,6 +650,20 @@ class PokemonCrystalWorld(World):
             trade_id: {"requested": str(self.generated_pokemon[trade.requested_pokemon].id), "received": str(
                 self.generated_pokemon[trade.received_pokemon].id)} for trade_id, trade in
             self.generated_trades.items()}
+
+        slot_data["trap_weights"] = {
+            "Phone Trap": self.options.phone_trap_weight.value,
+            "Sleep Trap": self.options.sleep_trap_weight.value,
+            "Burn Trap": self.options.burn_trap_weight.value,
+            "Freeze Trap": self.options.freeze_trap_weight.value,
+            "Poison Trap": self.options.poison_trap_weight.value,
+            "Paralysis Trap": self.options.paralysis_trap_weight.value,
+        }
+
+        if not self.options.remote_items:
+            slot_data["trap_locations"] = {str(location.address): location.item.code for location in
+                                           self.get_locations() if
+                                           location.item.player == self.player and "Trap" in location.item.tags}
 
         return slot_data
 
