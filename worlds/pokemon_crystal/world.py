@@ -504,6 +504,7 @@ class PokemonCrystalWorld(World):
             "provide_shop_hints",
             "randomize_fly_unlocks",
             "fly_cheese",
+            "route_42_access",
             "mount_mortar_access",
             "randomize_pokemon_requests",
             "randomize_evolution",
