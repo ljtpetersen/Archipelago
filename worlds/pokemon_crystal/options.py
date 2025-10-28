@@ -24,12 +24,14 @@ class Goal(Choice):
     Elite Four: Defeat the Champion and enter the Hall of Fame
     Red: Defeat Red at Mt. Silver
     Diploma: Catch all logically available Pokemon and receive the diploma in Celadon City
+    Rival: Defeat all possible rival battles
     """
     display_name = "Goal"
     default = 0
     option_elite_four = 0
     option_red = 1
     option_diploma = 2
+    option_rival = 3
 
 
 class JohtoOnly(Choice):

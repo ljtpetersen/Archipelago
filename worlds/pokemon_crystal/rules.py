@@ -452,6 +452,20 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     elif world.options.goal == Goal.option_diploma:
         world.multiworld.completion_condition[world.player] = lambda state: state.has(
             "EVENT_OBTAINED_DIPLOMA", world.player)
+    elif world.options.goal == Goal.option_rival:
+        rival_events = [
+            "EVENT_BEAT_CHERRYGROVE_RIVAL",
+            "EVENT_BEAT_AZALEA_RIVAL",
+            "EVENT_RIVAL_BURNED_TOWER",
+            "EVENT_BEAT_GOLDENROD_UNDERGROUND_RIVAL",
+            "EVENT_BEAT_VICTORY_ROAD_RIVAL",
+        ]
+        if world.options.johto_only == JohtoOnly.option_off:
+            rival_events.extend([
+                "EVENT_BEAT_RIVAL_IN_MT_MOON",
+                "EVENT_BEAT_RIVAL_IN_INDIGO_PLATEAU"
+            ])
+        world.multiworld.completion_condition[world.player] = lambda state: state.has_all(rival_events, world.player)
     else:
         world.multiworld.completion_condition[world.player] = lambda state: state.has(
             "EVENT_BEAT_ELITE_FOUR", world.player)
@@ -513,6 +527,8 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
     safe_set_location_rule("Cherrygrove City - Rival",
                            lambda state: state.has("EVENT_GOT_MYSTERY_EGG_FROM_MR_POKEMON", world.player))
+    set_rule(get_location("EVENT_BEAT_CHERRYGROVE_RIVAL"),
+             lambda state: state.has("EVENT_GOT_MYSTERY_EGG_FROM_MR_POKEMON", world.player))
 
     # Route 31
     if "Dark Cave" in world.options.dark_areas:
@@ -668,6 +684,8 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
     safe_set_location_rule("Azalea Town - Rival",
                            lambda state: state.has("EVENT_CLEARED_SLOWPOKE_WELL", world.player))
+    set_rule(get_location("EVENT_BEAT_AZALEA_RIVAL"),
+             lambda state: state.has("EVENT_CLEARED_SLOWPOKE_WELL", world.player))
 
     set_rule(get_location("Azalea Town - Lure Ball from Kurt"),
              lambda state: state.has("EVENT_CLEARED_SLOWPOKE_WELL", world.player))

@@ -69,7 +69,8 @@
       "ITEM_FROM_RIVAL_2"
     ],
     "events": [
-      "EVENT_RIVAL_AZALEA_TOWN"
+      "EVENT_RIVAL_AZALEA_TOWN",
+      "EVENT_BEAT_AZALEA_RIVAL"
     ],
     "wild_encounters": {
       "headbutt": "Town"
@@ -695,7 +696,8 @@
       "ITEM_FROM_RIVAL_1"
     ],
     "events": [
-      "EVENT_RIVAL_CHERRYGROVE_CITY"
+      "EVENT_RIVAL_CHERRYGROVE_CITY",
+      "EVENT_BEAT_CHERRYGROVE_RIVAL"
     ],
     "wild_encounters": {
       "fishing": "Shore",
@@ -1798,7 +1800,8 @@
       "ITEM_FROM_RIVAL_4"
     ],
     "events": [
-      "EVENT_RIVAL_GOLDENROD_UNDERGROUND"
+      "EVENT_RIVAL_GOLDENROD_UNDERGROUND",
+      "EVENT_BEAT_GOLDENROD_UNDERGROUND_RIVAL"
     ]
   },
   "REGION_GOLDENROD_UNDERGROUND_SWITCH_ROOM_ENTRANCES:TAKEOVER": {
@@ -2080,7 +2083,9 @@
     "locations": [
       "ITEM_FROM_RIVAL_7"
     ],
-    "events": []
+    "events": [
+      "EVENT_BEAT_RIVAL_IN_INDIGO_PLATEAU"
+    ]
   },
   "REGION_KARENS_ROOM": {
     "johto": true,
@@ -6529,7 +6534,8 @@
       "ITEM_FROM_RIVAL_5"
     ],
     "events": [
-      "EVENT_RIVAL_VICTORY_ROAD"
+      "EVENT_RIVAL_VICTORY_ROAD",
+      "EVENT_BEAT_VICTORY_ROAD_RIVAL"
     ],
     "wild_encounters": {
       "grass": "VICTORY_ROAD"

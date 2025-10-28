@@ -8,7 +8,7 @@ from NetUtils import ClientStatus
 from worlds._bizhawk.client import BizHawkClient
 from .data import data, POKEDEX_OFFSET, POKEDEX_COUNT_OFFSET, FLY_UNLOCK_OFFSET, GRASS_OFFSET
 from .items import item_const_name_to_id
-from .options import Goal, ProvideShopHints
+from .options import Goal, ProvideShopHints, JohtoOnly
 
 if TYPE_CHECKING:
     from worlds._bizhawk.context import BizHawkClientContext
@@ -179,7 +179,7 @@ class PokemonCrystalClient(BizHawkClient):
     patch_suffix = ".apcrystal"
 
     local_checked_locations: set[int]
-    goal_flag: int | None
+    goal_flags: list[int]
     local_set_events: dict[str, bool]
     local_set_events_2: dict[str, bool]
     local_set_static_events: dict[str, bool]
@@ -197,7 +197,7 @@ class PokemonCrystalClient(BizHawkClient):
 
     def initialize_client(self) -> None:
         self.local_checked_locations = set()
-        self.goal_flag = None
+        self.goal_flags = []
         self.local_set_events = dict()
         self.local_set_events_2 = dict()
         self.local_set_static_events = dict()
@@ -285,11 +285,24 @@ class PokemonCrystalClient(BizHawkClient):
             return
 
         if ctx.slot_data["goal"] == Goal.option_elite_four:
-            self.goal_flag = data.event_flags["EVENT_BEAT_ELITE_FOUR"]
+            self.goal_flags = [data.event_flags["EVENT_BEAT_ELITE_FOUR"]]
         elif ctx.slot_data["goal"] == Goal.option_diploma:
-            self.goal_flag = data.event_flags["EVENT_ENABLE_DIPLOMA_PRINTING"]
+            self.goal_flags = [data.event_flags["EVENT_ENABLE_DIPLOMA_PRINTING"]]
+        elif ctx.slot_data["goal"] == Goal.option_rival:
+            self.goal_flags = [
+                data.event_flags["EVENT_BEAT_CHERRYGROVE_RIVAL"],
+                data.event_flags["EVENT_BEAT_AZALEA_RIVAL"],
+                data.event_flags["EVENT_RIVAL_BURNED_TOWER"],
+                data.event_flags["EVENT_BEAT_GOLDENROD_UNDERGROUND_RIVAL"],
+                data.event_flags["EVENT_BEAT_VICTORY_ROAD_RIVAL"],
+            ]
+            if ctx.slot_data["johto_only"] == JohtoOnly.option_off:
+                self.goal_flags.extend([
+                    data.event_flags["EVENT_BEAT_RIVAL_IN_MT_MOON"],
+                    data.event_flags["EVENT_BEAT_RIVAL_IN_INDIGO_PLATEAU"],
+                ])
         else:
-            self.goal_flag = data.event_flags["EVENT_BEAT_RED"]
+            self.goal_flags = [data.event_flags["EVENT_BEAT_RED"]]
 
         self.grass_location_mapping = ctx.slot_data["grass_location_mapping"]
 
@@ -357,7 +370,6 @@ class PokemonCrystalClient(BizHawkClient):
             grass_cut_bytes = read_result[3]
             trade_bytes = read_result[4]
 
-            game_clear = False
             local_checked_locations = set()
             local_set_events = {flag_name: False for flag_name in TRACKER_EVENT_FLAGS}
             local_set_events_2 = {flag_name: False for flag_name in TRACKER_EVENT_FLAGS_2}
@@ -376,6 +388,8 @@ class PokemonCrystalClient(BizHawkClient):
                 if f"pokemon_crystal_caught_pokemon_{ctx.team}_{ctx.slot}" in ctx.stored_data:
                     local_caught_pokemon = set(ctx.stored_data[f"pokemon_crystal_caught_pokemon_{ctx.team}_{ctx.slot}"])
 
+            goal_flags_cleared = {flag: False for flag in self.goal_flags}
+
             flag_bytes = read_result[0]
             for byte_i, byte in enumerate(flag_bytes):
                 for i in range(8):
@@ -386,8 +400,8 @@ class PokemonCrystalClient(BizHawkClient):
                         if location_id in ctx.server_locations:
                             local_checked_locations.add(location_id)
 
-                        if self.goal_flag is not None and location_id == self.goal_flag:
-                            game_clear = True
+                        if location_id in goal_flags_cleared:
+                            goal_flags_cleared[location_id] = True
 
                         if location_id in EVENT_FLAG_MAP:
                             local_set_events[EVENT_FLAG_MAP[location_id]] = True
@@ -502,7 +516,7 @@ class PokemonCrystalClient(BizHawkClient):
                 self.local_checked_locations = local_checked_locations
 
             # Send game clear
-            if not ctx.finished_game and game_clear:
+            if not ctx.finished_game and all(goal_flags_cleared.values()):
                 await ctx.send_msgs([{
                     "cmd": "StatusUpdate",
                     "status": ClientStatus.CLIENT_GOAL
