@@ -1670,7 +1670,7 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
             if encounter.pokemon == "UNOWN":
                 add_rule(location, lambda state: state.has_any(unown_unlocks, world.player))
 
-            if encounter_access is LogicalAccess.OutOfLogic and not world.options.enforce_wild_encounter_methods_logic:
+            if encounter_access is LogicalAccess.OutOfLogic:
                 add_rule(location, lambda state: state.has(PokemonCrystalGlitchedToken.TOKEN_NAME, world.player))
 
     def evolution_logic(state: CollectionState, evolved_from: str, evolutions: list[EvolutionData],
