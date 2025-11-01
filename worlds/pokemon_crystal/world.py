@@ -800,13 +800,13 @@ class PokemonCrystalWorld(World):
                     dexsanity_hint_data[evo.pokemon].add(hint_text)
 
         def get_dexsanity_breeding_hint_data(dexsanity_hint_data: dict[str, set[str]]):
-            for pokemon, data in self.generated_pokemon.items():
-                if not can_breed(self, pokemon): continue
+            for parent, data in self.generated_pokemon.items():
+                if not can_breed(self, parent): continue
                 child = data.produces_egg
-                if pokemon == child: continue
-                parent_name = self.generated_pokemon[pokemon].friendly_name
-                if child == "NIDORAN_F" and "NIDORAN_M" in self.generated_dexsanity:
+                parent_name = self.generated_pokemon[parent].friendly_name
+                if child == "NIDORAN_F" and parent != "NIDORAN_M" and "NIDORAN_M" in self.generated_dexsanity:
                     dexsanity_hint_data["NIDORAN_M"].add(f"Breed {parent_name}")
+                if parent == child: continue
                 if child in self.generated_dexsanity:
                     dexsanity_hint_data[child].add(f"Breed {parent_name}")
 
