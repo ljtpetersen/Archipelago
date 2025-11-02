@@ -32,7 +32,7 @@ def randomize_pokemon_data(world: "PokemonCrystalWorld"):
                     for second_evo in evo_poke.evolutions:
                         evolution_line_list.append(second_evo.pokemon)
 
-            new_types = get_random_types(world.random)
+            new_types = get_random_types(world)
             for pokemon in evolution_line_list:
                 world.generated_pokemon[pokemon] = replace(
                     world.generated_pokemon[pokemon],
@@ -406,12 +406,16 @@ def get_random_base_stats(random, bst=None):
     return [int((stat * bst) / total) for stat in randoms]
 
 
-def get_random_types(random):
+def get_random_types(world: "PokemonCrystalWorld") -> list[str]:
     all_types = list(crystal_data.types.keys())
-    new_types = [random.choice(all_types)]
+    if world.options.shared_primary_type:
+        new_types = [type_id for type_id, type_data in crystal_data.types.items() if
+                     type_data.rom_id == world.options.shared_primary_type.value - 1]
+    else:
+        new_types = [world.random.choice(all_types)]
     # approx. 110/251 Pokemon are dual type in gen 2
-    if random.randint(0, 24) < 11:
-        new_types.append(random.choice([t for t in all_types if t not in new_types]))
+    if world.random.randint(0, 24) < 11:
+        new_types.append(world.random.choice([t for t in all_types if t not in new_types]))
     return new_types
 
 

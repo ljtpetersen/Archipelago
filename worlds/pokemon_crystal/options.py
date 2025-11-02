@@ -1254,6 +1254,32 @@ class RandomizeTypes(Choice):
     option_completely_random = 2
 
 
+class SharedPrimaryType(Choice):
+    """
+    If types are randomized, all Pokemon will share this type
+    """
+    display_name = "Shared Primary Type"
+    default = 0
+    option_off = 0
+    option_normal = 1
+    option_fighting = 2
+    option_flying = 3
+    option_poison = 4
+    option_ground = 5
+    option_rock = 6
+    option_bug = 8
+    option_ghost = 9
+    option_steel = 10
+    option_fire = 21
+    option_water = 22
+    option_grass = 23
+    option_electric = 24
+    option_psychic = 25
+    option_ice = 26
+    option_dragon = 27
+    option_dark = 28
+
+
 class RandomizeEvolution(Choice):
     """
     - Vanilla: Pokemon evolve into the same Pokemon they do in vanilla
@@ -1940,6 +1966,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     field_moves_always_usable: FieldMovesAlwaysUsable
     randomize_base_stats: RandomizeBaseStats
     randomize_types: RandomizeTypes
+    shared_primary_type: SharedPrimaryType
     randomize_evolution: RandomizeEvolution
     convergent_evolution: ConvergentEvolution
     evolution_blocklist: EvolutionBlocklist
@@ -2066,6 +2093,7 @@ OPTION_GROUPS = [
          StaticBlocklist,
          RandomizeBaseStats,
          RandomizeTypes,
+         SharedPrimaryType,
          RandomizeEvolution,
          ConvergentEvolution,
          EvolutionBlocklist,
