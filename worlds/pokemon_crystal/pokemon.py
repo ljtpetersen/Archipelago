@@ -296,6 +296,11 @@ def fill_wild_encounter_locations(world: "PokemonCrystalWorld"):
             location = world.get_location(f"{region_key.region_name()}_1")
             location.place_locked_item((world.create_event(static.pokemon)))
 
+    if "Bug Catching Contest" in world.options.wild_encounter_methods_required or world.is_universal_tracker:
+        for i, slot in enumerate(world.generated_contest):
+            location = world.get_location(f"Bug Catching Contest Slot {i + 1}")
+            location.place_locked_item(world.create_event(slot.pokemon))
+
 
 def get_random_pokemon(world: "PokemonCrystalWorld", priority_pokemon: set[str] | None = None, types=None,
                        base_only=False, force_fully_evolved_at=None, current_level=None, starter=False,

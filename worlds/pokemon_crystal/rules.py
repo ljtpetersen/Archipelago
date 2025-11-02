@@ -895,6 +895,15 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
                  lambda state: state.has("Bicycle", world.player))
         set_rule(get_entrance("REGION_ROUTE_36_NATIONAL_PARK_GATE -> REGION_NATIONAL_PARK"),
                  lambda state: state.has("Bicycle", world.player))
+        set_rule(get_entrance("REGION_ROUTE_35_NATIONAL_PARK_GATE -> REGION_NATIONAL_PARK:CONTEST"),
+                 lambda state: state.has("Bicycle", world.player))
+        set_rule(get_entrance("REGION_ROUTE_36_NATIONAL_PARK_GATE -> REGION_NATIONAL_PARK:CONTEST"),
+                 lambda state: state.has("Bicycle", world.player))
+
+    if "Bug Catching Contest" not in world.options.wild_encounter_methods_required and world.is_universal_tracker:
+        for i in range(len(world.generated_contest)):
+            set_rule(get_location(f"Bug Catching Contest Slot {i + 1}"),
+                     lambda state: state.has(PokemonCrystalGlitchedToken.TOKEN_NAME))
 
     if rematchsanity():
         set_rule(get_location("SCHOOLBOY_JACK_OLIVINE"),

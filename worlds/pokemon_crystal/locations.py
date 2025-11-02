@@ -5,7 +5,7 @@ from BaseClasses import Location, Region, LocationProgressType
 from .data import data, POKEDEX_OFFSET, POKEDEX_COUNT_OFFSET, FLY_UNLOCK_OFFSET, LogicalAccess, GRASS_OFFSET, GrassTile
 from .evolution import evolution_location_name
 from .items import item_const_name_to_id
-from .options import Goal, DexsanityStarters, Grasssanity
+from .options import Goal, DexsanityStarters, Grasssanity, RandomizeBugCatchingContest
 from .pokemon import get_priority_dexsanity, get_excluded_dexsanity
 from .utils import get_fly_regions, get_mart_slot_location_name
 
@@ -59,7 +59,16 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
     if not world.options.johto_trainersanity and not world.options.kanto_trainersanity:
         exclude.add("Trainersanity")
 
+    exclude.add("Contest")
+
     always_include = {"KeyItem"}
+
+    if world.options.randomize_bug_catching_contest == RandomizeBugCatchingContest.option_all:
+        always_include.add("ContestAll")
+    elif world.options.randomize_bug_catching_contest == RandomizeBugCatchingContest.option_combine_second_third:
+        always_include.add("ContestCombineSecondThird")
+    elif world.options.randomize_bug_catching_contest == RandomizeBugCatchingContest.option_participate:
+        always_include.add("ContestParticipate")
 
     for region_name, region_data in data.regions.items():
         if region_name in regions:
@@ -319,6 +328,18 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
         locs_to_remove = len(trainer_locations) - world.options.kanto_trainersanity.value
         remove_excess_trainersanity(trainer_locations, locs_to_remove)
 
+    if "Bug Catching Contest" in world.options.wild_encounter_methods_required or world.is_universal_tracker:
+        region = regions["REGION_NATIONAL_PARK:CONTEST"]
+
+        for i in range(len(world.generated_contest)):
+            location = PokemonCrystalLocation(
+                player=world.player,
+                name=f"Bug Catching Contest Slot {i + 1}",
+                parent=region,
+            )
+            location.show_in_spoiler = False
+            region.locations.append(location)
+
 
 def create_location_label_to_id_map() -> dict[str, int]:
     """
@@ -377,7 +398,8 @@ LOCATION_GROUPS: dict[str, set[str]] = {
 }
 
 excluded_location_tags = ("VanillaClairOn", "VanillaClairOff", "RequiresSaffronGatehouses", "Badge", "NPCGift",
-                          "Hidden", "KeyItem", "HM", "BillsGrandpa", "BerryTree")
+                          "Hidden", "KeyItem", "HM", "BillsGrandpa", "BerryTree", "ContestAll",
+                          "ContestCombineSecondThird")
 
 for location in data.locations.values():
     for tag in location.tags:

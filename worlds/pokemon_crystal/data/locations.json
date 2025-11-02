@@ -8894,5 +8894,73 @@
     ],
     "default_item": "NO_ITEM",
     "script": "AP_Trainer_SAGE_MASA"
+  },
+  "CONTEST_FIRST_PLACE": {
+    "label": "Bug Catching Contest - First Place Prize",
+    "flag": "EVENT_CONTEST_GOT_FIRST_PRIZE",
+    "type": "giveitem",
+    "tags": [
+      "Contest",
+      "ContestAll",
+      "ContestCombineSecondThird"
+    ],
+    "default_item": "SUN_STONE",
+    "script": "AP_NPC_BugContest_First_SUN_STONE"
+  },
+  "CONTEST_SECOND_PLACE": {
+    "label": "Bug Catching Contest - Second Place Prize",
+    "flag": "EVENT_CONTEST_GOT_SECOND_PRIZE",
+    "type": "giveitem",
+    "tags": [
+      "Contest",
+      "ContestAll"
+    ],
+    "default_item": "EVERSTONE",
+    "script": "AP_NPC_BugContest_Second_EVERSTONE"
+  },
+  "CONTEST_THIRD_PLACE": {
+    "label": "Bug Catching Contest - Third Place Prize",
+    "flag": "EVENT_CONTEST_GOT_THIRD_PRIZE",
+    "type": "giveitem",
+    "tags": [
+      "Contest",
+      "ContestAll"
+    ],
+    "default_item": "GOLD_BERRY",
+    "script": "AP_NPC_BugContest_Third_GOLD_BERRY"
+  },
+  "CONTEST_FOURTH_PLACE": {
+    "label": "Bug Catching Contest - Consolation Prize",
+    "flag": "EVENT_CONTEST_GOT_FOURTH_PRIZE",
+    "type": "giveitem",
+    "tags": [
+      "Contest",
+      "ContestAll",
+      "ContestCombineSecondThird"
+    ],
+    "default_item": "BERRY",
+    "script": "AP_NPC_BugContest_Fourth_BERRY"
+  },
+  "CONTEST_SECOND_THIRD_PLACE": {
+    "label": "Bug Catching Contest - Second or Third Place Prize",
+    "flag": "EVENT_CONTEST_GOT_SECOND_THIRD_PRIZE",
+    "type": "giveitem",
+    "tags": [
+      "Contest",
+      "ContestCombineSecondThird"
+    ],
+    "default_item": "EVERSTONE",
+    "script": "AP_NPC_BugContest_SecondThird_EVERSTONE"
+  },
+  "CONTEST_PARTICIPATION_PRIZE": {
+    "label": "Bug Catching Contest - Participation Prize",
+    "flag": "EVENT_CONTEST_GOT_PARTICIPATION_PRIZE",
+    "type": "giveitem",
+    "tags": [
+      "Contest",
+      "ContestParticipate"
+    ],
+    "default_item": "BERRY",
+    "script": "AP_NPC_BugContest_Participation_BERRY"
   }
 }

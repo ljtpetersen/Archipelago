@@ -12,7 +12,7 @@ from worlds.AutoWorld import World, WebWorld
 from .breeding import randomize_breeding, generate_breeding_data, can_breed, breeding_is_randomized
 from .data import PokemonData, TrainerData, MiscData, TMHMData, data as crystal_data, StaticPokemon, \
     MusicData, MoveData, FlyRegion, TradeData, MiscOption, POKEDEX_OFFSET, StartingTown, \
-    LogicalAccess, EncounterType, EncounterKey, EncounterMon, EvolutionType, TypeData
+    LogicalAccess, EncounterType, EncounterKey, EncounterMon, EvolutionType, TypeData, BugContestEncounter
 from .evolution import randomize_evolution, generate_evolution_data, evolution_in_logic
 from .items import PokemonCrystalItem, create_item_label_to_code_map, get_item_classification, ITEM_GROUPS, \
     item_const_name_to_id, item_const_name_to_label, adjust_item_classifications, get_random_filler_item, \
@@ -38,7 +38,7 @@ from .trainers import randomize_trainers
 from .universal_tracker import load_ut_slot_data
 from .utils import get_free_fly_locations, randomize_starting_town, \
     adjust_options
-from .wild import randomize_wild_pokemon, randomize_static_pokemon
+from .wild import randomize_wild_pokemon, randomize_static_pokemon, randomize_contest_pokemon
 
 
 class PokemonCrystalSettings(settings.Group):
@@ -107,6 +107,7 @@ class PokemonCrystalWorld(World):
     generated_wild: dict[EncounterKey, list[EncounterMon]]
     generated_static: dict[EncounterKey, StaticPokemon]
     generated_trades: dict[str, TradeData]
+    generated_contest: list[BugContestEncounter]
 
     generated_dexsanity: set[str]
     generated_dexcountsanity: list[int]
@@ -151,6 +152,7 @@ class PokemonCrystalWorld(World):
         self.generated_wild = {key: list(encounters) for key, encounters in crystal_data.wild.items()}
         self.generated_static = dict(crystal_data.static)
         self.generated_trades = dict(crystal_data.trades)
+        self.generated_contest = list(crystal_data.bug_contest_encounters)
         self.generated_dexsanity = set()
         self.generated_dexcountsanity = []
         self.generated_wooper = "WOOPER"
@@ -215,6 +217,7 @@ class PokemonCrystalWorld(World):
 
         randomize_wild_pokemon(self)
         randomize_static_pokemon(self)
+        randomize_contest_pokemon(self)
 
         previous_logically_available_pokemon_count = 0
         while previous_logically_available_pokemon_count != len(self.logic.available_pokemon):
@@ -530,6 +533,7 @@ class PokemonCrystalWorld(World):
             "randomize_trades",
             "trades_required",
             "trap_link",
+            "randomize_bug_catching_contest",
         )
         slot_data["apworld_version"] = self.apworld_version
         slot_data["tea_north"] = 1 if "North" in self.options.saffron_gatehouse_tea.value else 0
@@ -548,6 +552,8 @@ class PokemonCrystalWorld(World):
             region_encounters[encounter_key.region_name()] = {self.generated_pokemon[encounter.pokemon].id}
 
         slot_data["region_encounters"] = region_encounters
+
+        slot_data["contest_encounters"] = [self.generated_pokemon[slot.pokemon].id for slot in self.generated_contest]
 
         for hm in self.options.remove_badge_requirement.valid_keys:
             slot_data["free_" + hm.lower()] = 1 if hm in self.options.remove_badge_requirement.value else 0
@@ -587,6 +593,8 @@ class PokemonCrystalWorld(World):
             else ool_encounter_method
         slot_data["encmethod_rocksmash"] = 2 if "Rock Smash" in self.options.wild_encounter_methods_required \
             else ool_encounter_method
+        slot_data["encmethod_contest"] = 2 if "Bug Catching Contest" in self.options.wild_encounter_methods_required \
+            else 0
 
         slot_data["evomethod_happiness"] = 1 if "Happiness" in self.options.evolution_methods_required else 0
         slot_data["evomethod_level"] = 1 if "Level" in self.options.evolution_methods_required else 0
@@ -703,6 +711,8 @@ class PokemonCrystalWorld(World):
                 for encounter in encounters:
                     if friendly_region_name not in encounters_per_pokemon[encounter.pokemon]:
                         encounters_per_pokemon[encounter.pokemon].append(friendly_region_name)
+            for slot in self.generated_contest:
+                encounters_per_pokemon[slot.pokemon].append("Bug Catching Contest")
         if self.options.randomize_static_pokemon:
             for key, static in self.generated_static.items():
                 if static.level_type == "ignore" or \
@@ -791,7 +801,7 @@ class PokemonCrystalWorld(World):
         def get_dexsanity_evolution_hint_data(dexsanity_hint_data: dict[str, set[str]]):
             for pokemon_id, pokemon_data in self.generated_pokemon.items():
                 for evo in pokemon_data.evolutions:
-                    if not(evo.pokemon in self.generated_dexsanity and evolution_in_logic(self, evo)):
+                    if not (evo.pokemon in self.generated_dexsanity and evolution_in_logic(self, evo)):
                         continue
                     hint_text = f"Evolve {self.generated_pokemon[pokemon_id].friendly_name}"
                     divergent_evolutions = ("EEVEE", "GLOOM", "POLIWHIRL", "SLOWPOKE", "TYROGUE")

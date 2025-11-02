@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 from .data import EncounterMon, LogicalAccess, EncounterType, EncounterKey
 from .options import RandomizeWilds, EncounterGrouping, BreedingMethodsRequired, RandomizePokemonRequests, \
-    RandomizeTrades
+    RandomizeTrades, EncounterSlotDistribution
 from .pokemon import get_random_pokemon, get_priority_dexsanity
 from .utils import pokemon_convert_friendly_to_ids
 
@@ -209,3 +209,20 @@ def randomize_static_pokemon(world: "PokemonCrystalWorld"):
     world.logic.available_pokemon.update(
         static.pokemon for region_key, static in world.generated_static.items() if world.logic.wild_regions[
             region_key] is LogicalAccess.InLogic)
+
+
+def randomize_contest_pokemon(world: "PokemonCrystalWorld"):
+    all_pokemon = sorted(world.generated_pokemon.keys())
+    selected_pokemon = set()
+    if world.options.randomize_wilds:
+        for i, slot in enumerate(world.generated_contest):
+            pokemon = world.random.choice(all_pokemon)
+            selected_pokemon.add(pokemon)
+            world.generated_contest[i] = replace(
+                slot,
+                pokemon=pokemon,
+                percentage=10 if world.options.encounter_slot_distribution == EncounterSlotDistribution.option_equal
+                else slot.percentage)
+            
+    if "Bug Catching Contest" in world.options.wild_encounter_methods_required or world.is_universal_tracker:
+        world.logic.available_pokemon.update(selected_pokemon)

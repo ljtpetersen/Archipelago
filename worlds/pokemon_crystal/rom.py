@@ -1016,8 +1016,10 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         write_bytes(patch, [0xFF], current_address)
 
     if world.options.enforce_wild_encounter_methods_logic:
-        methods = [method in world.options.wild_encounter_methods_required.value for method in
-                   [key for key in WildEncounterMethodsRequired.valid_keys if not key.startswith("_")]]
+        valid_methods = [key for key in WildEncounterMethodsRequired.valid_keys if
+                         not key.startswith("_") and key != "Bug Catching Contest"]
+        assert len(valid_methods) == 5
+        methods = [method in world.options.wild_encounter_methods_required.value for method in valid_methods]
 
         write_bytes(patch, methods, data.rom_addresses["AP_Setting_AllowedCatchTypes"])
 
@@ -1076,6 +1078,14 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
 
     dexcount = len(world.logic.available_pokemon) - 1
     write_bytes(patch, [dexcount], data.rom_addresses["AP_Setting_DiplomaCount"] + 1)
+
+    for i, slot in enumerate(world.generated_contest):
+        address = data.rom_addresses["AP_Setting_BugContestMons"] + (i * 4)  # contest entries are 4 bytes
+        write_bytes(patch, [slot.percentage, world.generated_pokemon[slot.pokemon].id, slot.min_level, slot.max_level],
+                    address)
+    if world.options.randomize_bug_catching_contest:
+        write_bytes(patch, [world.options.randomize_bug_catching_contest.value - 1],
+                    data.rom_addresses["AP_Setting_BugContestMode"] + 1)
 
     # Set slot auth
     ap_version_text = convert_to_ingame_text(data.manifest.world_version)[:19]
