@@ -1014,15 +1014,22 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         set_rule(get_entrance("REGION_OLIVINE_CITY -> REGION_OLIVINE_LIGHTHOUSE_1F"), can_flash)
 
     if not johto_only():
+
+        if world.options.ss_aqua_access:
+            ship_rule = lambda state: state.has("S.S. Ticket", world.player) and state.has(
+                "EVENT_JASMINE_RETURNED_TO_GYM", world.player)
+        else:
+            ship_rule = lambda state: state.has("S.S. Ticket", world.player)
+
         set_rule(get_entrance("REGION_OLIVINE_PORT -> REGION_FAST_SHIP_1F"),
-                 lambda state: state.has("S.S. Ticket", world.player))
+                 ship_rule)
 
         set_rule(get_entrance("REGION_FAST_SHIP_1F -> REGION_OLIVINE_PORT"),
                  lambda state: state.has("EVENT_FAST_SHIP_LAZY_SAILOR", world.player))
 
         if hidden():
             set_rule(get_location("Olivine Port - Hidden Item in Buoy"),
-                     lambda state: state.has("S.S. Ticket", world.player) and can_surf(state))
+                     lambda state: ship_rule(state) and can_surf(state))
 
     set_rule(get_entrance("REGION_OLIVINE_CITY -> REGION_OLIVINE_GYM"),
              lambda state: state.has("EVENT_JASMINE_RETURNED_TO_GYM", world.player))
@@ -1505,9 +1512,6 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         set_rule(get_location("Vermilion City - Lost Item from Guy in Fan Club"),
                  lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
 
-        if hidden():
-            set_rule(get_location("Vermilion Port - Hidden Item in Buoy"), can_surf_kanto)
-
         has_expn = world.logic.has_expn()
         set_rule(get_location("EVENT_FOUGHT_SNORLAX"), has_expn)
         if world.options.level_scaling:
@@ -1538,8 +1542,16 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
             set_rule(get_entrance("REGION_DIGLETTS_CAVE -> REGION_VERMILION_CITY"), has_expn)
             set_rule(get_entrance("REGION_ROUTE_11 -> REGION_VERMILION_CITY"), has_expn)
 
-        set_rule(get_entrance("REGION_VERMILION_PORT_PASSAGE -> REGION_VERMILION_PORT"),
-                 lambda state: state.has("S.S. Ticket", world.player))
+        if world.options.ss_aqua_access:
+            ship_rule = lambda state: state.has("S.S. Ticket", world.player) and state.has(
+                "EVENT_JASMINE_RETURNED_TO_GYM", world.player)
+        else:
+            ship_rule = lambda state: state.has("S.S. Ticket", world.player)
+
+        set_rule(get_entrance("REGION_VERMILION_PORT -> REGION_FAST_SHIP_1F"), ship_rule)
+        if hidden():
+            set_rule(get_location("Vermilion Port - Hidden Item in Buoy"),
+                     lambda state: ship_rule(state) and can_surf_kanto)
 
         set_rule(get_entrance("REGION_FAST_SHIP_1F -> REGION_VERMILION_PORT"),
                  lambda state: state.has("EVENT_FAST_SHIP_LAZY_SAILOR", world.player))

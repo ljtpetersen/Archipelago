@@ -1087,6 +1087,10 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         write_bytes(patch, [world.options.randomize_bug_catching_contest.value - 1],
                     data.rom_addresses["AP_Setting_BugContestMode"] + 1)
 
+    for i in range(1, 5):
+        write_bytes(patch, [world.options.ss_aqua_access.value],
+                    data.rom_addresses[f"AP_Setting_ShipRequiresLighthouse_{i}"] + 1)
+
     # Set slot auth
     ap_version_text = convert_to_ingame_text(data.manifest.world_version)[:19]
     ap_version_text.append(0x50)

@@ -434,6 +434,17 @@ class Route12Access(Choice):
     option_weird_tree = 1
 
 
+class SSAquaAccess(Choice):
+    """
+    Sets the requirement to sail on the S.S. Aqua
+    - Vanilla: S.S. Ticket is required
+    - Lighthouse and Ticket: Healing Amphy in the Olivine lighthouse and the S.S Ticket are required
+    """
+    default = 0
+    option_vanilla = 0
+    option_lighthouse_and_ticket = 1
+
+
 class JohtoTrainersanity(NamedRange):
     """
     Adds checks for defeating Johto trainers.
@@ -1907,6 +1918,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     route_42_access: Route42Access
     mount_mortar_access: MountMortarAccess
     route_12_access: Route12Access
+    ss_aqua_access: SSAquaAccess
     johto_trainersanity: JohtoTrainersanity
     kanto_trainersanity: KantoTrainersanity
     rematchsanity: Rematchsanity
@@ -2046,7 +2058,8 @@ OPTION_GROUPS = [
          EastWestUnderground,
          VanillaClair,
          Route12Access,
-         MagnetTrainAccess]
+         MagnetTrainAccess,
+         SSAquaAccess]
     ),
     OptionGroup(
         "Items",
