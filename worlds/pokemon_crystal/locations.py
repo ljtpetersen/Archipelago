@@ -16,6 +16,7 @@ if TYPE_CHECKING:
 class PokemonCrystalLocation(Location):
     game: str = data.manifest.game
     rom_address: int | None
+    rom_addresses: list[int]
     default_item_code: int | None
     flag: int | None
     tags: frozenset[str]
@@ -26,14 +27,14 @@ class PokemonCrystalLocation(Location):
             name: str,
             parent: Region | None = None,
             flag: int | None = None,
-            rom_address: int | None = None,
+            rom_addresses: list[int] | None = None,
             default_item_value: int | None = None,
             tags: frozenset[str] = frozenset(),
             progress_type: LocationProgressType = LocationProgressType.DEFAULT
     ) -> None:
         super().__init__(player, name, flag, parent)
         self.default_item_code = default_item_value
-        self.rom_address = rom_address
+        self.rom_addresses = rom_addresses or []
         self.tags = tags
         self.progress_type = progress_type
 
@@ -87,7 +88,7 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
                     location_data.label,
                     region,
                     location_data.flag,
-                    location_data.rom_address,
+                    location_data.rom_addresses,
                     location_data.default_item,
                     location_data.tags,
                     progress_type,
@@ -131,7 +132,7 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
                 world.player,
                 f"Pokedex - {pokemon_data.friendly_name}",
                 pokedex_region,
-                rom_address=pokemon_data.id,
+                rom_addresses=[pokemon_data.id],
                 flag=POKEDEX_OFFSET + pokemon_data.id,
                 tags=frozenset({"dexsanity"})
             )
@@ -156,7 +157,7 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
                 world.player,
                 f"Pokedex - Catch {dexcountsanity_count} Pokemon",
                 pokedex_region,
-                rom_address=dexcountsanity_count,
+                rom_addresses=[dexcountsanity_count],
                 flag=POKEDEX_COUNT_OFFSET + dexcountsanity_count,
                 tags=frozenset({"dexcountsanity"})
             )
@@ -168,7 +169,7 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
             world.player,
             "Pokedex - Final Catch",
             pokedex_region,
-            rom_address=world.generated_dexcountsanity[-1],
+            rom_addresses=[world.generated_dexcountsanity[-1]],
             flag=POKEDEX_COUNT_OFFSET + len(data.pokemon),
             tags=frozenset({"dexcountsanity"})
         )
@@ -229,7 +230,7 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
                         region,
                         tags=frozenset({"shopsanity"}),
                         flag=item.flag,
-                        rom_address=item.address,
+                        rom_addresses=[item.address],
                         default_item_value=item_const_name_to_id(item.item),
                         progress_type=progress_type
                     )
@@ -247,7 +248,7 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
                 parent_region,
                 tags=frozenset({"fly"}),
                 flag=data.event_flags[f"EVENT_VISITED_{fly_region.base_identifier}"],
-                rom_address=data.rom_addresses[f"AP_FlyUnlock_{fly_region.base_identifier}"],
+                rom_addresses=[data.rom_addresses[f"AP_FlyUnlock_{fly_region.base_identifier}"]],
                 default_item_value=FLY_UNLOCK_OFFSET + fly_region.id
             )
 
@@ -264,7 +265,7 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
                         player=world.player,
                         name=grass_tile.name,
                         parent=grass_region,
-                        rom_address=grass_tile.rom_address,
+                        rom_addresses=[grass_tile.rom_address],
                         flag=grass_tile.flag,
                         tags=frozenset({"grass"}),
                     )
@@ -293,7 +294,7 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
                 name=location_name,
                 parent=grass_region,
                 flag=flag,
-                rom_address=region_tile.rom_address,
+                rom_addresses=[region_tile.rom_address],
                 tags=frozenset({"grass"}),
             )
             location.original_grass_flag = region_tile.flag

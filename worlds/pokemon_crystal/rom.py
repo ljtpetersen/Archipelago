@@ -72,10 +72,11 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
 
     write_bytes(patch, option_bytes, data.rom_addresses["AP_Setting_DefaultOptions"])
 
-    def write_item(item: int, address: int) -> None:
-        write_bytes(patch, [item], address)
-        if address in data.adhoc_trainersanity:
-            write_bytes(patch, [1], data.adhoc_trainersanity[address])
+    def write_item(item: int, addresses: list[int]) -> None:
+        for address in addresses:
+            write_bytes(patch, [item], address)
+            if address in data.adhoc_trainersanity:
+                write_bytes(patch, [1], data.adhoc_trainersanity[address])
 
     item_texts = []
     for location in world.multiworld.get_locations(world.player):
@@ -83,18 +84,20 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
             continue
 
         if location.address > GRASS_OFFSET:
-            location_address = location.rom_address
+            location_addresses = location.rom_addresses
         elif location.address > POKEDEX_COUNT_OFFSET:
-            location_address = data.rom_addresses["AP_DexcountsanityItems"] + location.rom_address - 1
+            location_addresses = [data.rom_addresses["AP_DexcountsanityItems"] + address - 1 for address in
+                                  location.rom_addresses]
         elif location.address > POKEDEX_OFFSET:
-            location_address = data.rom_addresses["AP_DexsanityItems"] + location.rom_address - 1
+            location_addresses = [data.rom_addresses["AP_DexsanityItems"] + address - 1 for address in
+                                  location.rom_addresses]
         else:
-            location_address = location.rom_address
+            location_addresses = location.rom_addresses
 
         if not world.options.remote_items and location.item and location.item.player == world.player:
             item_id = location.item.code
             if item_id >= FLY_UNLOCK_OFFSET:
-                write_item(item_const_name_to_id("FLY_UNLOCK"), location_address)
+                write_item(item_const_name_to_id("FLY_UNLOCK"), location_addresses)
 
                 if location.address >= GRASS_OFFSET:
                     if hasattr(location, "original_grass_flag"):
@@ -113,7 +116,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
                 write_bytes(patch, event_id.to_bytes(2, "little"),
                             data.rom_addresses["AP_Setting_FlyUnlockTable"] + (fly_id * 3))
             else:
-                write_item(item_id, location_address)
+                write_item(item_id, location_addresses)
         else:
             # for in game text
             if location.address < POKEDEX_OFFSET:
@@ -122,7 +125,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
                 item_name = location.item.name.upper()
                 item_texts.append((player_name, item_name, item_flag, "shopsanity" in location.tags))
 
-            write_item(item_const_name_to_id("AP_ITEM"), location_address)
+            write_item(item_const_name_to_id("AP_ITEM"), location_addresses)
 
     # table has format: location id (2 bytes), string address (2 bytes), string bank (1 byte),
     # and is terminated by 0xFF
@@ -281,7 +284,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
                 if not remote_items and item_min_shop_price < item_price // 2:
                     item_min_shop_price = item_price // 2
 
-                address = location.rom_address + 1
+                address = location.rom_addresses[0] + 1
                 shop_price = world.random.randint(item_min_shop_price, item_max_shop_price) \
                     if item_max_shop_price > item_min_shop_price else item_min_shop_price
                 logging.debug(f"Setting ¥{shop_price} for {location.name}")
