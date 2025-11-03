@@ -1,5 +1,8 @@
 {
   "game": "Pokemon Crystal",
+  "authors": [
+    "gerbiljames"
+  ],
   "minimum_ap_version": "0.6.3",
   "world_version": "5.2.5",
   "compatible_version": 7,
