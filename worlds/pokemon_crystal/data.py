@@ -448,6 +448,7 @@ class MiscOption(IntEnum):
     TooManyDogs = auto()
     WhirlDexLocations = auto()
     Farfetchd = auto()
+    DarkAreas = auto()
 
 
 @dataclass(frozen=True)

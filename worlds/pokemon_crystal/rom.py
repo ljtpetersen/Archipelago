@@ -656,6 +656,9 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         if MiscOption.Farfetchd.value in world.generated_misc.selected:
             write_bytes(patch, [1], data.rom_addresses["AP_Misc_Farfetchd"] + 1)
 
+        if MiscOption.DarkAreas.value in world.generated_misc.selected:
+            write_bytes(patch, [1], data.rom_addresses["AP_Misc_DarkAreas"] + 1)
+
     if world.options.reusable_tms:
         address = data.rom_addresses["AP_Setting_ReusableTMs"] + 1
         write_bytes(patch, [1], address)
