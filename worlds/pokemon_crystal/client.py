@@ -537,6 +537,7 @@ class PokemonCrystalClient(BizHawkClient):
                     "cmd": "StatusUpdate",
                     "status": ClientStatus.CLIENT_GOAL
                 }])
+                ctx.finished_game = True
 
             if not self.phone_trap_locations:
                 phone_result = await bizhawk.guarded_read(
