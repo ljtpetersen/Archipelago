@@ -1,5 +1,4 @@
 import math
-import random
 import time
 from typing import TYPE_CHECKING
 
@@ -209,7 +208,6 @@ class PokemonCrystalClient(BizHawkClient):
         self.notify_setup_complete = False
         self.remote_seen_pokemon = set()
         self.remote_caught_pokemon = set()
-        self.random_number = random.randint(1, 1000)
 
     async def validate_rom(self, ctx: "BizHawkClientContext") -> bool:
         from CommonClient import logger
