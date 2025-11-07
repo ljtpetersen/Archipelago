@@ -1,4 +1,5 @@
 import math
+import random
 import time
 from typing import TYPE_CHECKING
 
@@ -208,6 +209,7 @@ class PokemonCrystalClient(BizHawkClient):
         self.notify_setup_complete = False
         self.remote_seen_pokemon = set()
         self.remote_caught_pokemon = set()
+        self.random_number = random.randint(1, 1000)
 
     async def validate_rom(self, ctx: "BizHawkClientContext") -> bool:
         from CommonClient import logger
@@ -280,12 +282,12 @@ class PokemonCrystalClient(BizHawkClient):
         if ctx.server is None or ctx.server.socket.closed or ctx.slot_data is None:
             return
 
+        pokedex_seen_key = f"pokemon_crystal_seen_pokemon_{ctx.team}_{ctx.slot}"
+        pokedex_caught_key = f"pokemon_crystal_caught_pokemon_{ctx.team}_{ctx.slot}"
+
         if not self.notify_setup_complete:
             if ctx.items_handling & 0b010:
-                ctx.set_notify(
-                    f"pokemon_crystal_seen_pokemon_{ctx.team}_{ctx.slot}",
-                    f"pokemon_crystal_caught_pokemon_{ctx.team}_{ctx.slot}"
-                )
+                ctx.set_notify(pokedex_caught_key, pokedex_seen_key)
             self.notify_setup_complete = True
 
         if ctx.slot_data["goal"] == Goal.option_elite_four:
@@ -302,11 +304,12 @@ class PokemonCrystalClient(BizHawkClient):
                 hint_ids = []
                 for locations in HINT_FLAGS.values():
                     hint_ids.extend(loc for loc in locations if loc in ctx.missing_locations)
-                await ctx.send_msgs([{
-                    "cmd": "LocationScouts",
-                    "locations": hint_ids,
-                    "create_as_hint": 0
-                }])
+                if hint_ids:
+                    await ctx.send_msgs([{
+                        "cmd": "LocationScouts",
+                        "locations": hint_ids,
+                        "create_as_hint": 0
+                    }])
 
             overworld_guard = (data.ram_addresses["wArchipelagoSafeWrite"], [1], "WRAM")
 
@@ -357,8 +360,11 @@ class PokemonCrystalClient(BizHawkClient):
             local_set_static_events = {flag_name: False for flag_name in TRACKER_STATIC_EVENT_FLAGS}
             local_set_rocket_trap_events = {flag_name: False for flag_name in TRACKER_ROCKET_TRAP_EVENTS}
             local_found_key_items = {flag_name: False for flag_name in TRACKER_KEY_ITEM_FLAGS}
-            local_seen_pokemon = self.remote_seen_pokemon
-            local_caught_pokemon = self.remote_caught_pokemon
+            remote_seen_pokemon = ctx.stored_data[pokedex_seen_key] if pokedex_seen_key in ctx.stored_data else None
+            local_seen_pokemon = set(remote_seen_pokemon) if remote_seen_pokemon else set()
+            remote_caught_pokemon = ctx.stored_data[
+                pokedex_caught_key] if pokedex_caught_key in ctx.stored_data else None
+            local_caught_pokemon = set(remote_caught_pokemon) if remote_caught_pokemon else set()
             local_hints = {flag_name: False for flag_name in HINT_FLAGS.keys()}
 
             flag_bytes = read_result[0]
@@ -420,7 +426,7 @@ class PokemonCrystalClient(BizHawkClient):
             if local_seen_pokemon != self.local_seen_pokemon:
                 packages.append({
                     "cmd": "Set",
-                    "key": f"pokemon_crystal_seen_pokemon_{ctx.team}_{ctx.slot}",
+                    "key": pokedex_seen_key,
                     "default": [],
                     "want_reply": ctx.items_handling & 0b010,
                     "operations": [{"operation": "update" if ctx.items_handling & 0b010 else "replace",
@@ -430,7 +436,7 @@ class PokemonCrystalClient(BizHawkClient):
             if local_caught_pokemon != self.local_caught_pokemon:
                 packages.append({
                     "cmd": "Set",
-                    "key": f"pokemon_crystal_caught_pokemon_{ctx.team}_{ctx.slot}",
+                    "key": pokedex_caught_key,
                     "default": [],
                     "want_reply": ctx.items_handling & 0b010,
                     "operations": [{"operation": "update" if ctx.items_handling & 0b010 else "replace",
@@ -694,21 +700,3 @@ class PokemonCrystalClient(BizHawkClient):
         elif "DeathLink" in ctx.tags:
             await ctx.update_death_link(False)
             self.last_death_link = 0
-
-    def on_package(self, ctx: "BizHawkClientContext", cmd: str, args: dict) -> None:
-        super().on_package(ctx, cmd, args)
-
-        if cmd == "Retrieved":
-            if ctx.items_handling & 0b010:
-                if f"pokemon_crystal_caught_pokemon_{ctx.team}_{ctx.slot}" in args["keys"]:
-                    remote_caught_pokemon = args["keys"][f"pokemon_crystal_caught_pokemon_{ctx.team}_{ctx.slot}"]
-                    self.remote_caught_pokemon = set(remote_caught_pokemon) if remote_caught_pokemon else set()
-                if f"pokemon_crystal_seen_pokemon_{ctx.team}_{ctx.slot}" in args["keys"]:
-                    remote_seen_pokemon = args["keys"][f"pokemon_crystal_seen_pokemon_{ctx.team}_{ctx.slot}"]
-                    self.remote_seen_pokemon = set(remote_seen_pokemon) if remote_seen_pokemon else set()
-
-        if cmd == "SetReply":
-            if args["key"] == f"pokemon_crystal_caught_pokemon_{ctx.team}_{ctx.slot}":
-                self.remote_caught_pokemon = set(args["value"])
-            elif args["key"] == f"pokemon_crystal_seen_pokemon_{ctx.team}_{ctx.slot}":
-                self.remote_seen_pokemon = set(args["value"])
