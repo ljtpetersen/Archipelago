@@ -83,7 +83,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         if location.address is None:
             continue
 
-        if location.address > GRASS_OFFSET:
+        if location.address >= GRASS_OFFSET:
             location_addresses = location.rom_addresses
         elif location.address > POKEDEX_COUNT_OFFSET:
             location_addresses = [data.rom_addresses["AP_DexcountsanityItems"] + address - 1 for address in
