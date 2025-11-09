@@ -15,7 +15,6 @@ if TYPE_CHECKING:
 
 class PokemonCrystalLocation(Location):
     game: str = data.manifest.game
-    rom_address: int | None
     rom_addresses: list[int]
     default_item_code: int | None
     flag: int | None
