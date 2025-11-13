@@ -1227,7 +1227,7 @@ the_player_parable:
       makes it the most
       perfect sequel.
 
-  palex00_disinformation_campaign:
+palex00_disinformation_campaign:
     caller: out_of_area
     script:
     - |
@@ -1289,3 +1289,27 @@ wrong_number_song:
       We're very very
       sorry that we got
       it wrong!
+      
+bbbbb:
+  caller: withheld
+  script:
+    - |
+      Come on down to
+      Bunk Bunker's Big
+      Bug Bonanza!
+    - |
+      Bring your Bike to
+      Bational Bark and
+      catch bugs such as
+    - |
+      BEEDRILL, 
+      BUTTERFREE,
+      BINSIR,
+    - |
+      and beven a
+      BYTHER!
+      Biggest Brize bis
+    - |
+      a Bun Bone.
+      Bye Bye 
+      Beveryone
