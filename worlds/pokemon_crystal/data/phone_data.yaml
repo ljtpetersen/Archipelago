@@ -1262,3 +1262,30 @@ the_player_parable:
       I should have
       given you an
       EVERSTONE!
+      
+wrong_number_song:
+  caller: withheld
+  script:
+    - |
+      Hello! Can I speak
+      to G…
+    - |
+      Wait a second…
+      Is this the wrong
+      number…?
+    - |
+      Oh, it's the wrong
+      number! The wrong
+      number song!
+    - |
+      We're very very
+      sorry that we got
+      it wrong!
+    - |
+      Oh, it's the wrong
+      number! The wrong
+      number song!
+    - |
+      We're very very
+      sorry that we got
+      it wrong!
