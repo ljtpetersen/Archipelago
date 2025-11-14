@@ -49,6 +49,13 @@ class PokemonCrystalSettings(settings.Group):
 
     rom_file: RomFile = RomFile(RomFile.copy_to)
 
+    class MaximumFillerTrapPercentage(int):
+        """
+        The maximum allowed filler_trap_percentage
+        """
+
+    maximum_filler_trap_percentage = MaximumFillerTrapPercentage(20)
+
 
 class PokemonCrystalWebWorld(WebWorld):
     tutorials = [Tutorial(
@@ -299,7 +306,7 @@ class PokemonCrystalWorld(World):
             ("Freeze Trap", self.options.freeze_trap_weight.value),
             ("Paralysis Trap", self.options.paralysis_trap_weight.value),
         )
-        total_trap_weight = sum(trap_weights)
+        total_trap_weight = self.options.filler_trap_percentage.value if any(trap_weights) else 0
 
         def get_random_trap():
             return self.create_item(self.random.choices(trap_names, trap_weights)[0])
@@ -350,7 +357,7 @@ class PokemonCrystalWorld(World):
             if self.itempool[i].classification == ItemClassification.filler:
                 if add_items:
                     self.itempool[i] = self.create_item_by_const_name(add_items.pop())
-                elif total_trap_weight and self.random.randint(0, 100) < total_trap_weight:
+                elif total_trap_weight and self.random.randint(0, 100) <= total_trap_weight:
                     self.itempool[i] = get_random_trap()
 
         adjust_item_classifications(self)
@@ -670,7 +677,7 @@ class PokemonCrystalWorld(World):
             "Paralysis Trap": self.options.paralysis_trap_weight.value,
         }
 
-        if not self.options.remote_items:
+        if not self.options.remote_items and self.options.filler_trap_percentage:
             slot_data["trap_locations"] = {str(location.address): location.item.code for location in
                                            self.get_locations() if
                                            location.item.player == self.player and "Trap" in location.item.tags}

@@ -44,6 +44,7 @@ def __adjust_option_problems(world: "PokemonCrystalWorld"):
     __adjust_options_dark_areas(world)
     __adjust_options_randomize_types(world)
     __adjust_options_tm_plando(world)
+    __adjust_options_traps(world)
 
 
 def __adjust_options_radio_tower_and_route_44(world: "PokemonCrystalWorld"):
@@ -302,6 +303,18 @@ def __adjust_options_tm_plando(world: "PokemonCrystalWorld"):
             "Pokemon Crystal: A Sweet Scent TM must exist if Dexsanity or Dexcountsanity are enabled. "
             "Resetting TM12 to vanilla for Player %s (%s).", world.player, world.player_name)
         world.options.tm_plando.value.pop("12")
+
+
+def __adjust_options_traps(world: "PokemonCrystalWorld"):
+    if world.options.filler_trap_percentage > world.settings.maximum_filler_trap_percentage:
+        maximum_trap_weight = world.settings.maximum_filler_trap_percentage
+        logging.warning(
+            "Pokemon Crystal: Trap Weight is greater than allowed maximum. "
+            f"Reducing filler trap percentage to {maximum_trap_weight} for Player %s (%s).",
+            world.player,
+            world.player_name
+        )
+        world.options.filler_trap_percentage.value = maximum_trap_weight
 
 
 def pokemon_convert_friendly_to_ids(world: "PokemonCrystalWorld", pokemon: Iterable[str]) -> set[str]:

@@ -1624,70 +1624,86 @@ class AllPokemonSeen(Toggle):
     display_name = "All Pokemon Seen"
 
 
+class TrapWeight(Range):
+    """
+    Percentage chance each filler item is replaced with a trap
+
+    If no traps have any weight, this option does nothing
+
+    NOTE: This option has a maximum of 20 by default, this can be changed by setting maximum_filler_trap_percentage in host.yaml
+    """
+    display_name = "Filler Trap Percentage"
+    default = 0
+    range_start = 0
+    range_end = 100
+
+
 class PhoneTrapWeight(Range):
     """
     Adds random Pokegear calls that acts as traps
-    Weight is the percentage chance each filler item is replaced with a trap
+    Specifies the weight at which traps become Phone Traps
+
+    NOTE: Phone traps will loop after you receive 32 of them
     """
     display_name = "Phone Trap Weight"
     default = 0
     range_start = 0
-    range_end = 8
+    range_end = 100
 
 
 class SleepTrapWeight(Range):
     """
     Trap that causes Sleep status on your party
-    Weight is the percentage chance each filler item is replaced with a trap
+    Specifies the weight at which traps become Sleep Traps
     """
     display_name = "Sleep Trap Weight"
     default = 0
     range_start = 0
-    range_end = 8
+    range_end = 100
 
 
 class PoisonTrapWeight(Range):
     """
     Trap that causes Poison status on your party
-    Weight is the percentage chance each filler item is replaced with a trap
+    Specifies the weight at which traps become Poison Traps
     """
     display_name = "Poison Trap Weight"
     default = 0
     range_start = 0
-    range_end = 8
+    range_end = 100
 
 
 class BurnTrapWeight(Range):
     """
     Trap that causes Burn status on your party
-    Weight is the percentage chance each filler item is replaced with a trap
+    Specifies the weight at which traps become Burn Traps
     """
     display_name = "Burn Trap Weight"
     default = 0
     range_start = 0
-    range_end = 8
+    range_end = 100
 
 
 class FreezeTrapWeight(Range):
     """
     Trap that causes Freeze status on your party
-    Weight is the percentage chance each filler item is replaced with a trap
+    Specifies the weight at which traps become Freeze Traps
     """
     display_name = "Freeze Trap Weight"
     default = 0
     range_start = 0
-    range_end = 8
+    range_end = 100
 
 
 class ParalysisTrapWeight(Range):
     """
     Trap that causes Paralysis status on your party
-    Weight is the percentage chance each filler item is replaced with a trap
+    Specifies the weight at which traps become Paralysis Traps
     """
     display_name = "Paralysis Trap Weight"
     default = 0
     range_start = 0
-    range_end = 8
+    range_end = 100
 
 
 class TrapLink(Toggle):
@@ -2041,6 +2057,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     experience_modifier: ExpModifier
     starting_money: StartingMoney
     all_pokemon_seen: AllPokemonSeen
+    filler_trap_percentage: TrapWeight
     phone_trap_weight: PhoneTrapWeight
     sleep_trap_weight: SleepTrapWeight
     poison_trap_weight: PoisonTrapWeight
@@ -2208,7 +2225,8 @@ OPTION_GROUPS = [
     ),
     OptionGroup(
         "Traps",
-        [PhoneTrapWeight,
+        [TrapWeight,
+         PhoneTrapWeight,
          SleepTrapWeight,
          PoisonTrapWeight,
          BurnTrapWeight,
