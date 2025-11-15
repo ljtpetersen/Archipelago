@@ -860,6 +860,16 @@ class BugContestEncounter:
 
 
 @dataclass(frozen=True)
+class PaletteData:
+    NPC_PAL_OFFSET = 8
+    PRIORITY = 0x80
+    name: str
+    index: int
+    id: str
+    battle_palette: list[int]
+
+
+@dataclass(frozen=True)
 class PokemonCrystalData:
     manifest: ManifestData
     rom_version: int
@@ -892,6 +902,7 @@ class PokemonCrystalData:
     grass_tiles: Mapping[str, list[GrassTile]]
     grass_regions: Mapping[str, list[str]]
     bug_contest_encounters: Sequence[BugContestEncounter]
+    palettes: Sequence[PaletteData]
 
 
 def load_json_data(data_name: str) -> list[Any] | Mapping[str, Any]:
@@ -1360,6 +1371,15 @@ def _init() -> None:
         world_version=manifest_json["world_version"],
     )
 
+    palettes = [
+        PaletteData(
+            name=palette_data["name"],
+            index=palette_data["index"],
+            id=palette_data["id"],
+            battle_palette=palette_data["battle_palette"]
+        ) for palette_data in data_json["palettes"]
+    ]
+
     global data
     data = PokemonCrystalData(
         manifest=manifest,
@@ -1393,6 +1413,7 @@ def _init() -> None:
         grass_tiles=grass_tiles,
         grass_regions=grass_regions,
         bug_contest_encounters=bug_contest_encounters,
+        palettes=palettes,
     )
 
 

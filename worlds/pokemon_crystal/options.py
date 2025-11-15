@@ -1928,6 +1928,19 @@ class RequirePokegearForPhoneNumbers(DefaultOnToggle):
     display_name = "Require Pokegear for Phone Numbers"
 
 
+class TrainerPalette(Choice):
+    """
+    Sets the palette used for the player character
+    """
+    display_name = "Trainer Palette"
+    default = 0
+    option_vanilla = 0
+    option_red = 1
+    option_blue = 2
+    option_green = 3
+    option_brown = 4
+
+
 class PokemonCrystalDeathLink(DeathLink):
     __doc__ = DeathLink.__doc__ + "\n\n    In Pokemon Crystal, whiting out sends a death and receiving a death causes you to white out."
 
@@ -2077,6 +2090,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     default_pokedex_mode: DefaultPokedexMode
     trap_link: TrapLink
     require_pokegear_for_phone_numbers: RequirePokegearForPhoneNumbers
+    trainer_palette: TrainerPalette
 
 
 OPTION_GROUPS = [
@@ -2256,7 +2270,8 @@ OPTION_GROUPS = [
     OptionGroup(
         "Cosmetic",
         [RandomizePalettes,
-         RandomizeMusic]
+         RandomizeMusic,
+         TrainerPalette]
     ),
     OptionGroup(
         ":3",

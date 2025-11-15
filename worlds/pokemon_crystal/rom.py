@@ -8,7 +8,7 @@ import bsdiff4
 from settings import get_settings
 from worlds.Files import APProcedurePatch, APTokenMixin, APPatchExtension
 from .data import data, MiscOption, POKEDEX_COUNT_OFFSET, POKEDEX_OFFSET, EncounterType, \
-    FishingRodType, TreeRarity, FLY_UNLOCK_OFFSET, BETTER_MART_MARTS, MapPalette, GRASS_OFFSET
+    FishingRodType, TreeRarity, FLY_UNLOCK_OFFSET, BETTER_MART_MARTS, MapPalette, GRASS_OFFSET, PaletteData
 from .items import item_const_name_to_id
 from .maps import FLASH_MAP_GROUPS
 from .options import UndergroundsRequirePower, RequireItemfinder, Goal, Route2Access, Route42Access, \
@@ -1113,6 +1113,47 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
                 data.rom_addresses["AP_Setting_PhoneRequiresGear_1"] + 1)
     write_bytes(patch, [world.options.require_pokegear_for_phone_numbers.value],
                 data.rom_addresses["AP_Setting_PhoneRequiresGear_2"] + 1)
+
+    if world.options.trainer_palette:
+        palette_data = next(palette for palette in data.palettes if palette.index == world.options.trainer_palette - 1)
+
+        addresses = ("AP_Setting_ChrisWalkSpriteData", "AP_Setting_ChrisBikeSpriteData",
+                     "AP_Setting_KrisWalkSpriteData", "AP_Setting_KrisBikeSpriteData", "AP_Setting_ChrisRunSpriteData",
+                     "AP_Setting_KrisRunSpriteData")
+
+        for address_ref in addresses:
+            write_bytes(patch, [palette_data.index], data.rom_addresses[address_ref] + 5)
+
+        for i in range(1, 5):
+            byte = (palette_data.index + PaletteData.NPC_PAL_OFFSET) << 4
+            write_bytes(patch, [byte], data.rom_addresses[f"AP_Setting_ChrisSpritePalette_{i}"] + 1)
+            write_bytes(patch, [byte], data.rom_addresses[f"AP_Setting_KrisSpritePalette_{i}"] + 1)
+
+        write_bytes(patch, [palette_data.index], data.rom_addresses["AP_Setting_ChrisIntroPal"] + 1)
+        write_bytes(patch, [palette_data.index], data.rom_addresses["AP_Setting_KrisIntroPal"] + 1)
+
+        write_bytes(patch, palette_data.battle_palette, data.rom_addresses["AP_Setting_ChrisBattlePalette"])
+        write_bytes(patch, palette_data.battle_palette, data.rom_addresses["AP_Setting_KrisBattlePalette"])
+
+        address = data.rom_addresses["AP_Setting_OAMBlueWalk"] + 4
+        for i in range(4):
+            write_bytes(patch, [palette_data.index], address)
+            address += 4
+
+        address = data.rom_addresses["AP_Setting_OAMRedWalk"] + 4
+        for i in range(4):
+            write_bytes(patch, [palette_data.index], address)
+            address += 4
+
+        address = data.rom_addresses["AP_Setting_OAMMagnetTrainBlue"] + 4
+        for i in range(4):
+            write_bytes(patch, [palette_data.index | PaletteData.PRIORITY], address)
+            address += 4
+
+        address = data.rom_addresses["AP_Setting_OAMMagnetTrainRed"] + 4
+        for i in range(4):
+            write_bytes(patch, [palette_data.index | PaletteData.PRIORITY], address)
+            address += 4
 
     # Set slot auth
     ap_version_text = convert_to_ingame_text(data.manifest.world_version)[:19]
