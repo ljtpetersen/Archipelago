@@ -758,7 +758,7 @@ class RandomizePokemonRequests(Choice):
     Shuffles the items given by Bill's Grandpa after showing him specific Pokemon into the pool
     Optionally also randomizes the requested Pokemon
 
-    Tainers which need you to show them a Pokemon to get their phone number require both this option and Randomize Phone Call Items to be enabled.
+    Trainers which need you to show them a Pokemon to get their phone number require both this option and Randomize Phone Call Items to be enabled.
     """
     display_name = "Randomize Pokemon Requests"
     default = 0
