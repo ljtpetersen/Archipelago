@@ -491,11 +491,14 @@
       "KeyItem"
     ]
   },
-  "SILVER_LEAF": {
-    "name": "Silver Leaf",
-    "classification": "FILLER",
-    "price": 1000,
-    "tags": []
+  "OMANYTE_TILE": {
+    "name": "Omanyte Tile",
+    "classification": "PROGRESSION",
+    "price": 0,
+    "tags": [
+      "Alph Puzzle Tile",
+      "Tracker"
+    ]
   },
   "SUPER_ROD": {
     "name": "Super Rod",
@@ -635,11 +638,14 @@
       "Berries"
     ]
   },
-  "GOLD_LEAF": {
-    "name": "Gold Leaf",
-    "classification": "FILLER",
-    "price": 1000,
-    "tags": []
+  "AERO_TILE": {
+    "name": "Aerodactyl Tile",
+    "classification": "PROGRESSION",
+    "price": 0,
+    "tags": [
+      "Alph Puzzle Tile",
+      "Tracker"
+    ]
   },
   "SOFT_SAND": {
     "name": "Soft Sand",
@@ -1215,11 +1221,14 @@
     "price": 2,
     "tags": []
   },
-  "GORGEOUS_BOX": {
-    "name": "Gorgeous Box",
-    "classification": "FILLER",
-    "price": 10,
-    "tags": []
+  "KABUTO_TILE": {
+    "name": "Kabuto Tile",
+    "classification": "PROGRESSION",
+    "price": 0,
+    "tags": [
+      "Alph Puzzle Tile",
+      "Tracker"
+    ]
   },
   "SUN_STONE": {
     "name": "Sun Stone",
@@ -1294,11 +1303,14 @@
       "KeyItem"
     ]
   },
-  "BRICK_PIECE": {
-    "name": "Brick Piece",
-    "classification": "FILLER",
-    "price": 50,
-    "tags": []
+  "HO_OH_TILE": {
+    "name": "Ho-Oh Tile",
+    "classification": "PROGRESSION",
+    "price": 0,
+    "tags": [
+      "Alph Puzzle Tile",
+      "Tracker"
+    ]
   },
   "SURF_MAIL": {
     "name": "Surf Mail",

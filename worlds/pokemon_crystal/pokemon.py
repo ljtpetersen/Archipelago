@@ -3,13 +3,13 @@ from dataclasses import replace
 from typing import TYPE_CHECKING
 
 from BaseClasses import ItemClassification
-from .data import data as crystal_data, LogicalAccess, EncounterType
+from .data import data as crystal_data, LogicalAccess, EncounterType, ALL_UNOWN
 from .evolution import get_random_pokemon_evolution
 from .items import get_random_filler_item
 from .moves import get_tmhm_compatibility, randomize_learnset, moves_convert_friendly_to_ids
 from .options import RandomizeTypes, RandomizePalettes, RandomizeBaseStats, RandomizeStarters, RandomizeTrades, \
-    DexsanityStarters, EncounterGrouping, RandomizePokemonRequests
-from .utils import pokemon_convert_friendly_to_ids
+    DexsanityStarters, EncounterGrouping, RandomizePokemonRequests, Goal
+from .utils import pokemon_convert_friendly_to_ids, should_include_region
 
 if TYPE_CHECKING:
     from .world import PokemonCrystalWorld
@@ -304,7 +304,7 @@ def fill_wild_encounter_locations(world: "PokemonCrystalWorld"):
 
 def get_random_pokemon(world: "PokemonCrystalWorld", priority_pokemon: set[str] | None = None, types=None,
                        base_only=False, force_fully_evolved_at=None, current_level=None, starter=False,
-                       exclude_unown=False, blocklist: set[str] | None = None):
+                       exclude_unown=False, blocklist: set[str] | None = None) -> str:
     bst_range = world.options.starters_bst_average * .10
 
     def filter_out_pokemon(pkmn_name, pkmn_data):
@@ -381,6 +381,32 @@ def _locations_to_pokemon(world: "PokemonCrystalWorld", locations: Iterable[str]
         if "Catch" in parts[1]: continue
         pokemon.add(parts[1])
     return pokemon_convert_friendly_to_ids(world, pokemon)
+
+
+def get_chamber_event_for_unown(unown_letter: str) -> str:
+    char = unown_letter[-1]
+    if char < "L": return "ENGINE_UNLOCKED_UNOWNS_A_TO_K"
+    if char < "S": return "ENGINE_UNLOCKED_UNOWNS_L_TO_R"
+    if char < "X": return "ENGINE_UNLOCKED_UNOWNS_S_TO_W"
+    return "ENGINE_UNLOCKED_UNOWNS_X_TO_Z"
+
+
+def randomize_unown_signs(world: "PokemonCrystalWorld"):
+    if world.options.goal != Goal.option_unown_hunt: return
+    available_signs = []
+    for region in crystal_data.regions.values():
+        if not should_include_region(region, world): continue
+        for sign in region.signs:
+            available_signs.append(sign)
+
+    all_unown = list(ALL_UNOWN)
+    world.random.shuffle(all_unown)
+    world.random.shuffle(available_signs)
+
+    for unown in all_unown:
+        world.generated_unown_signs[available_signs.pop()] = unown
+
+    world.logic.available_pokemon.add("UNOWN")
 
 
 def get_priority_dexsanity(world: "PokemonCrystalWorld") -> set[str]:

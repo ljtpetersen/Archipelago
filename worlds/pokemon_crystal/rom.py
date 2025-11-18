@@ -8,7 +8,7 @@ import bsdiff4
 from settings import get_settings
 from worlds.Files import APProcedurePatch, APTokenMixin, APPatchExtension
 from .data import data, MiscOption, POKEDEX_COUNT_OFFSET, POKEDEX_OFFSET, EncounterType, \
-    FishingRodType, TreeRarity, FLY_UNLOCK_OFFSET, BETTER_MART_MARTS, MapPalette, GRASS_OFFSET, PaletteData
+    FishingRodType, TreeRarity, FLY_UNLOCK_OFFSET, BETTER_MART_MARTS, MapPalette, GRASS_OFFSET, PaletteData, ALL_UNOWN
 from .items import item_const_name_to_id
 from .maps import FLASH_MAP_GROUPS
 from .options import UndergroundsRequirePower, RequireItemfinder, Goal, Route2Access, Route42Access, \
@@ -1154,6 +1154,12 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         for i in range(4):
             write_bytes(patch, [palette_data.index | PaletteData.PRIORITY], address)
             address += 4
+
+    for sign, unown in world.generated_unown_signs.items():
+        write_bytes(patch, [ALL_UNOWN.index(unown) + 1], data.rom_addresses[f"AP_Sign_{sign}"] + 1)
+
+    if world.options.goal == Goal.option_unown_hunt:
+        write_bytes(patch, [1], data.rom_addresses["AP_Setting_AlphPuzzlesLocked"] + 1)
 
     # Set slot auth
     ap_version_text = convert_to_ingame_text(data.manifest.world_version)[:19]

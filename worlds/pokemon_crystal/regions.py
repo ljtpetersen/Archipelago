@@ -7,7 +7,7 @@ from .data import data, RegionData, EncounterMon, StaticPokemon, LogicalAccess, 
 from .items import PokemonCrystalItem
 from .locations import PokemonCrystalLocation
 from .options import FreeFlyLocation, JohtoOnly, BlackthornDarkCaveAccess, Goal, FlyCheese, Route42Access
-from .utils import get_fly_regions
+from .utils import get_fly_regions, should_include_region
 
 if TYPE_CHECKING:
     from .world import PokemonCrystalWorld
@@ -78,21 +78,12 @@ def create_regions(world: "PokemonCrystalWorld") -> dict[str, Region]:
     regions: dict[str, Region] = {}
     connections: list[tuple[str, str, str]] = []
     johto_only = world.options.johto_only.value
-    skip_e4 = world.options.skip_elite_four.value
 
     wild_name_level_list: list[tuple[str, list[int]]] = []
     trainer_name_level_list: list[tuple[str, int]] = []
     static_name_level_list: list[tuple[str, int]] = []
 
     wild_scaling_locations = set()
-
-    def should_include_region(region):
-        # check if region should be included
-        return (region.johto
-                or johto_only == JohtoOnly.option_off
-                or (region.silver_cave and johto_only == JohtoOnly.option_include_silver_cave)) and (
-                not skip_e4 or not region.elite_4
-        )
 
     def exclude_scaling(trainer: str):
         if not world.options.rematchsanity and trainer in REMATCHES:
@@ -233,7 +224,7 @@ def create_regions(world: "PokemonCrystalWorld") -> dict[str, Region]:
                 parent_region.connect(new_region)
 
     for region_name, region_data in data.regions.items():
-        if should_include_region(region_data):
+        if should_include_region(region_data, world):
             new_region = Region(region_name, world.player, world.multiworld)
 
             regions[region_name] = new_region
@@ -300,7 +291,7 @@ def create_regions(world: "PokemonCrystalWorld") -> dict[str, Region]:
                 connections.append((f"{region_name} -> {region_exit}", region_name, region_exit))
 
     for name, source, dest in connections:
-        if should_include_region(data.regions[source]) and should_include_region(data.regions[dest]):
+        if should_include_region(data.regions[source], world) and should_include_region(data.regions[dest], world):
             regions[source].connect(regions[dest], name)
 
     if world.options.skip_elite_four:

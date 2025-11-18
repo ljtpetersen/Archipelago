@@ -214,6 +214,10 @@ ADHOC_TRAINERSANITY_TRAINERS = [
     "RIVAL_7"
 ]
 
+ALL_UNOWN = [
+    f"UNOWN_{char}" for char in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+]
+
 
 @dataclass(frozen=True)
 class ItemData:
@@ -731,6 +735,7 @@ class RegionData:
     wild_encounters: RegionWildEncounterData | None
     marts: list[str]
     trades: list[str]
+    signs: list[str]
 
 
 @dataclass(frozen=True)
@@ -870,6 +875,12 @@ class PaletteData:
 
 
 @dataclass(frozen=True)
+class UnownSignData:
+    name: str
+    address: int
+
+
+@dataclass(frozen=True)
 class PokemonCrystalData:
     manifest: ManifestData
     rom_version: int
@@ -903,6 +914,7 @@ class PokemonCrystalData:
     grass_regions: Mapping[str, list[str]]
     bug_contest_encounters: Sequence[BugContestEncounter]
     palettes: Sequence[PaletteData]
+    unown_signs: Mapping[str, UnownSignData]
 
 
 def load_json_data(data_name: str) -> list[Any] | Mapping[str, Any]:
@@ -1035,6 +1047,7 @@ def _init() -> None:
             ) if "wild_encounters" in region_json else None,
             marts=region_json["marts"] if "marts" in region_json else [],
             trades=region_json["trades"] if "trades" in region_json else [],
+            signs=region_json["signs"] if "signs" in region_json else [],
         )
 
         regions[region_name] = new_region
@@ -1380,6 +1393,13 @@ def _init() -> None:
         ) for palette_data in data_json["palettes"]
     ]
 
+    unown_signs = {
+        sign_data["name"]: UnownSignData(
+            name=sign_data["name"],
+            address=rom_address_data[sign_data["address"]]
+        ) for sign_data in data_json["unown_signs"]
+    }
+
     global data
     data = PokemonCrystalData(
         manifest=manifest,
@@ -1414,6 +1434,7 @@ def _init() -> None:
         grass_regions=grass_regions,
         bug_contest_encounters=bug_contest_encounters,
         palettes=palettes,
+        unown_signs=unown_signs,
     )
 
 

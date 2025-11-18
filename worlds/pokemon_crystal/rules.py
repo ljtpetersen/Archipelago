@@ -3,7 +3,8 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 from worlds.generic.Rules import add_rule, set_rule, CollectionRule
-from .data import data, EvolutionType, EvolutionData, FishingRodType, EncounterKey, LogicalAccess, EncounterType
+from .data import data, EvolutionType, EvolutionData, FishingRodType, EncounterKey, LogicalAccess, EncounterType, \
+    ALL_UNOWN
 from .evolution import evolution_location_name
 from .items import PokemonCrystalGlitchedToken
 from .options import Goal, JohtoOnly, Route32Condition, UndergroundsRequirePower, Route2Access, \
@@ -11,7 +12,7 @@ from .options import Goal, JohtoOnly, Route32Condition, UndergroundsRequirePower
     MtSilverRequirement, FreeFlyLocation, HMBadgeRequirements, EliteFourRequirement, RedRequirement, \
     Route44AccessRequirement, RandomizeBadges, RadioTowerRequirement, PokemonCrystalOptions, Shopsanity, FlyCheese, \
     RequireFlash, RequireItemfinder, Route42Access, RedGyaradosAccess, RandomizePhoneCalls
-from .pokemon import add_hm_compatibility
+from .pokemon import add_hm_compatibility, get_chamber_event_for_unown
 from .utils import get_fly_regions, get_mart_slot_location_name
 
 if TYPE_CHECKING:
@@ -487,6 +488,9 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
                 "EVENT_ROUTE_24_ROCKET"
             ])
         world.multiworld.completion_condition[world.player] = lambda state: state.has_all(rocket_events, world.player)
+    elif world.options.goal == Goal.option_unown_hunt:
+        world.multiworld.completion_condition[world.player] = lambda state: state.has("EVENT_GOT_ALL_UNOWN",
+                                                                                      world.player)
     else:
         world.multiworld.completion_condition[world.player] = lambda state: state.has(
             "EVENT_BEAT_ELITE_FOUR", world.player)
@@ -640,6 +644,17 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
     set_rule(get_entrance("REGION_RUINS_OF_ALPH_HO_OH_CHAMBER -> REGION_RUINS_OF_ALPH_HO_OH_ITEM_ROOM"),
              lambda state: state.has("Rainbow Wing", world.player))
+
+    if world.options.goal == Goal.option_unown_hunt:
+        set_rule(get_location("EVENT_GOT_ALL_UNOWN"), lambda state: state.has_all(ALL_UNOWN, world.player))
+        set_rule(get_location("ENGINE_UNLOCKED_UNOWNS_A_TO_K"),
+                 lambda state: state.count("Kabuto Tile", world.player) >= 16)
+        set_rule(get_location("ENGINE_UNLOCKED_UNOWNS_L_TO_R"),
+                 lambda state: state.count("Aerodactyl Tile", world.player) >= 16)
+        set_rule(get_location("ENGINE_UNLOCKED_UNOWNS_S_TO_W"),
+                 lambda state: state.count("Omanyte Tile", world.player) >= 16)
+        set_rule(get_location("ENGINE_UNLOCKED_UNOWNS_X_TO_Z"),
+                 lambda state: state.count("Ho-Oh Tile", world.player) >= 16)
 
     # Route 32
     route_32_access_rule = world.logic.has_route_32_condition()
@@ -1308,11 +1323,13 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     set_rule(get_entrance("REGION_BLACKTHORN_GYM_2F -> REGION_BLACKTHORN_GYM_1F:STRENGTH"), can_strength)
 
     if "Dragons Den" in world.options.dark_areas:
-        dragons_den_access = lambda state: (world.logic.has_beaten_gym(state, "clair")
-                                            and can_surf(state) and can_flash(state))
+        dragons_den_access = lambda state: world.logic.has_beaten_gym(state, "clair") and can_flash(state)
     else:
-        dragons_den_access = lambda state: world.logic.has_beaten_gym(state, "clair") and can_surf(state)
-    set_rule(get_entrance("REGION_BLACKTHORN_CITY -> REGION_DRAGONS_DEN_1F"), dragons_den_access)
+        dragons_den_access = lambda state: world.logic.has_beaten_gym(state, "clair")
+
+    set_rule(get_entrance("REGION_BLACKTHORN_CITY:DRAGONS_DEN_ENTRANCE -> REGION_DRAGONS_DEN_1F"), dragons_den_access)
+    set_rule(get_entrance("REGION_BLACKTHORN_CITY -> REGION_BLACKTHORN_CITY:DRAGONS_DEN_ENTRANCE"), can_surf)
+    set_rule(get_entrance("REGION_BLACKTHORN_CITY:DRAGONS_DEN_ENTRANCE -> REGION_BLACKTHORN_CITY"), can_surf)
 
     # Dragons Den
     set_rule(get_entrance("REGION_DRAGONS_DEN_B1F -> REGION_DRAGONS_DEN_B1F:WATER"), can_surf)
@@ -1584,26 +1601,25 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
             set_rule(get_location("Static_Snorlax_1"), has_expn)
 
         set_rule(get_entrance("REGION_VERMILION_CITY -> REGION_ROUTE_11"), has_expn)
+        set_rule(get_entrance("REGION_VERMILION_CITY -> REGION_VERMILION_CITY:DIGLETTS_CAVE_ENTRANCE"), has_expn)
 
         if "Digletts Cave" in world.options.dark_areas:
-            digletts_cave_access = lambda state: has_expn(state) and can_flash_kanto(state)
-        else:
-            digletts_cave_access = has_expn
-        set_rule(get_entrance("REGION_VERMILION_CITY -> REGION_DIGLETTS_CAVE"), digletts_cave_access)
+            set_rule(get_entrance("REGION_VERMILION_CITY:DIGLETTS_CAVE_ENTRANCE -> REGION_DIGLETTS_CAVE"),
+                     can_flash_kanto)
 
         if not world.options.randomize_fly_unlocks and world.options.fly_cheese == FlyCheese.option_in_logic:
-            set_rule(get_entrance("REGION_DIGLETTS_CAVE -> REGION_VERMILION_CITY"),
+            set_rule(get_entrance("REGION_VERMILION_CITY:DIGLETTS_CAVE_ENTRANCE -> REGION_VERMILION_CITY"),
                      lambda state: has_expn(state) or can_fly(state))
             set_rule(get_entrance("REGION_ROUTE_11 -> REGION_VERMILION_CITY"),
                      lambda state: has_expn(state) or can_fly(state))
         elif (not world.options.randomize_fly_unlocks
               and world.options.fly_cheese == FlyCheese.option_out_of_logic and world.is_universal_tracker):
-            set_rule(get_entrance("REGION_DIGLETTS_CAVE -> REGION_VERMILION_CITY"),
+            set_rule(get_entrance("REGION_VERMILION_CITY:DIGLETTS_CAVE_ENTRANCE -> REGION_VERMILION_CITY"),
                      lambda state: has_expn(state) or state.has(PokemonCrystalGlitchedToken.TOKEN_NAME, world.player))
             set_rule(get_entrance("REGION_ROUTE_11 -> REGION_VERMILION_CITY"),
                      lambda state: has_expn(state) or state.has(PokemonCrystalGlitchedToken.TOKEN_NAME, world.player))
         else:
-            set_rule(get_entrance("REGION_DIGLETTS_CAVE -> REGION_VERMILION_CITY"), has_expn)
+            set_rule(get_entrance("REGION_VERMILION_CITY:DIGLETTS_CAVE_ENTRANCE -> REGION_VERMILION_CITY"), has_expn)
             set_rule(get_entrance("REGION_ROUTE_11 -> REGION_VERMILION_CITY"), has_expn)
 
         if world.options.ss_aqua_access:
@@ -1672,11 +1688,11 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         set_rule(get_entrance("REGION_ROUTE_8:CUT -> REGION_ROUTE_8"), can_cut_kanto)
 
         # Celadon
+        set_rule(get_entrance("REGION_CELADON_CITY -> REGION_CELADON_CITY:GYM_ENTRANCE"), can_cut_kanto)
+        set_rule(get_entrance("REGION_CELADON_CITY:GYM_ENTRANCE -> REGION_CELADON_CITY"), can_cut_kanto)
+
         if world.options.lock_kanto_gyms:
-            set_rule(get_entrance("REGION_CELADON_CITY -> REGION_CELADON_GYM"),
-                     lambda state: can_cut_kanto(state) and kanto_gyms_access(state))
-        else:
-            set_rule(get_entrance("REGION_CELADON_CITY -> REGION_CELADON_GYM"), can_cut_kanto)
+            set_rule(get_entrance("REGION_CELADON_CITY:GYM_ENTRANCE -> REGION_CELADON_GYM"), kanto_gyms_access)
 
         if Shopsanity.game_corners in world.options.shopsanity.value:
             set_rule(
@@ -1721,7 +1737,7 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         if world.options.lock_kanto_gyms:
             set_rule(get_entrance("REGION_FUCHSIA_CITY -> REGION_FUCHSIA_GYM"), kanto_gyms_access)
 
-        set_rule(get_entrance("REGION_ROUTE_19_FUCHSIA_GATE -> REGION_ROUTE_19"),
+        set_rule(get_entrance("REGION_ROUTE_19:GATE_ENTRANCE -> REGION_ROUTE_19"),
                  lambda state: state.has("EVENT_CINNABAR_ROCKS_CLEARED", world.player) and can_surf_kanto(state))
 
         # Cinnabar
@@ -1733,6 +1749,14 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
         if world.options.lock_kanto_gyms:
             set_rule(get_entrance("REGION_ROUTE_20 -> REGION_SEAFOAM_GYM"), kanto_gyms_access)
+
+        if world.options.goal == Goal.option_unown_hunt:
+            for location, unown in world.generated_unown_signs.items():
+                chamber_event = get_chamber_event_for_unown(unown)
+                set_rule(get_location(location),
+                         lambda state, event=chamber_event: state.has(event, world.player))
+                set_rule(get_location(f"{location}_Encounter"),
+                         lambda state, event=chamber_event: state.has(event, world.player))
 
         if world.options.randomize_pokemon_requests:
             bills_grandpa_locations = (

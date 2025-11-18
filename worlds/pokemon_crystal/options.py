@@ -27,6 +27,7 @@ class Goal(Choice):
     Rival: Win all possible rival battles
     Defeat Team Rocket: Vanquish Team Rocket in Slowpoke Well, Mahogany Town, Radio Tower and defeat the grunt
     on route 24 (if Kanto is accessible)
+    Unown Hunt: The 26 Unown forms are scattered across the region(s), read things to find them all
     """
     display_name = "Goal"
     default = 0
@@ -35,6 +36,7 @@ class Goal(Choice):
     option_diploma = 2
     option_rival = 3
     option_defeat_team_rocket = 4
+    option_unown_hunt = 5
 
 
 class JohtoOnly(Choice):
@@ -652,7 +654,7 @@ class Shopsanity(EnhancedOptionSet):
     - _All: Includes all valid options.
     - _Random: Each option that is not included has a 50% chance to be additionally included.
 
-    IMPORTANT NOTE: There is a non-randomized shop on Pokecenter 2F, you can always buy Poke Balls, and Escape Ropes there.
+    IMPORTANT NOTE: There is a non-randomized shop on Pokecenter 2F, you can always buy Poke Balls and Escape Ropes there.
     """
     display_name = "Shopsanity"
     default = []
@@ -785,7 +787,7 @@ class RandomizeBugCatchingContest(Choice):
     """
     Shuffles the bug catching contest prizes into the pool
     - All: shuffles all prizes into the pool. WARNING: It can be very difficult to get second or third place.
-    - Combine second and third: Combines second and third place into a single prize. Shuffles 1st 2nd+3rd and 4th.
+    - Combine second and third: Combines second and third place into a single prize. Shuffles 1st, 2nd+3rd and 4th.
     - Participate: Shuffles a single participation award into the pool, which is obtained by completing the contest.
     """
     display_name = "Randomize Bug Catching Contest"

@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 from .data import EncounterMon, LogicalAccess, EncounterKey
 from .options import RandomizeWilds, EncounterGrouping, BreedingMethodsRequired, RandomizePokemonRequests, \
-    RandomizeTrades, EncounterSlotDistribution
+    RandomizeTrades, EncounterSlotDistribution, Goal
 from .pokemon import get_random_pokemon, get_priority_dexsanity
 from .utils import pokemon_convert_friendly_to_ids
 
@@ -14,6 +14,8 @@ if TYPE_CHECKING:
 
 def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
     if world.options.randomize_wilds and not world.is_universal_tracker:
+
+        exclude_unown = world.options.goal == Goal.option_unown_hunt
 
         world.generated_wooper = get_random_pokemon(world, exclude_unown=True)
 
@@ -84,8 +86,9 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
             logical_pokemon_pool = logical_pokemon_pool[:required_logical_pokemon]
 
         if len(logical_pokemon_pool) < required_logical_pokemon:
-            logical_pokemon_pool.extend(get_random_pokemon(world, blocklist=global_blocklist) for _ in
-                                        range(required_logical_pokemon - len(logical_pokemon_pool)))
+            logical_pokemon_pool.extend(
+                get_random_pokemon(world, blocklist=global_blocklist, exclude_unown=exclude_unown) for _ in
+                range(required_logical_pokemon - len(logical_pokemon_pool)))
 
         if (world.options.breeding_methods_required.value == BreedingMethodsRequired.option_with_ditto
                 and "DITTO" not in logical_pokemon_pool):
@@ -98,12 +101,14 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
             accessible_pokemon_pool = accessible_pokemon_pool[:required_accessible_pokemon]
 
         if len(accessible_pokemon_pool) < required_accessible_pokemon:
-            accessible_pokemon_pool.extend(get_random_pokemon(world, blocklist=global_blocklist) for _ in
-                                           range(required_accessible_pokemon - len(accessible_pokemon_pool)))
+            accessible_pokemon_pool.extend(
+                get_random_pokemon(world, blocklist=global_blocklist, exclude_unown=exclude_unown) for _ in
+                range(required_accessible_pokemon - len(accessible_pokemon_pool)))
 
         world.random.shuffle(accessible_pokemon_pool)
 
-        inaccessible_pokemon_pool = [get_random_pokemon(world, blocklist=global_blocklist) for _ in
+        inaccessible_pokemon_pool = [get_random_pokemon(world, blocklist=global_blocklist, exclude_unown=exclude_unown)
+                                     for _ in
                                      range(required_inaccessible_pokemon)]
 
         world.random.shuffle(inaccessible_pokemon_pool)
@@ -112,7 +117,7 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
             pokemon = pool.pop()
 
             if blocklist and pokemon in blocklist:
-                pokemon = get_random_pokemon(world, blocklist=blocklist | global_blocklist)
+                pokemon = get_random_pokemon(world, blocklist=blocklist | global_blocklist, exclude_unown=exclude_unown)
             return pokemon
 
         def randomize_encounter_list(region_key: EncounterKey, encounter_list: list[EncounterMon]) -> list[
@@ -169,6 +174,9 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
     else:
         wild_pokemon = set()
         for region_key, wilds in world.generated_wild.items():
+            if world.options.goal.value == Goal.option_unown_hunt and any(wild.pokemon == "UNOWN" for wild in wilds):
+                wilds = [replace(wild, pokemon="RATTATA") for wild in wilds]
+                world.generated_wild[region_key] = wilds
             access = world.logic.wild_regions[region_key]
             if access is LogicalAccess.InLogic:
                 wild_pokemon.update(wild.pokemon for wild in wilds)

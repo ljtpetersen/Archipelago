@@ -26,11 +26,11 @@ from .music import randomize_music
 from .options import PokemonCrystalOptions, JohtoOnly, RandomizeBadges, HMBadgeRequirements, FreeFlyLocation, \
     EliteFourRequirement, MtSilverRequirement, RedRequirement, \
     Route44AccessRequirement, RadioTowerRequirement, RequireItemfinder, \
-    OPTION_GROUPS, RandomizeFlyUnlocks, Shopsanity, Grasssanity
+    OPTION_GROUPS, RandomizeFlyUnlocks, Shopsanity, Grasssanity, Goal
 from .phone import generate_phone_traps
 from .phone_data import PhoneScript
 from .pokemon import randomize_pokemon_data, randomize_starters, randomize_traded_pokemon, \
-    fill_wild_encounter_locations, randomize_requested_pokemon, fill_trade_locations
+    fill_wild_encounter_locations, randomize_requested_pokemon, fill_trade_locations, randomize_unown_signs
 from .regions import create_regions, setup_free_fly_regions
 from .rom import generate_output, PokemonCrystalProcedurePatch
 from .rules import set_rules, PokemonCrystalLogic, verify_hm_accessibility
@@ -123,6 +123,7 @@ class PokemonCrystalWorld(World):
     generated_starter_helditems: tuple[str, str, str]
     generated_palettes: dict[str, list[int]]
     generated_request_pokemon: list[str]
+    generated_unown_signs: dict[str, str]
 
     generated_music: MusicData
     generated_misc: MiscData
@@ -173,6 +174,7 @@ class PokemonCrystalWorld(World):
         self.generated_misc = replace(crystal_data.misc)
         self.generated_phone_traps = []
         self.generated_phone_indices = []
+        self.generated_unown_signs = {}
 
         self.trainer_name_list = []
         self.trainer_level_list = []
@@ -208,6 +210,7 @@ class PokemonCrystalWorld(World):
 
             randomize_move_types(self)
             randomize_pokemon_data(self)
+            randomize_unown_signs(self)
 
         self.logic.set_hm_compatible_pokemon(self)
 
@@ -297,6 +300,12 @@ class PokemonCrystalWorld(World):
             add_items.extend(
                 ["RED_APRICORN", "GRN_APRICORN", "BLU_APRICORN", "YLW_APRICORN", "PNK_APRICORN", "BLK_APRICORN",
                  "WHT_APRICORN"])
+
+        if self.options.goal == Goal.option_unown_hunt:
+            add_items.extend(["KABUTO_TILE"] * 16)
+            add_items.extend(["OMANYTE_TILE"] * 16)
+            add_items.extend(["AERO_TILE"] * 16)
+            add_items.extend(["HO_OH_TILE"] * 16)
 
         trap_names, trap_weights = zip(
             ("Phone Trap", self.options.phone_trap_weight.value),
@@ -682,6 +691,8 @@ class PokemonCrystalWorld(World):
                                            self.get_locations() if
                                            location.item.player == self.player and "Trap" in location.item.tags}
 
+        slot_data["unown_signs"] = self.generated_unown_signs
+
         return slot_data
 
     def modify_multidata(self, multidata: dict[str, Any]):
@@ -691,6 +702,12 @@ class PokemonCrystalWorld(World):
 
     def write_spoiler(self, spoiler_handle) -> None:
         spoiler_handle.write(f"\nPokemon Crystal ({self.player_name}):\n")
+
+        if self.options.goal == Goal.option_unown_hunt:
+            spoiler_handle.write("Unown locations:\n")
+            for sign, unown in self.generated_unown_signs.items():
+                spoiler_handle.write(f"{sign}: {unown.replace("_", " ")}\n")
+            spoiler_handle.write("\n")
 
         if self.options.randomize_starters:
             spoiler_handle.write("Starters: ")

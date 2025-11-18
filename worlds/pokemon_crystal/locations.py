@@ -107,6 +107,27 @@ def create_locations(world: "PokemonCrystalWorld", regions: dict[str, Region]) -
                     location.show_in_spoiler = False
                     region.locations.append(location)
 
+            if world.options.goal == Goal.option_unown_hunt:
+                for sign in region_data.signs:
+                    if sign not in world.generated_unown_signs: continue
+                    location = PokemonCrystalLocation(
+                        world.player,
+                        f"{sign}_Encounter",
+                        region
+                    )
+                    location.show_in_spoiler = False
+                    location.place_locked_item(world.create_event("UNOWN"))
+                    region.locations.append(location)
+
+                    location = PokemonCrystalLocation(
+                        world.player,
+                        sign,
+                        region
+                    )
+                    location.show_in_spoiler = False
+                    location.place_locked_item(world.create_event(world.generated_unown_signs[sign]))
+                    region.locations.append(location)
+
     if world.options.dexsanity:
         if not world.is_universal_tracker:
             pokemon_items = sorted(list(world.logic.available_pokemon))

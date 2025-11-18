@@ -3,7 +3,7 @@ from collections.abc import Iterable
 from typing import TYPE_CHECKING
 
 from Options import Toggle
-from .data import data, StartingTown, FlyRegion, CUSTOM_MART_SLOT_NAMES
+from .data import data, StartingTown, FlyRegion, CUSTOM_MART_SLOT_NAMES, RegionData
 from .options import FreeFlyLocation, Route32Condition, JohtoOnly, RandomizeBadges, UndergroundsRequirePower, \
     Route3Access, EliteFourRequirement, Goal, Route44AccessRequirement, BlackthornDarkCaveAccess, RedRequirement, \
     MtSilverRequirement, HMBadgeRequirements, RedGyaradosAccess, EarlyFly, RadioTowerRequirement, \
@@ -315,6 +315,15 @@ def __adjust_options_traps(world: "PokemonCrystalWorld"):
             world.player_name
         )
         world.options.filler_trap_percentage.value = maximum_trap_weight
+
+
+def should_include_region(region: RegionData, world: "PokemonCrystalWorld"):
+    # check if region should be included
+    return (region.johto
+            or world.options.johto_only.value == JohtoOnly.option_off
+            or (region.silver_cave and world.options.johto_only == JohtoOnly.option_include_silver_cave)) and (
+            not world.options.skip_elite_four or not region.elite_4
+    )
 
 
 def pokemon_convert_friendly_to_ids(world: "PokemonCrystalWorld", pokemon: Iterable[str]) -> set[str]:

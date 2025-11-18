@@ -324,6 +324,10 @@ class PokemonCrystalClient(BizHawkClient):
             ]
             if ctx.slot_data["johto_only"] == JohtoOnly.option_off:
                 self.goal_flags.append(data.event_flags["EVENT_ROUTE_24_ROCKET"])
+        elif ctx.slot_data["goal"] == Goal.option_unown_hunt:
+            self.goal_flags = [
+                data.event_flags["EVENT_GOT_ALL_UNOWN"]
+            ]
         else:
             self.goal_flags = [data.event_flags["EVENT_BEAT_RED"]]
 

@@ -97,3 +97,4 @@ def load_ut_slot_data(world: "PokemonCrystalWorld"):
                                                 tm_hm=[LOGIC_MOVES[hm_index] for hm_index in hms])
 
     world.grass_location_mapping = world.ut_slot_data["grass_location_mapping"]
+    world.generated_unown_signs = world.ut_slot_data["unown_signs"]
