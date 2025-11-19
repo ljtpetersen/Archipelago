@@ -1943,6 +1943,13 @@ class TrainerPalette(Choice):
     option_brown = 4
 
 
+class ProgressiveRods(Toggle):
+    """
+    Sets whether fishing rods are always received in order (Old -> Good -> Super)
+    """
+    display_name = "Progressive Rods"
+
+
 class PokemonCrystalDeathLink(DeathLink):
     __doc__ = DeathLink.__doc__ + "\n\n    In Pokemon Crystal, whiting out sends a death and receiving a death causes you to white out."
 
@@ -2093,6 +2100,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     trap_link: TrapLink
     require_pokegear_for_phone_numbers: RequirePokegearForPhoneNumbers
     trainer_palette: TrainerPalette
+    progressive_rods: ProgressiveRods
 
 
 OPTION_GROUPS = [
@@ -2266,6 +2274,7 @@ OPTION_GROUPS = [
          TrainerName,
          FieldMoveMenuOrder,
          DefaultPokedexMode,
+         ProgressiveRods,
          RequirePokegearForPhoneNumbers,
          PokemonCrystalDeathLink]
     ),

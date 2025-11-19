@@ -1008,12 +1008,14 @@
       "KeyItem"
     ]
   },
-  "EGG_TICKET": {
-    "name": "Egg Ticket",
-    "classification": "FILLER",
+  "PROG_ROD": {
+    "name": "Progressive Rod",
+    "classification": "PROGRESSION",
     "price": 0,
     "tags": [
-      "INVALID"
+      "Key Items",
+      "Tracker",
+      "KeyItem"
     ]
   },
   "LOST_ITEM": {

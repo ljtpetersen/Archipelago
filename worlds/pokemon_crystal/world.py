@@ -291,7 +291,10 @@ class PokemonCrystalWorld(World):
             add_items.extend(kanto_badges[:required_badges - 8])
 
         if self.options.johto_only:
-            add_items.append("SUPER_ROD")
+            if self.options.progressive_rods:
+                add_items.append("PROG_ROD")
+            else:
+                add_items.append("SUPER_ROD")
 
         if Shopsanity.blue_card in self.options.shopsanity.value:
             add_items.extend(["BLUE_CARD_PT"] * 5)
@@ -349,6 +352,11 @@ class PokemonCrystalWorld(World):
             # Replace the S.S. Ticket with the Silver Wing for Johto only seeds
             self.itempool = [item if item.name != "S.S. Ticket" else self.create_item_by_const_name("SILVER_WING")
                              for item in self.itempool]
+
+        if self.options.progressive_rods:
+            self.itempool = [
+                item if item.name not in ("Old Rod", "Good Rod", "Super Rod") else self.create_item_by_const_name(
+                    "PROG_ROD") for item in self.itempool]
 
         x_items_to_remove = place_x_items(self)
         if x_items_to_remove:

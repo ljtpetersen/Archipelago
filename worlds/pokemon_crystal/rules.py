@@ -212,11 +212,18 @@ class PokemonCrystalLogic:
             else:
                 self.phone_call_components = ("EVENT_GOT_POKEGEAR", "EVENT_GOT_PHONE_CARD", "EVENT_CHANGE_DST")
 
-        self.fishing_rod_rules = {
-            FishingRodType.Old: lambda state: state.has("Old Rod", self.player),
-            FishingRodType.Good: lambda state: state.has("Good Rod", self.player),
-            FishingRodType.Super: lambda state: state.has("Super Rod", self.player)
-        }
+        if world.options.progressive_rods:
+            self.fishing_rod_rules = {
+                FishingRodType.Old: lambda state: state.has("Progressive Rod", self.player),
+                FishingRodType.Good: lambda state: state.has("Progressive Rod", self.player, 2),
+                FishingRodType.Super: lambda state: state.has("Progressive Rod", self.player, 3),
+            }
+        else:
+            self.fishing_rod_rules = {
+                FishingRodType.Old: lambda state: state.has("Old Rod", self.player),
+                FishingRodType.Good: lambda state: state.has("Good Rod", self.player),
+                FishingRodType.Super: lambda state: state.has("Super Rod", self.player),
+            }
 
     def has_badge(self, state: CollectionState, badge: str):
         return state.has(self.badge_items[badge], self.player)
@@ -648,13 +655,13 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     if world.options.goal == Goal.option_unown_hunt:
         set_rule(get_location("EVENT_GOT_ALL_UNOWN"), lambda state: state.has_all(ALL_UNOWN, world.player))
         set_rule(get_location("ENGINE_UNLOCKED_UNOWNS_A_TO_K"),
-                 lambda state: state.count("Kabuto Tile", world.player) >= 16)
+                 lambda state: state.has("Kabuto Tile", world.player, 16))
         set_rule(get_location("ENGINE_UNLOCKED_UNOWNS_L_TO_R"),
-                 lambda state: state.count("Aerodactyl Tile", world.player) >= 16)
+                 lambda state: state.has("Aerodactyl Tile", world.player, 16))
         set_rule(get_location("ENGINE_UNLOCKED_UNOWNS_S_TO_W"),
-                 lambda state: state.count("Omanyte Tile", world.player) >= 16)
+                 lambda state: state.has("Omanyte Tile", world.player, 16))
         set_rule(get_location("ENGINE_UNLOCKED_UNOWNS_X_TO_Z"),
-                 lambda state: state.count("Ho-Oh Tile", world.player) >= 16)
+                 lambda state: state.has("Ho-Oh Tile", world.player, 16))
 
     # Route 32
     route_32_access_rule = world.logic.has_route_32_condition()
