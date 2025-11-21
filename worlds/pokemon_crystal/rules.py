@@ -1601,8 +1601,9 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
             set_rule(get_entrance("REGION_VERMILION_CITY -> REGION_VERMILION_GYM"),
                      lambda state: can_cut_kanto(state) or can_surf_kanto(state))
 
+        kanto_badges = list(world.logic.badge_items.values())[8:]
         set_rule(get_location("Vermilion City - HP Up from Man nowhere near PokeCenter"),
-                 lambda state: world.logic.has_n_badges(state, 16))
+                 lambda state: state.has_all(kanto_badges, world.player))
 
         set_rule(get_location("Vermilion City - Lost Item from Guy in Fan Club"),
                  lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
