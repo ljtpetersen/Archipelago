@@ -447,6 +447,15 @@ class SSAquaAccess(Choice):
     option_lighthouse_and_ticket = 1
 
 
+class Route30Battle(Choice):
+    """
+    Sets which directions the battle on Route 30 blocks
+    """
+    default = 0
+    option_blocks_northbound = 0
+    option_blocks_both = 1
+
+
 class JohtoTrainersanity(NamedRange):
     """
     Adds checks for defeating Johto trainers.
@@ -1990,6 +1999,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     mount_mortar_access: MountMortarAccess
     route_12_access: Route12Access
     ss_aqua_access: SSAquaAccess
+    route_30_battle: Route30Battle
     johto_trainersanity: JohtoTrainersanity
     kanto_trainersanity: KantoTrainersanity
     rematchsanity: Rematchsanity
@@ -2135,7 +2145,8 @@ OPTION_GROUPS = [
          VanillaClair,
          Route12Access,
          MagnetTrainAccess,
-         SSAquaAccess]
+         SSAquaAccess,
+         Route30Battle]
     ),
     OptionGroup(
         "Items",

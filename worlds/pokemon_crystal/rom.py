@@ -1161,6 +1161,27 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
     if world.options.goal == Goal.option_unown_hunt:
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_AlphPuzzlesLocked"] + 1)
 
+    if world.options.route_30_battle:
+        standing_left = 8
+        standing_right = 9
+
+        write_bytes(patch, [27, 6, standing_right], data.rom_addresses["AP_Setting_Route30Battle_Joey"] + 1)
+        write_bytes(patch, [standing_left], data.rom_addresses["AP_Setting_Route30Battle_Mikey"] + 3)
+        write_bytes(patch, [27, 8, standing_left], data.rom_addresses["AP_Setting_Route30Battle_MikeysMon"] + 1)
+        write_bytes(patch, [27, 7, standing_right], data.rom_addresses["AP_Setting_Route30Battle_JoeysMon"] + 1)
+
+        left = 2
+        move_left = 16 | left
+        right = 3
+        move_right = 16 | right
+        write_bytes(patch, [move_right], data.rom_addresses["AP_Setting_Route30Battle_JoeysMonAttacks1"])
+        write_bytes(patch, [move_left], data.rom_addresses["AP_Setting_Route30Battle_JoeysMonAttacks2"])
+        write_bytes(patch, [move_left], data.rom_addresses["AP_Setting_Route30Battle_MikeysMonAttacks1"])
+        write_bytes(patch, [move_right], data.rom_addresses["AP_Setting_Route30Battle_MikeysMonAttacks2"])
+
+        write_bytes(patch, [right], data.rom_addresses["AP_Setting_Route30Battle_JoeyTurn"] + 2)
+        write_bytes(patch, [left], data.rom_addresses["AP_Setting_Route30Battle_MikeyTurn"] + 2)
+
     # Set slot auth
     ap_version_text = convert_to_ingame_text(data.manifest.world_version)[:19]
     ap_version_text.append(0x50)

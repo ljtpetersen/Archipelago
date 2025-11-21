@@ -4532,31 +4532,21 @@
       "REGION_CHERRYGROVE_CITY",
       "REGION_ROUTE_30_BERRY_HOUSE",
       "REGION_MR_POKEMONS_HOUSE",
-      "REGION_ROUTE_30:NORTHWEST"
+      "REGION_ROUTE_30:NORTHWEST",
+      "REGION_ROUTE_30:POST_MYSTERY_EGG"
     ],
-    "trainers": [
-      "YOUNGSTER_MIKEY",
-      "YOUNGSTER_JOEY",
-      "YOUNGSTER_JOEY_GOLDENROD",
-      "YOUNGSTER_JOEY_OLIVINE",
-      "YOUNGSTER_JOEY_RADIO",
-      "YOUNGSTER_JOEY_CHAMPION"
-    ],
+    "trainers": [],
     "locations": [
       "ROUTE_30_ANTIDOTE",
       "ROUTE_30_HIDDEN_POTION",
-      "ITEM_FROM_YOUNGSTER_MIKEY",
-      "ITEM_FROM_YOUNGSTER_JOEY",
       "FRUITTREE_ROUTE_30_1",
-      "FRUITTREE_ROUTE_30_2",
-      "HP_UP_FROM_JOEY"
+      "FRUITTREE_ROUTE_30_2"
     ],
     "events": [],
     "signs": [
       "Route30",
       "MrPokemonsHouseDirections",
-      "MrPokemonsHouse",
-      "Route30TrainerTips"
+      "MrPokemonsHouse"
     ],
     "wild_encounters": {
       "grass": "ROUTE_30",
@@ -4578,10 +4568,31 @@
       "ITEM_FROM_BUG_CATCHER_DON"
     ],
     "events": [],
+    "signs": [
+      "Route30TrainerTips"
+    ],
     "wild_encounters": {
       "grass": "ROUTE_30",
       "headbutt": "Route"
     }
+  },
+  "REGION_ROUTE_30:POST_MYSTERY_EGG": {
+    "johto": true,
+    "exits": [],
+    "trainers": [
+      "YOUNGSTER_MIKEY",
+      "YOUNGSTER_JOEY",
+      "YOUNGSTER_JOEY_GOLDENROD",
+      "YOUNGSTER_JOEY_OLIVINE",
+      "YOUNGSTER_JOEY_RADIO",
+      "YOUNGSTER_JOEY_CHAMPION"
+    ],
+    "locations": [
+      "ITEM_FROM_YOUNGSTER_MIKEY",
+      "ITEM_FROM_YOUNGSTER_JOEY",
+      "HP_UP_FROM_JOEY"
+    ],
+    "events": []
   },
   "REGION_ROUTE_30_BERRY_HOUSE": {
     "johto": true,
