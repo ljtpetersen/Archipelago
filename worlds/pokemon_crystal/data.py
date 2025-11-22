@@ -878,6 +878,7 @@ class PaletteData:
 class UnownSignData:
     name: str
     address: int
+    id: int
 
 
 @dataclass(frozen=True)
@@ -1396,7 +1397,8 @@ def _init() -> None:
     unown_signs = {
         sign_data["name"]: UnownSignData(
             name=sign_data["name"],
-            address=rom_address_data[sign_data["address"]]
+            address=rom_address_data[sign_data["address"]],
+            id=sign_data["id"]
         ) for sign_data in data_json["unown_signs"]
     }
 

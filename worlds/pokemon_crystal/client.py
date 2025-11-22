@@ -17,6 +17,7 @@ EVENT_BYTES = math.ceil(max(data.event_flags.values()) / 8)
 DEX_BYTES = math.ceil(len(data.pokemon) / 8)
 GRASS_BYTES = math.ceil(sum(len(tiles) for tiles in data.grass_tiles.values()) / 8)
 TRADE_BYTES = math.ceil(len(data.trades) / 8)
+SIGN_BYTES = math.ceil(len(data.unown_signs) / 8)
 
 TRACKER_EVENT_FLAGS = [
     "EVENT_GOT_KENYA",
@@ -172,6 +173,8 @@ HINT_FLAG_MAP = {data.event_flags[flag_name]: flag_name for flag_name in HINT_FL
 TRAP_ID_TO_NAME = {item.item_id: item.label for item in data.items.values() if "Trap" in item.tags}
 TRAP_NAME_TO_ID = {item_name: item_id for item_id, item_name in TRAP_ID_TO_NAME.items()}
 
+SIGN_ID_TO_NAME = {sign.id: sign.name for sign in data.unown_signs.values()}
+
 
 class PokemonCrystalClient(BizHawkClient):
     game = data.manifest.game
@@ -197,6 +200,7 @@ class PokemonCrystalClient(BizHawkClient):
     notify_setup_complete: bool
     remote_seen_pokemon: set[int]
     remote_caught_pokemon: set[int]
+    local_seen_signs: set[str]
 
     def initialize_client(self) -> None:
         self.local_checked_locations = set()
@@ -218,6 +222,7 @@ class PokemonCrystalClient(BizHawkClient):
         self.notify_setup_complete = False
         self.remote_seen_pokemon = set()
         self.remote_caught_pokemon = set()
+        self.local_seen_signs = set()
 
     async def validate_rom(self, ctx: "BizHawkClientContext") -> bool:
         from CommonClient import logger
@@ -386,7 +391,9 @@ class PokemonCrystalClient(BizHawkClient):
                  (data.ram_addresses["wArchipelagoPokedexCaught"], DEX_BYTES, "WRAM"),
                  (data.ram_addresses["wArchipelagoPokedexSeen"], DEX_BYTES, "WRAM"),
                  (data.ram_addresses["wArchipelagoGrassFlags"], GRASS_BYTES, "WRAM"),
-                 (data.ram_addresses["wArchipelagoTradeFlags"], TRADE_BYTES, "WRAM")],
+                 (data.ram_addresses["wArchipelagoTradeFlags"], TRADE_BYTES, "WRAM"),
+                 (data.ram_addresses["wArchipelagoSignFlags"], SIGN_BYTES, "WRAM"),
+                 (data.ram_addresses["wMapGroup"], 2, "WRAM")],
                 [overworld_guard]
             )
 
@@ -397,6 +404,8 @@ class PokemonCrystalClient(BizHawkClient):
             pokedex_seen_bytes = read_result[2]
             grass_cut_bytes = read_result[3]
             trade_bytes = read_result[4]
+            sign_bytes = read_result[5]
+            current_map_bytes = read_result[6]
 
             local_checked_locations = set()
             local_set_events = {flag_name: False for flag_name in TRACKER_EVENT_FLAGS}
@@ -682,21 +691,34 @@ class PokemonCrystalClient(BizHawkClient):
                             "create_as_hint": 2
                         }])
 
+            local_seen_signs = set()
+
+            for byte_i, byte in enumerate(sign_bytes):
+                for i in range(8):
+                    if byte & (1 << i):
+                        sign_id = (byte_i * 8 + i)
+                        sign_name = SIGN_ID_TO_NAME[sign_id]
+                        local_seen_signs.add(sign_name)
+
+            if local_seen_signs != self.local_seen_signs:
+                await ctx.send_msgs([{
+                    "cmd": "Set",
+                    "key": f"pokemon_crystal_signs_{ctx.team}_{ctx.slot}",
+                    "default": [],
+                    "want_reply": ctx.items_handling & 0b010,
+                    "operations": [{"operation": "update" if ctx.items_handling & 0b010 else "replace",
+                                    "value": list(local_seen_signs)}, ]
+                }])
+                self.local_seen_signs = local_seen_signs
+
             await self.handle_death_link(ctx, overworld_guard)
 
-            read_result = await bizhawk.guarded_read(
-                ctx.bizhawk_ctx,
-                [(data.ram_addresses["wMapGroup"], 2, "WRAM")],  # Current Map
-                [overworld_guard]
-            )
-
-            if read_result is not None:
-                current_map = [int(x) for x in read_result[0]]
-                if self.current_map != current_map:
-                    self.current_map = current_map
-                    message = [{"cmd": "Bounce", "slots": [ctx.slot],
-                                "data": {"mapGroup": current_map[0], "mapNumber": current_map[1]}}]
-                    await ctx.send_msgs(message)
+            current_map = [int(x) for x in current_map_bytes]
+            if self.current_map != current_map:
+                self.current_map = current_map
+                message = [{"cmd": "Bounce", "slots": [ctx.slot],
+                            "data": {"mapGroup": current_map[0], "mapNumber": current_map[1]}}]
+                await ctx.send_msgs(message)
 
             if ctx.items_handling & 0b010:
 
