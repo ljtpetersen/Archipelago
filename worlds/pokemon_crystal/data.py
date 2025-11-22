@@ -815,7 +815,7 @@ class MapEnvironment(IntEnum):
     Route = 2
     Indoor = 3
     Cave = 4
-    Unused = 5
+    IndoorEscapable = 5
     Gate = 6
     Dungeon = 7
 
@@ -825,7 +825,7 @@ class MapEnvironment(IntEnum):
         if map_env_string == "ROUTE": return MapEnvironment.Route
         if map_env_string == "INDOOR": return MapEnvironment.Indoor
         if map_env_string == "CAVE": return MapEnvironment.Cave
-        if map_env_string == "ENVIRONMENT_5": return MapEnvironment.Unused
+        if map_env_string == "INDOOR_ESCAPABLE": return MapEnvironment.IndoorEscapable
         if map_env_string == "GATE": return MapEnvironment.Gate
         if map_env_string == "DUNGEON": return MapEnvironment.Dungeon
         raise ValueError(f"Invalid map environment string: {map_env_string}")
