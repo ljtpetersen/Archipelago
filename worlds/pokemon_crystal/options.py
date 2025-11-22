@@ -9,8 +9,14 @@ from .maps import FLASH_MAP_GROUPS
 class EnhancedOptionSet(OptionSet):
 
     def __init__(self, value):
-        if isinstance(value, list) and "_All" in value:
-            value = [k for k in self.valid_keys if not k.startswith("_")]
+        if isinstance(value, list):
+            value = [x.title() if x.title() in ('_All', '_Random') else x for x in value]
+
+            if "_All" in value:
+                value = [k for k in self.valid_keys if not k.startswith("_")]
+            elif "_Random" in value:
+                import random
+                value = [random.choice([k for k in self.valid_keys if not k.startswith("_")])]
         super().__init__(value)
 
     def __init_subclass__(cls, **kwargs):
@@ -313,8 +319,8 @@ class DarkAreas(EnhancedOptionSet):
     """
     Sets which areas are dark until Flash is used
 
-- _All includes all areas
-- _Random has a 50% chance to include each area that is not already included
+    - _All includes all areas
+    - _Random has a 50% chance to include each area that is not already included
     """
     display_name = "Dark Areas"
     default = sorted(area for area, maps in FLASH_MAP_GROUPS.items() if data.maps[maps[0]].palette is MapPalette.Dark)
