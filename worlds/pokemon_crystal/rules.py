@@ -957,7 +957,7 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     if "Bug Catching Contest" not in world.options.wild_encounter_methods_required and world.is_universal_tracker:
         for i in range(len(world.generated_contest)):
             set_rule(get_location(f"Bug Catching Contest Slot {i + 1}"),
-                     lambda state: state.has(PokemonCrystalGlitchedToken.TOKEN_NAME))
+                     lambda state: state.has(PokemonCrystalGlitchedToken.TOKEN_NAME, world.player))
 
     if rematchsanity():
         set_rule(get_location("SCHOOLBOY_JACK_OLIVINE"),
