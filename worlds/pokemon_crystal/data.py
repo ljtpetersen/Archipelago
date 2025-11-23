@@ -456,6 +456,7 @@ class MiscOption(IntEnum):
     WhirlDexLocations = auto()
     Farfetchd = auto()
     DarkAreas = auto()
+    VermilionGym = auto()
 
 
 @dataclass(frozen=True)

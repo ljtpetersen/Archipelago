@@ -659,6 +659,12 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         if MiscOption.DarkAreas.value in world.generated_misc.selected:
             write_bytes(patch, [1], data.rom_addresses["AP_Misc_DarkAreas"] + 1)
 
+        if MiscOption.VermilionGym.value in world.generated_misc.selected:
+            write_bytes(patch, [0], data.rom_addresses["AP_Misc_VermilionGymSwitch1"] + 2)
+            write_bytes(patch, [0], data.rom_addresses["AP_Misc_VermilionGymSwitch2"] + 2)
+            write_bytes(patch, [1], data.rom_addresses["AP_Misc_VermilionGymTraps_1"] + 1)
+            write_bytes(patch, [1], data.rom_addresses["AP_Misc_VermilionGymTraps_2"] + 1)
+
     if world.options.reusable_tms:
         address = data.rom_addresses["AP_Setting_ReusableTMs"] + 1
         write_bytes(patch, [1], address)
