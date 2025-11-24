@@ -1,3 +1,4 @@
+import logging
 import pkgutil
 from collections import defaultdict
 from collections.abc import Sequence, Mapping
@@ -1431,6 +1432,8 @@ def _init() -> None:
             id=sign_data["id"]
         ) for sign_data in data_json["unown_signs"]
     }
+
+    logging.warning(len(unown_signs))
 
     global data
     data = PokemonCrystalData(
