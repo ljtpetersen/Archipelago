@@ -398,6 +398,7 @@
     "exits": [
       "REGION_CELADON_DEPT_STORE_1F",
       "REGION_CELADON_MANSION_1F",
+      "REGION_CELADON_MANSION_1F:STAIRWELL",
       "REGION_CELADON_POKECENTER_1F",
       "REGION_CELADON_GAME_CORNER",
       "REGION_CELADON_GAME_CORNER_PRIZE_ROOM",
@@ -602,6 +603,18 @@
     "locations": [
       "CELADON_MANSION_1F_TEA"
     ],
+    "events": [],
+    "signs": [
+      "CeladonMansionManagersSuiteSign"
+    ]
+  },
+  "REGION_CELADON_MANSION_1F:STAIRWELL": {
+    "johto": false,
+    "exits": [
+      "REGION_CELADON_CITY",
+      "REGION_CELADON_MANSION_2F:STAIRWELL"
+    ],
+    "locations": [],
     "events": []
   },
   "REGION_CELADON_MANSION_2F": {
@@ -609,6 +622,18 @@
     "exits": [
       "REGION_CELADON_MANSION_1F",
       "REGION_CELADON_MANSION_3F"
+    ],
+    "locations": [],
+    "events": [],
+    "signs": [
+      "CeladonMansion2FMeetingRoomSign"
+    ]
+  },
+  "REGION_CELADON_MANSION_2F:STAIRWELL": {
+    "johto": false,
+    "exits": [
+      "REGION_CELADON_MANSION_1F:STAIRWELL",
+      "REGION_CELADON_MANSION_3F:STAIRWELL"
     ],
     "locations": [],
     "events": []
@@ -622,13 +647,24 @@
     "locations": [],
     "events": [
       "EVENT_OBTAINED_DIPLOMA"
+    ],
+    "signs": [
+      "CeladonMansion3FDevRoomSign"
     ]
+  },
+  "REGION_CELADON_MANSION_3F:STAIRWELL": {
+    "johto": false,
+    "exits": [
+      "REGION_CELADON_MANSION_2F:STAIRWELL",
+      "REGION_CELADON_MANSION_ROOF:HOUSE"
+    ],
+    "locations": [],
+    "events": []
   },
   "REGION_CELADON_MANSION_ROOF": {
     "johto": false,
     "exits": [
-      "REGION_CELADON_MANSION_3F",
-      "REGION_CELADON_MANSION_ROOF_HOUSE"
+      "REGION_CELADON_MANSION_3F"
     ],
     "locations": [],
     "events": [],
@@ -636,10 +672,19 @@
       "CeladonMansionRoofGraffiti"
     ]
   },
+  "REGION_CELADON_MANSION_ROOF:HOUSE": {
+    "johto": false,
+    "exits": [
+      "REGION_CELADON_MANSION_3F:STAIRWELL",
+      "REGION_CELADON_MANSION_ROOF_HOUSE"
+    ],
+    "locations": [],
+    "events": []
+  },
   "REGION_CELADON_MANSION_ROOF_HOUSE": {
     "johto": false,
     "exits": [
-      "REGION_CELADON_MANSION_ROOF"
+      "REGION_CELADON_MANSION_ROOF:HOUSE"
     ],
     "locations": [
       "TM03_CURSE"
