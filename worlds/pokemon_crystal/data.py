@@ -500,20 +500,20 @@ class MiscData:
          MiscOption.WhirlDexLocations,
          MiscOption.Farfetchd,
          MiscOption.DarkAreas]
-    )
+                                       )
     wild: Sequence[MiscOption] = field(default_factory=lambda: \
         [MiscOption.SecretSwitch,
-         MiscOption.OhkoMoves, # Not "that bad" but can happen multiple times over an entire run
+         MiscOption.OhkoMoves,  # Not "that bad" but can happen multiple times over an entire run
          MiscOption.TooManyDogs,
          MiscOption.VermilionGym]
-    )
+                                       )
     dynamic: Sequence[MiscOption] = field(default_factory=lambda: [])
 
     assert len(set(tame.default_factory() + \
                    wild.default_factory() + \
                    dynamic.default_factory())) \
            == max(list(MiscOption)).value, \
-            "Misc options are not properly categorized. Each must be assigned to one of 'tame', 'wild' or 'dynamic'."
+        "Misc options are not properly categorized. Each must be assigned to one of 'tame', 'wild' or 'dynamic'."
 
 
 @dataclass(frozen=True)
