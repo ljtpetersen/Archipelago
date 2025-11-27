@@ -179,12 +179,7 @@ def template_call_remote(location: Location, world):
     }
 
     raw_game_name = location.item.game.upper()
-
-    if raw_game_name in POKEMON_REGIONS:
-        game_name = POKEMON_REGIONS[raw_game_name]
-    else:
-        game_name = raw_game_name
-        
+    game_name = POKEMON_REGIONS.get(raw_game_name, raw_game_name)
     game_name = (game_name[:15] + "…") if len(game_name) > 16 else game_name
 
     player_name = world.multiworld.player_name[player].upper()

@@ -1,5 +1,5 @@
 import logging
-from collections.abc import Iterable
+from collections.abc import Iterable, Sequence
 from typing import TYPE_CHECKING
 
 from Options import Toggle
@@ -501,7 +501,7 @@ def get_mart_slot_location_name(mart: str, index: int):
         return f"Shop Item {index + 1}"
 
 
-def convert_to_ingame_text(text: str):
+def convert_to_ingame_text(text: str) -> Sequence[int]:
     charmap = {
         "…": 0x75, " ": 0x7f, "A": 0x80, "B": 0x81, "C": 0x82, "D": 0x83, "E": 0x84, "F": 0x85, "G": 0x86, "H": 0x87,
         "I": 0x88, "J": 0x89, "K": 0x8a, "L": 0x8b, "M": 0x8c, "N": 0x8d, "O": 0x8e, "P": 0x8f, "Q": 0x90, "R": 0x91,
@@ -514,7 +514,7 @@ def convert_to_ingame_text(text: str):
         ",": 0xf4, "0": 0xf6, "1": 0xf7, "2": 0xf8, "3": 0xf9, "4": 0xfa, "5": 0xfb, "6": 0xfc, "7": 0xfd, "8": 0xfe,
         "9": 0xff, "_": 0xe3, "♀": 0xf5
     }
-    return [charmap[char] if char in charmap else charmap["?"] for char in text]
+    return [charmap.get(char, charmap["?"]) for char in text]
 
 
 def bound(value: int, lower_bound: int, upper_bound: int) -> int:

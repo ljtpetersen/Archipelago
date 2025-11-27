@@ -318,6 +318,9 @@ class PokemonCrystalWorld(World):
             if self.options.johto_only != JohtoOnly.option_off:
                 add_items.extend(["TM_3", "TM_6", "TM_7", "TM_17", "TM_19", "TM_29", "TM_42", "TM_47"])
 
+        if MiscOption.UnLuckyEgg.value in self.generated_misc.selected:
+            add_items.append("LUCKY_EGG")
+
         trap_names, trap_weights = zip(
             ("Phone Trap", self.options.phone_trap_weight.value),
             ("Sleep Trap", self.options.sleep_trap_weight.value),

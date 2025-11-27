@@ -457,6 +457,7 @@ class MiscOption(IntEnum):
     Farfetchd = auto()
     DarkAreas = auto()
     VermilionGym = auto()
+    UnLuckyEgg = auto()
 
 
 @dataclass(frozen=True)
@@ -505,7 +506,8 @@ class MiscData:
         [MiscOption.SecretSwitch,
          MiscOption.OhkoMoves,  # Not "that bad" but can happen multiple times over an entire run
          MiscOption.TooManyDogs,
-         MiscOption.VermilionGym]
+         MiscOption.VermilionGym,
+         MiscOption.UnLuckyEgg]
                                        )
     dynamic: Sequence[MiscOption] = field(default_factory=lambda: [])
 

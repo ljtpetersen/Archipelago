@@ -665,6 +665,10 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
             write_bytes(patch, [1], data.rom_addresses["AP_Misc_VermilionGymTraps_1"] + 1)
             write_bytes(patch, [1], data.rom_addresses["AP_Misc_VermilionGymTraps_2"] + 1)
 
+        if MiscOption.UnLuckyEgg.value in world.generated_misc.selected:
+            write_bytes(patch, [1], data.rom_addresses["AP_Misc_UnLuckyEgg"] + 1)
+            write_bytes(patch, convert_to_ingame_text("?"), data.rom_addresses["AP_Misc_LuckyEggDesc"] + 7)
+
     if world.options.reusable_tms:
         address = data.rom_addresses["AP_Setting_ReusableTMs"] + 1
         write_bytes(patch, [1], address)
