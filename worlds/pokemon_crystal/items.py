@@ -63,7 +63,7 @@ def item_const_name_to_label(const_name):
     return CONST_NAME_TO_LABEL.get(const_name, "Poke Ball")
 
 
-def get_random_filler_item(world: "PokemonCrystalWorld"):
+def get_random_filler_item(world: "PokemonCrystalWorld") -> str:
     if world.options.item_pool_fill == ItemPoolFill.option_balanced:
         weighted_pool = [["RARE_CANDY", "ETHER", "ELIXER", "MAX_ETHER", "MAX_ELIXER", "MYSTERYBERRY",
                           "WATER_STONE", "FIRE_STONE", "THUNDERSTONE", "LEAF_STONE", "SUN_STONE",

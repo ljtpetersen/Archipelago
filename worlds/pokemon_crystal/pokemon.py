@@ -3,7 +3,7 @@ from dataclasses import replace
 from typing import TYPE_CHECKING
 
 from BaseClasses import ItemClassification
-from .data import data as crystal_data, LogicalAccess, EncounterType, ALL_UNOWN
+from .data import data as crystal_data, LogicalAccess, EncounterType, ALL_UNOWN, MiscOption
 from .evolution import get_random_pokemon_evolution
 from .items import get_random_filler_item
 from .moves import get_tmhm_compatibility, randomize_learnset, moves_convert_friendly_to_ids
@@ -124,9 +124,12 @@ def randomize_starters(world: "PokemonCrystalWorld"):
         for trainer_name, trainer in rival_fights:
             set_rival_fight_starter(trainer_name, trainer, final_evo_pokemon)
 
-    new_helditems = (get_random_filler_item(world),
-                     get_random_filler_item(world),
-                     get_random_filler_item(world))
+    if MiscOption.UnLuckyEgg.value in world.generated_misc.selected:
+        new_helditems = ("LUCKY_EGG", "LUCKY_EGG", "LUCKY_EGG")
+    else:
+        new_helditems = (get_random_filler_item(world),
+                         get_random_filler_item(world),
+                         get_random_filler_item(world))
 
     world.generated_starter_helditems = new_helditems
 
