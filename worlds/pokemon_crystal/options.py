@@ -1748,7 +1748,7 @@ class EnableMischief(Choice):
     option_off = 0
     alias_false = option_off # For compatibility
     alias_no = option_off # For compatibility
-    option_tame = 1
+    option_mild = 1
     option_wild = 2
     alias_true = option_wild # For compatibility
     alias_on = option_wild # For compatibility
@@ -1759,7 +1759,7 @@ class CustomMischiefPool(OptionSet):
     """Only allow specific Mischief options"""
     display_name = "Custom Mischief Pool"
     visibility = Visibility.none
-    valid_keys = [misc_option.name for misc_option in list(MiscOption)] + ["_Tame", "_Wild"]
+    valid_keys = [misc_option.name for misc_option in list(MiscOption)] + ["_Mild", "_Wild"]
 
 
 class MischiefLowerBound(Range):

@@ -12,20 +12,20 @@ if TYPE_CHECKING:
 def randomize_mischief(world: "PokemonCrystalWorld"):
     if not world.options.enable_mischief: return
 
-    tame_mischief = list(world.generated_misc.tame)
+    mild_mischief = list(world.generated_misc.mild)
     wild_mischief = list(world.generated_misc.wild)
 
     # Dynamic mischief assignments go here
     # (Currently nothing)
 
     # Decide which mischief is eligible
-    all_mischief = list(tame_mischief)
+    all_mischief = list(mild_mischief)
     if world.options.enable_mischief.value >= EnableMischief.option_wild:
         all_mischief += wild_mischief
 
     mischief_pool = {MiscOption[name] for name in world.options.custom_mischief_pool.value if not name.startswith("_")}
-    if "_Tame" in world.options.custom_mischief_pool.value:
-        mischief_pool |= set(tame_mischief)
+    if "_Mild" in world.options.custom_mischief_pool.value:
+        mischief_pool |= set(mild_mischief)
     if "_Wild" in world.options.custom_mischief_pool.value:
         mischief_pool |= set(wild_mischief)
 
@@ -54,6 +54,9 @@ def randomize_mischief(world: "PokemonCrystalWorld"):
 
     if world.options.metronome_only:
         safe_remove_mischief(MiscOption.OhkoMoves)
+
+    if not world.options.randomize_starters:
+        safe_remove_mischief(MiscOption.UnLuckyEgg)
 
     # Decide which mischief is active
     lower_count = floor(len(eligible_mischief) * world.options.mischief_lower_bound.value / 100)
