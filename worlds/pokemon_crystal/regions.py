@@ -78,6 +78,7 @@ def create_regions(world: "PokemonCrystalWorld") -> dict[str, Region]:
     regions: dict[str, Region] = {}
     connections: list[tuple[str, str, str]] = []
     johto_only = world.options.johto_only.value
+    rematches = world.options.rematchsanity or world.options.randomize_phone_call_items
 
     wild_name_level_list: list[tuple[str, list[int]]] = []
     trainer_name_level_list: list[tuple[str, int]] = []
@@ -86,7 +87,7 @@ def create_regions(world: "PokemonCrystalWorld") -> dict[str, Region]:
     wild_scaling_locations = set()
 
     def exclude_scaling(trainer: str):
-        if not world.options.rematchsanity and trainer in REMATCHES:
+        if not rematches and (trainer in REMATCHES):
             return True
         elif johto_only != JohtoOnly.option_off and trainer in KANTO_LOCKED:
             return True
