@@ -7,7 +7,7 @@ from BaseClasses import ItemClassification
 from NetUtils import ClientStatus
 from worlds._bizhawk.client import BizHawkClient
 from .data import data, POKEDEX_OFFSET, POKEDEX_COUNT_OFFSET, FLY_UNLOCK_OFFSET, GRASS_OFFSET, ALL_UNOWN
-from .items import item_const_name_to_id
+from .items import item_const_name_to_id, EXTENDED_TRAPLINK_MAPPING
 from .options import Goal, ProvideShopHints, JohtoOnly
 
 if TYPE_CHECKING:
@@ -171,7 +171,7 @@ HINT_FLAGS = {f"EVENT_SEEN_{mart_name}": [item.flag for item in mart_data.items 
 HINT_FLAG_MAP = {data.event_flags[flag_name]: flag_name for flag_name in HINT_FLAGS.keys()}
 
 TRAP_ID_TO_NAME = {item.item_id: item.label for item in data.items.values() if "Trap" in item.tags}
-TRAP_NAME_TO_ID = {item_name: item_id for item_id, item_name in TRAP_ID_TO_NAME.items()}
+TRAP_NAME_TO_ID = {item_name: item_id for item_id, item_name in TRAP_ID_TO_NAME.items()} | EXTENDED_TRAPLINK_MAPPING
 
 SIGN_ID_TO_NAME = {sign.id: sign.name for sign in data.unown_signs.values()}
 NUM_UNOWN = len(ALL_UNOWN)

@@ -183,3 +183,17 @@ for item in data.items.values():
         if tag not in ITEM_GROUPS:
             ITEM_GROUPS[tag] = set()
         ITEM_GROUPS[tag].add(item.label)
+
+EXTENDED_TRAPLINK_MAPPING = {
+    "Literature Trap": item_const_name_to_id("PHONE_TRAP"),
+    "Exposition Trap": item_const_name_to_id("PHONE_TRAP"),
+    "Frozen Trap": item_const_name_to_id("FRZ_TRAP"),
+    "Fire Trap": item_const_name_to_id("BRN_TRAP"),
+    "Electrocution Trap": item_const_name_to_id("PAR_TRAP"),
+    "Cutscene Trap": item_const_name_to_id("PHONE_TRAP"),
+    "Ice Trap": item_const_name_to_id("FRZ_TRAP"),
+    "Paralyze Trap": item_const_name_to_id("PAR_TRAP"),
+    "Slow Trap": item_const_name_to_id("PAR_TRAP"),
+    "Slowness Trap": item_const_name_to_id("PAR_TRAP"),
+    "Stun Trap": item_const_name_to_id("PAR_TRAP"),
+}
