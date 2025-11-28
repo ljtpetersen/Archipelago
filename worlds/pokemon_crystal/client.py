@@ -62,6 +62,16 @@ TRACKER_EVENT_FLAGS_2 = [
     "EVENT_SAW_SUICUNE_ON_ROUTE_36",
     "EVENT_BEAT_RIVAL_IN_MT_MOON",
     "EVENT_GOT_EON_MAIL_FROM_EUSINE",
+    "EVENT_BEAT_CHERRYGROVE_RIVAL",
+    "EVENT_BEAT_AZALEA_RIVAL",
+    "EVENT_RIVAL_BURNED_TOWER",
+    "EVENT_BEAT_GOLDENROD_UNDERGROUND_RIVAL",
+    "EVENT_BEAT_VICTORY_ROAD_RIVAL",
+    "EVENT_BEAT_RIVAL_IN_INDIGO_PLATEAU",
+    "EVENT_ROUTE_24_ROCKET",
+    "EVENT_GOT_ALL_UNOWN",
+    "EVENT_OBTAINED_DIPLOMA",
+    "EVENT_BEAT_ROCKET_EXECUTIVEM_3",
 ]
 
 EVENT_FLAG_MAP_2 = {data.event_flags[event]: event for event in TRACKER_EVENT_FLAGS_2}
@@ -312,7 +322,7 @@ class PokemonCrystalClient(BizHawkClient):
         if ctx.slot_data["goal"] == Goal.option_elite_four:
             self.goal_flags = [data.event_flags["EVENT_BEAT_ELITE_FOUR"]]
         elif ctx.slot_data["goal"] == Goal.option_diploma:
-            self.goal_flags = [data.event_flags["EVENT_ENABLE_DIPLOMA_PRINTING"]]
+            self.goal_flags = [data.event_flags["EVENT_OBTAINED_DIPLOMA"]]
         elif ctx.slot_data["goal"] == Goal.option_rival:
             self.goal_flags = [
                 data.event_flags["EVENT_BEAT_CHERRYGROVE_RIVAL"],
