@@ -818,6 +818,10 @@ class PokemonCrystalClient(BizHawkClient):
                                      + ctx.player_names[ctx.slot] + " whited out!")
                 await bizhawk.write(ctx.bizhawk_ctx, [(data.ram_addresses["wArchipelagoDeathLink"], [0], "WRAM")])
                 self.last_death_link = time.time()
+            elif death_link_status[0][0] == 3:
+                await ctx.send_death(ctx.player_names[ctx.slot] + " failed to dodge the spinner!")
+                await bizhawk.write(ctx.bizhawk_ctx, [(data.ram_addresses["wArchipelagoDeathLink"], [0], "WRAM")])
+                self.last_death_link = time.time()
             elif ctx.last_death_link > self.last_death_link and not death_link_status[0][0]:
                 await bizhawk.write(ctx.bizhawk_ctx, [(data.ram_addresses["wArchipelagoDeathLink"], [2], "WRAM")])
                 self.last_death_link = ctx.last_death_link

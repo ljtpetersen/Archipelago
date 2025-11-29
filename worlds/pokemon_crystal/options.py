@@ -1880,7 +1880,10 @@ class GameOptions(OptionDict):
     skip_dex_registration: off/on - Sets whether the Pokedex registration screen is skipped
     skip_nicknames: off/on - Sets whether you are asked to nickname a Pokemon upon receiving it
     sound: mono/stereo - Sets the sound mode
-    spinners: normal/rotators - Sets whether trainers with random spin are turned into consistent rotators
+    spinners: normal/rotators/hell - Sets the overworld behaviour of trainers
+        normal: Trainers will behave as they do in vanilla
+        rotators: Trainers that spin randomly will rotate consistently
+        hell: All trainers with vision will spin randomly, have max vision and can spot you through obstacles
     surf_music: on/off - Sets whether the surf music will play
     text_frame: 1-8 - Sets the textbox frame, "random" will pick a random frame
     text_speed: mid/slow/fast/instant - Sets the speed at which text advances
@@ -2011,7 +2014,7 @@ class ProgressiveRods(Toggle):
 
 
 class PokemonCrystalDeathLink(DeathLink):
-    __doc__ = DeathLink.__doc__ + "\n\n    In Pokemon Crystal, whiting out sends a death and receiving a death causes you to white out."
+    __doc__ = DeathLink.__doc__ + "\n\n    In Pokemon Crystal, whiting out sends a death and receiving a death causes you to white out.\n\n    Being seen by a trainer when spinner hell is enabled will send a deathlink."
 
 
 @dataclass

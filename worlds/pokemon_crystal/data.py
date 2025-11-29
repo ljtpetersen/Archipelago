@@ -1311,7 +1311,6 @@ def _init() -> None:
         "skip_nicknames": PokemonCrystalGameSetting(1, 6, 1, ON_OFF, 0),
         "auto_run": PokemonCrystalGameSetting(1, 7, 1, ON_OFF, 0),
 
-        "spinners": PokemonCrystalGameSetting(2, 0, 1, {"normal": 0, "rotators": 1}, 0),
         "fast_egg_hatch": PokemonCrystalGameSetting(2, 1, 1, ON_OFF, 0),
         "fast_egg_make": PokemonCrystalGameSetting(2, 2, 1, ON_OFF, 0),
         "rods_always_work": PokemonCrystalGameSetting(2, 3, 1, ON_OFF, 0),
@@ -1338,6 +1337,7 @@ def _init() -> None:
         "hms_require_teaching": PokemonCrystalGameSetting(5, 0, 1, ON_OFF, 1),
         "item_notification": PokemonCrystalGameSetting(5, 1, 2, {"popup": 0, "sound": 1, "none": 2}, 0),
         "_trap_link": PokemonCrystalGameSetting(5, 3, 1, ON_OFF, 0),
+        "spinners": PokemonCrystalGameSetting(5, 4, 2, {"normal": 0, "rotators": 1, "hell": 2}, 0),
     }
 
     phone_scripts = []
