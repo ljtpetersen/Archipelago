@@ -1645,9 +1645,10 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
             ship_rule = lambda state: state.has("S.S. Ticket", world.player)
 
         set_rule(get_entrance("REGION_VERMILION_PORT -> REGION_FAST_SHIP_1F"), ship_rule)
+
         if hidden():
             set_rule(get_location("Vermilion Port - Hidden Item in Buoy"),
-                     lambda state: ship_rule(state) and can_surf_kanto)
+                     lambda state: ship_rule(state) and can_surf_kanto(state))
 
         set_rule(get_entrance("REGION_FAST_SHIP_1F -> REGION_VERMILION_PORT"),
                  lambda state: state.has("EVENT_FAST_SHIP_LAZY_SAILOR", world.player))

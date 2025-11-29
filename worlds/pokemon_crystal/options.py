@@ -455,6 +455,7 @@ class SSAquaAccess(Choice):
     - Vanilla: S.S. Ticket is required
     - Lighthouse and Ticket: Healing Amphy in the Olivine lighthouse and the S.S Ticket are required
     """
+    display_name = "S.S. Aqua Access"
     default = 0
     option_vanilla = 0
     option_lighthouse_and_ticket = 1
@@ -464,6 +465,7 @@ class Route30Battle(Choice):
     """
     Sets which directions the battle on Route 30 blocks
     """
+    display_name = "Route 30 Battle"
     default = 0
     option_blocks_northbound = 0
     option_blocks_both = 1
@@ -1746,13 +1748,13 @@ class EnableMischief(Choice):
     display_name = "Enable Mischief"
     default = 0
     option_off = 0
-    alias_false = option_off # For compatibility
-    alias_no = option_off # For compatibility
+    alias_false = option_off  # For compatibility
+    alias_no = option_off  # For compatibility
     option_mild = 1
     option_wild = 2
-    alias_true = option_wild # For compatibility
-    alias_on = option_wild # For compatibility
-    alias_yes = option_wild # For compatibility
+    alias_true = option_wild  # For compatibility
+    alias_on = option_wild  # For compatibility
+    alias_yes = option_wild  # For compatibility
 
 
 class CustomMischiefPool(OptionSet):
