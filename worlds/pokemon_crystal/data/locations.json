@@ -3262,7 +3262,8 @@
       "NPCGift",
       "NPC Gifts",
       "National Park",
-      "Phone Call"
+      "Phone Call",
+      "PokemonRequest"
     ],
     "default_item": "NUGGET",
     "scripts": [
@@ -7046,7 +7047,8 @@
       "NPCGift",
       "NPC Gifts",
       "Route 39",
-      "Phone Call"
+      "Phone Call",
+      "PokemonRequest"
     ],
     "default_item": "NUGGET",
     "scripts": [
@@ -7605,7 +7607,8 @@
       "NPCGift",
       "NPC Gifts",
       "Route 43",
-      "Phone Calls"
+      "Phone Calls",
+      "PokemonRequest"
     ],
     "default_item": "PINK_BOW",
     "scripts": [
