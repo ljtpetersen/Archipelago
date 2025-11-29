@@ -553,13 +553,13 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         safe_set_location_rule("YOUNGSTER_JOEY_GOLDENROD",
                                lambda state: state.has("ENGINE_FLYPOINT_GOLDENROD", world.player))
         safe_set_location_rule("YOUNGSTER_JOEY_OLIVINE",
-                 lambda state: state.has("ENGINE_FLYPOINT_OLIVINE", world.player))
+                               lambda state: state.has("ENGINE_FLYPOINT_OLIVINE", world.player))
         safe_set_location_rule("YOUNGSTER_JOEY_RADIO",
-                 lambda state: state.has("EVENT_CLEARED_RADIO_TOWER", world.player))
+                               lambda state: state.has("EVENT_CLEARED_RADIO_TOWER", world.player))
 
         if world.options.goal == Goal.option_red:
             safe_set_location_rule("YOUNGSTER_JOEY_CHAMPION",
-                     lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
+                                   lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
 
     if world.options.randomize_phone_call_items:
         set_rule(get_location("Route 30 - HP Up from Joey"),
@@ -583,16 +583,16 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
     if rematchsanity():
         safe_set_location_rule("BUG_CATCHER_WADE_GOLDENROD",
-                 lambda state: state.has("ENGINE_FLYPOINT_GOLDENROD", world.player))
+                               lambda state: state.has("ENGINE_FLYPOINT_GOLDENROD", world.player))
         safe_set_location_rule("BUG_CATCHER_WADE_MAHOGANY",
-                 lambda state: state.has("ENGINE_FLYPOINT_MAHOGANY", world.player))
+                               lambda state: state.has("ENGINE_FLYPOINT_MAHOGANY", world.player))
         safe_set_location_rule("BUG_CATCHER_WADE_RADIO",
-                 lambda state: state.has("EVENT_CLEARED_RADIO_TOWER", world.player))
+                               lambda state: state.has("EVENT_CLEARED_RADIO_TOWER", world.player))
 
         # Dark Cave Violet
         if world.options.goal == Goal.option_red:
             safe_set_location_rule("BUG_CATCHER_WADE_CHAMPION",
-                     lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
+                                   lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
 
     if world.options.randomize_phone_call_items:
         set_rule(get_location("Route 31 - Berry from Wade"), can_phone_call)
@@ -682,25 +682,25 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
     if rematchsanity():
         safe_set_location_rule("FISHER_RALPH_ECRUTEAK",
-                 lambda state: state.has("ENGINE_FLYPOINT_ECRUTEAK", world.player))
+                               lambda state: state.has("ENGINE_FLYPOINT_ECRUTEAK", world.player))
         safe_set_location_rule("FISHER_RALPH_LAKE",
-                 lambda state: state.has("ENGINE_FLYPOINT_LAKE_OF_RAGE", world.player))
+                               lambda state: state.has("ENGINE_FLYPOINT_LAKE_OF_RAGE", world.player))
         safe_set_location_rule("PICNICKER_LIZ_ECRUTEAK",
-                 lambda state: state.has("ENGINE_FLYPOINT_ECRUTEAK", world.player))
+                               lambda state: state.has("ENGINE_FLYPOINT_ECRUTEAK", world.player))
         safe_set_location_rule("PICNICKER_LIZ_ROCKETHQ",
-                 lambda state: state.has("EVENT_CLEARED_ROCKET_HIDEOUT", world.player))
+                               lambda state: state.has("EVENT_CLEARED_ROCKET_HIDEOUT", world.player))
         safe_set_location_rule("PICNICKER_LIZ_RADIO",
-                 lambda state: state.has("EVENT_CLEARED_RADIO_TOWER", world.player))
+                               lambda state: state.has("EVENT_CLEARED_RADIO_TOWER", world.player))
 
         if world.options.goal == Goal.option_red:
             safe_set_location_rule("FISHER_RALPH_CHAMPION",
-                     lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
+                                   lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
             safe_set_location_rule("PICNICKER_LIZ_CHAMPION",
-                     lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
+                                   lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
 
             if not johto_only():
                 safe_set_location_rule("FISHER_RALPH_POWER",
-                         lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
+                                       lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
 
     # Union Cave
     set_rule(get_entrance("REGION_UNION_CAVE_1F -> REGION_UNION_CAVE_B1F:SOUTH"), can_surf)
@@ -717,17 +717,17 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     # Route 33
     if rematchsanity():
         safe_set_location_rule("HIKER_ANTHONY_OLIVINE",
-                 lambda state: state.has("ENGINE_FLYPOINT_OLIVINE", world.player))
+                               lambda state: state.has("ENGINE_FLYPOINT_OLIVINE", world.player))
         safe_set_location_rule("HIKER_ANTHONY_RADIO",
-                 lambda state: state.has("EVENT_CLEARED_RADIO_TOWER", world.player))
+                               lambda state: state.has("EVENT_CLEARED_RADIO_TOWER", world.player))
 
         if world.options.goal == Goal.option_red:
             safe_set_location_rule("HIKER_ANTHONY_CHAMPION",
-                     lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
+                                   lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
 
             if not johto_only():
                 safe_set_location_rule("HIKER_ANTHONY_POWER",
-                         lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
+                                       lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
 
     # Azalea Town
     if "Slowpoke Well" in world.options.dark_areas:
@@ -801,25 +801,25 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
     if rematchsanity():
         safe_set_location_rule("PICNICKER_GINA_MAHOGANY",
-                 lambda state: state.has("ENGINE_FLYPOINT_MAHOGANY", world.player))
+                               lambda state: state.has("ENGINE_FLYPOINT_MAHOGANY", world.player))
         safe_set_location_rule("PICNICKER_GINA_RADIO",
-                 lambda state: state.has("EVENT_CLEARED_RADIO_TOWER", world.player))
+                               lambda state: state.has("EVENT_CLEARED_RADIO_TOWER", world.player))
         safe_set_location_rule("CAMPER_TODD_CIANWOOD",
-                 lambda state: state.has("ENGINE_FLYPOINT_CIANWOOD", world.player))
+                               lambda state: state.has("ENGINE_FLYPOINT_CIANWOOD", world.player))
         safe_set_location_rule("CAMPER_TODD_BLACKTHORN",
-                 lambda state: state.has("ENGINE_FLYPOINT_BLACKTHORN", world.player))
+                               lambda state: state.has("ENGINE_FLYPOINT_BLACKTHORN", world.player))
 
         if world.options.goal == Goal.option_red:
             safe_set_location_rule("CAMPER_TODD_CHAMPION",
-                     lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
+                                   lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
             safe_set_location_rule("PICNICKER_GINA_CHAMPION",
-                     lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
+                                   lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
 
             if not johto_only():
                 safe_set_location_rule("CAMPER_TODD_POWER",
-                         lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
+                                       lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
                 safe_set_location_rule("PICNICKER_GINA_POWER",
-                         lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
+                                       lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
 
     if world.options.randomize_phone_call_items:
         set_rule(get_location("Route 34 - Leaf Stone from Gina"),
@@ -926,17 +926,17 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
     if rematchsanity():
         safe_set_location_rule("BUG_CATCHER_ARNIE_LAKE",
-                 lambda state: state.has("ENGINE_FLYPOINT_LAKE_OF_RAGE", world.player))
+                               lambda state: state.has("ENGINE_FLYPOINT_LAKE_OF_RAGE", world.player))
         safe_set_location_rule("BUG_CATCHER_ARNIE_BLACKTHORN",
-                 lambda state: state.has("ENGINE_FLYPOINT_BLACKTHORN", world.player))
+                               lambda state: state.has("ENGINE_FLYPOINT_BLACKTHORN", world.player))
 
         if world.options.goal == Goal.option_red:
             safe_set_location_rule("BUG_CATCHER_ARNIE_CHAMPION",
-                     lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
+                                   lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
 
             if not johto_only():
                 safe_set_location_rule("BUG_CATCHER_ARNIE_POWER",
-                         lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
+                                       lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
 
     # National Park
     if world.options.national_park_access.value == NationalParkAccess.option_bicycle:
@@ -959,17 +959,17 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
     if rematchsanity():
         safe_set_location_rule("SCHOOLBOY_JACK_OLIVINE",
-                 lambda state: state.has("ENGINE_FLYPOINT_OLIVINE", world.player))
+                               lambda state: state.has("ENGINE_FLYPOINT_OLIVINE", world.player))
         safe_set_location_rule("SCHOOLBOY_JACK_RADIO",
-                 lambda state: state.has("EVENT_CLEARED_RADIO_TOWER", world.player))
+                               lambda state: state.has("EVENT_CLEARED_RADIO_TOWER", world.player))
 
         if world.options.goal == Goal.option_red:
             safe_set_location_rule("SCHOOLBOY_JACK_CHAMPION",
-                     lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
+                                   lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
 
             if not johto_only():
                 safe_set_location_rule("SCHOOLBOY_JACK_POWER",
-                         lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
+                                       lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
 
     # Sudowoodo
     has_squirtbottle = lambda state: state.has("Squirtbottle", world.player)
@@ -994,17 +994,17 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
     if rematchsanity():
         safe_set_location_rule("SCHOOLBOY_ALAN_OLIVINE",
-                 lambda state: state.has("ENGINE_FLYPOINT_OLIVINE", world.player))
+                               lambda state: state.has("ENGINE_FLYPOINT_OLIVINE", world.player))
         safe_set_location_rule("SCHOOLBOY_ALAN_BLACKTHORN",
-                 lambda state: state.has("ENGINE_FLYPOINT_BLACKTHORN", world.player))
+                               lambda state: state.has("ENGINE_FLYPOINT_BLACKTHORN", world.player))
 
         if world.options.goal == Goal.option_red:
             safe_set_location_rule("SCHOOLBOY_ALAN_CHAMPION",
-                     lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
+                                   lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
 
             if not johto_only():
                 safe_set_location_rule("SCHOOLBOY_ALAN_POWER",
-                         lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
+                                       lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
 
     set_rule(get_location("Route 36 - Fire Stone from Alan"), can_phone_call)
     set_rule(get_location("Route 36 - TM08 from Rock Smash Guy"), has_squirtbottle)
@@ -1040,25 +1040,25 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     # Route 38
     if rematchsanity():
         safe_set_location_rule("SCHOOLBOY_CHAD_MAHOGANY",
-                 lambda state: state.has("ENGINE_FLYPOINT_MAHOGANY", world.player))
+                               lambda state: state.has("ENGINE_FLYPOINT_MAHOGANY", world.player))
         safe_set_location_rule("SCHOOLBOY_CHAD_RADIO",
-                 lambda state: state.has("EVENT_CLEARED_RADIO_TOWER", world.player))
+                               lambda state: state.has("EVENT_CLEARED_RADIO_TOWER", world.player))
         safe_set_location_rule("LASS_DANA_CIANWOOD",
-                 lambda state: state.has("ENGINE_FLYPOINT_CIANWOOD", world.player))
+                               lambda state: state.has("ENGINE_FLYPOINT_CIANWOOD", world.player))
         safe_set_location_rule("LASS_DANA_RADIO",
-                 lambda state: state.has("EVENT_CLEARED_RADIO_TOWER", world.player))
+                               lambda state: state.has("EVENT_CLEARED_RADIO_TOWER", world.player))
 
         if world.options.goal == Goal.option_red:
             safe_set_location_rule("SCHOOLBOY_CHAD_CHAMPION",
-                     lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
+                                   lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
             safe_set_location_rule("LASS_DANA_CHAMPION",
-                     lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
+                                   lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
 
             if not johto_only():
                 safe_set_location_rule("SCHOOLBOY_CHAD_POWER",
-                         lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
+                                       lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
                 safe_set_location_rule("LASS_DANA_POWER",
-                         lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
+                                       lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
 
     set_rule(get_location("Route 38 - Thunderstone from Dana"), can_phone_call)
 
@@ -1101,15 +1101,15 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
     if rematchsanity():
         safe_set_location_rule("SAILOR_HUEY_RADIO",
-                 lambda state: state.has("EVENT_CLEARED_RADIO_TOWER", world.player))
+                               lambda state: state.has("EVENT_CLEARED_RADIO_TOWER", world.player))
 
         if world.options.goal == Goal.option_red:
             safe_set_location_rule("SAILOR_HUEY_CHAMPION",
-                     lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
+                                   lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
 
             if not johto_only():
                 safe_set_location_rule("SAILOR_HUEY_POWER",
-                         lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
+                                       lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
 
     # Route 40
     set_rule(get_entrance("REGION_ROUTE_40 -> REGION_ROUTE_40:WATER"), can_surf)
@@ -1183,15 +1183,15 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
     if rematchsanity():
         safe_set_location_rule("FISHER_TULLY_ROCKETHQ",
-                 lambda state: state.has("EVENT_CLEARED_ROCKET_HIDEOUT", world.player))
+                               lambda state: state.has("EVENT_CLEARED_ROCKET_HIDEOUT", world.player))
 
         if world.options.goal == Goal.option_red:
             safe_set_location_rule("FISHER_TULLY_CHAMPION",
-                     lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
+                                   lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
 
             if not johto_only():
                 safe_set_location_rule("FISHER_TULLY_POWER",
-                         lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
+                                       lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
 
     if world.options.randomize_phone_call_items:
         set_rule(get_location("Route 42 - Water Stone from Tully"), can_phone_call)
@@ -1272,21 +1272,21 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
     if rematchsanity():
         safe_set_location_rule("POKEMANIAC_BRENT_ROCKETHQ",
-                 lambda state: state.has("EVENT_CLEARED_ROCKET_HIDEOUT", world.player))
+                               lambda state: state.has("EVENT_CLEARED_ROCKET_HIDEOUT", world.player))
         safe_set_location_rule("PICNICKER_TIFFANY_RADIO",
-                 lambda state: state.has("EVENT_CLEARED_RADIO_TOWER", world.player))
+                               lambda state: state.has("EVENT_CLEARED_RADIO_TOWER", world.player))
 
         if world.options.goal == Goal.option_red:
             safe_set_location_rule("POKEMANIAC_BRENT_CHAMPION",
-                     lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
+                                   lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
             safe_set_location_rule("PICNICKER_TIFFANY_CHAMPION",
-                     lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
+                                   lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
 
             if not johto_only():
                 safe_set_location_rule("POKEMANIAC_BRENT_POWER",
-                         lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
+                                       lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
                 safe_set_location_rule("PICNICKER_TIFFANY_POWER",
-                         lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
+                                       lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
 
     if world.options.randomize_phone_call_items and world.options.randomize_pokemon_requests:
         request_pokemon = world.generated_request_pokemon[7]
@@ -1307,15 +1307,15 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     if rematchsanity():
         if world.options.goal == Goal.option_red:
             safe_set_location_rule("BIRD_KEEPER_VANCE_CHAMPION",
-                     lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
+                                   lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
             safe_set_location_rule("FISHER_WILTON_CHAMPION",
-                     lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
+                                   lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
 
             if not johto_only():
                 safe_set_location_rule("BIRD_KEEPER_VANCE_POWER",
-                         lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
+                                       lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
                 safe_set_location_rule("FISHER_WILTON_POWER",
-                         lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
+                                       lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
 
     if world.options.randomize_phone_call_items:
         set_rule(get_location("Route 44 - Poke Ball from Wilton"), can_phone_call)
@@ -1361,21 +1361,25 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     if rematchsanity():
         if world.options.goal == Goal.option_red:
             safe_set_location_rule("HIKER_PARRY_CHAMPION",
-                     lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
+                                   lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
 
             if not johto_only():
                 safe_set_location_rule("HIKER_PARRY_POWER",
-                         lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
+                                       lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
 
     # Route 46
+    if world.options.randomize_phone_call_items and not world.options.johto_only:
+        set_rule(get_location("Route 46 - Calcium from Erin"),
+                 lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player) and can_phone_call(state))
+
     if rematchsanity():
         if world.options.goal == Goal.option_red:
             safe_set_location_rule("PICNICKER_ERIN_CHAMPION",
-                     lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
+                                   lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
 
             if not johto_only():
                 safe_set_location_rule("PICNICKER_ERIN_POWER",
-                         lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
+                                       lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
 
     if not world.options.johto_only and world.options.randomize_phone_call_items:
         set_rule(get_entrance("REGION_ROUTE_45 -> REGION_ROUTE_45:POWER"),
@@ -1385,15 +1389,15 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     if rematchsanity():
         if world.options.goal == Goal.option_red:
             safe_set_location_rule("COOLTRAINERM_GAVEN_CHAMPION",
-                     lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
+                                   lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
             safe_set_location_rule("COOLTRAINERF_BETH_CHAMPION",
-                     lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
+                                   lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
 
             if not johto_only():
                 safe_set_location_rule("COOLTRAINERM_GAVEN_POWER",
-                         lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
+                                       lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
                 safe_set_location_rule("COOLTRAINERF_BETH_POWER",
-                         lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
+                                       lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
 
     # Route 27
     set_rule(get_entrance("REGION_ROUTE_27:WEST -> REGION_NEW_BARK_TOWN"), can_surf)
@@ -1414,15 +1418,15 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     if rematchsanity():
         if world.options.goal == Goal.option_red:
             safe_set_location_rule("BIRD_KEEPER_JOSE_CHAMPION",
-                     lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
+                                   lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
             safe_set_location_rule("COOLTRAINERF_REENA_CHAMPION",
-                     lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
+                                   lambda state: state.has("EVENT_BEAT_ELITE_FOUR", world.player))
 
             if not johto_only():
                 safe_set_location_rule("BIRD_KEEPER_JOSE_POWER",
-                         lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
+                                       lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
                 safe_set_location_rule("COOLTRAINERF_REENA_POWER",
-                         lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
+                                       lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
 
     set_rule(get_location("Tohjo Falls - Item"), can_surf)
 
