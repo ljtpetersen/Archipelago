@@ -14,9 +14,7 @@ class EnhancedOptionSet(OptionSet):
 
             if "_All" in value:
                 value = [k for k in self.valid_keys if not k.startswith("_")]
-            elif "_Random" in value:
-                import random
-                value = [random.choice([k for k in self.valid_keys if not k.startswith("_")])]
+                
         super().__init__(value)
 
     def __init_subclass__(cls, **kwargs):
