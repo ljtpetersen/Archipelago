@@ -1005,8 +1005,9 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
             if not johto_only():
                 safe_set_location_rule("SCHOOLBOY_ALAN_POWER",
                                        lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
-
-    set_rule(get_location("Route 36 - Fire Stone from Alan"), can_phone_call)
+    if world.options.randomize_phone_call_items:
+        set_rule(get_location("Route 36 - Fire Stone from Alan"), can_phone_call)
+        
     set_rule(get_location("Route 36 - TM08 from Rock Smash Guy"), has_squirtbottle)
 
     # Ecruteak City
@@ -1059,8 +1060,8 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
                                        lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
                 safe_set_location_rule("LASS_DANA_POWER",
                                        lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
-
-    set_rule(get_location("Route 38 - Thunderstone from Dana"), can_phone_call)
+    if world.options.randomize_phone_call_items:
+        set_rule(get_location("Route 38 - Thunderstone from Dana"), can_phone_call)
 
     # Route 39
     if world.options.randomize_phone_call_items and world.options.randomize_pokemon_requests:
@@ -1086,8 +1087,7 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         else:
             ship_rule = lambda state: state.has("S.S. Ticket", world.player)
 
-        set_rule(get_entrance("REGION_OLIVINE_PORT -> REGION_FAST_SHIP_1F"),
-                 ship_rule)
+        set_rule(get_entrance("REGION_OLIVINE_PORT -> REGION_FAST_SHIP_1F"), ship_rule)
 
         set_rule(get_entrance("REGION_FAST_SHIP_1F -> REGION_OLIVINE_PORT"),
                  lambda state: state.has("EVENT_FAST_SHIP_LAZY_SAILOR", world.player))
@@ -1139,7 +1139,6 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     set_rule(get_entrance("REGION_CIANWOOD_CITY -> REGION_ROUTE_41"), can_surf)
     if hidden():
         set_rule(get_location("Cianwood City - Hidden Item in West Rock"), can_rock_smash)
-
         set_rule(get_location("Cianwood City - Hidden Item in North Rock"), can_rock_smash)
 
     set_rule(get_location("Cianwood City - HM02 from Chuck's Wife"),

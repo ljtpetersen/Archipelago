@@ -3262,7 +3262,7 @@
       "NPCGift",
       "NPC Gifts",
       "National Park",
-      "Phone Call",
+      "Phone Calls",
       "PokemonRequest"
     ],
     "default_item": "NUGGET",
@@ -3413,7 +3413,7 @@
       "NPCGift",
       "NPC Gifts",
       "Olivine Lighthouse",
-      "Phone Call"
+      "Phone Calls"
     ],
     "default_item": "PROTEIN",
     "scripts": [
@@ -5630,7 +5630,7 @@
       "NPCGift",
       "NPC Gifts",
       "Route 27",
-      "Phone Call"
+      "Phone Calls"
     ],
     "default_item": "STAR_PIECE",
     "scripts": [
@@ -5940,7 +5940,7 @@
       "NPCGift",
       "NPC Gifts",
       "Route 30",
-      "Phone Call"
+      "Phone Calls"
     ],
     "default_item": "HP_UP",
     "scripts": [
@@ -6065,7 +6065,7 @@
       "NPCGift",
       "NPC Gifts",
       "Route 31",
-      "Phone Call"
+      "Phone Calls"
     ],
     "default_item": "BERRY",
     "scripts": [
@@ -6454,7 +6454,7 @@
       "NPCGift",
       "NPC Gifts",
       "Route 34",
-      "Phone Call"
+      "Phone Calls"
     ],
     "default_item": "LEAF_STONE",
     "scripts": [
@@ -6734,7 +6734,7 @@
       "NPCGift",
       "NPC Gifts",
       "Route 36",
-      "Phone Call"
+      "Phone Calls"
     ],
     "default_item": "FIRE_STONE",
     "scripts": [
@@ -6991,7 +6991,7 @@
       "NPCGift",
       "NPC Gifts",
       "Route 38",
-      "Phone Call"
+      "Phone Calls"
     ],
     "default_item": "THUNDERSTONE",
     "scripts": [
@@ -7047,7 +7047,7 @@
       "NPCGift",
       "NPC Gifts",
       "Route 39",
-      "Phone Call",
+      "Phone Calls",
       "PokemonRequest"
     ],
     "default_item": "NUGGET",
@@ -7513,7 +7513,7 @@
       "NPCGift",
       "NPC Gifts",
       "Route 42",
-      "Phone Call"
+      "Phone Calls"
     ],
     "default_item": "WATER_STONE",
     "scripts": [
@@ -7703,7 +7703,7 @@
       "NPCGift",
       "NPC Gifts",
       "Route 44",
-      "Phone Call"
+      "Phone Calls"
     ],
     "default_item": "CARBOS",
     "scripts": [
@@ -7797,7 +7797,7 @@
       "NPCGift",
       "NPC Gifts",
       "Route 44",
-      "Phone Call"
+      "Phone Calls"
     ],
     "default_item": "POKE_BALL",
     "scripts": [
@@ -7892,7 +7892,7 @@
       "NPCGift",
       "NPC Gifts",
       "Route 45",
-      "Phone Call"
+      "Phone Calls"
     ],
     "default_item": "PP_UP",
     "scripts": [
@@ -8025,7 +8025,7 @@
       "NPCGift",
       "NPC Gifts",
       "Route 45",
-      "Phone Call"
+      "Phone Calls"
     ],
     "default_item": "IRON",
     "scripts": [
@@ -8160,7 +8160,7 @@
       "NPCGift",
       "NPC Gifts",
       "Route 46",
-      "Phone Call"
+      "Phone Calls"
     ],
     "default_item": "CALCIUM",
     "scripts": [
