@@ -3999,7 +3999,7 @@
     ]
   },
   "CLEAR_BELL": {
-    "label": "Radio Tower 5F - Clear Bell from Rocket Boss",
+    "label": "Radio Tower 5F - Clear Bell from Director",
     "flag": "EVENT_GOT_CLEAR_BELL",
     "type": "giveitem",
     "tags": [
