@@ -816,7 +816,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
             item_code = world.item_name_to_id[item]
             if item_code >= FLY_UNLOCK_OFFSET:
                 fly_id = item_code - FLY_UNLOCK_OFFSET
-                free_fly_write[int(fly_id / 8)] = 1 << (fly_id % 8)
+                free_fly_write[fly_id // 8] |= (1 << (fly_id % 8))
             if item_code > 255:
                 quantity = 0
                 continue
@@ -830,7 +830,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
 
     if world.options.free_fly_location.value in (FreeFlyLocation.option_free_fly,
                                                  FreeFlyLocation.option_free_fly_and_map_card):
-        free_fly_write[int(world.free_fly_location.id / 8)] = 1 << (world.free_fly_location.id % 8)
+        free_fly_write[world.free_fly_location.id // 8] |= (1 << (world.free_fly_location.id % 8))
 
     write_bytes(patch, free_fly_write, data.rom_addresses["AP_Setting_FreeFly"])
 
