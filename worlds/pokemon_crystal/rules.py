@@ -950,7 +950,7 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     if world.options.randomize_phone_call_items and world.options.randomize_pokemon_requests:
         request_pokemon = world.generated_request_pokemon[5]
         set_rule(get_location("National Park - Nugget from Beverly"),
-                 lambda state: can_phone_call(state) and state.has(request_pokemon, world.player))
+                 lambda state, request=request_pokemon: can_phone_call(state) and state.has(request, world.player))
 
     if "Bug Catching Contest" not in world.options.wild_encounter_methods_required and world.is_universal_tracker:
         for i in range(len(world.generated_contest)):
@@ -1066,7 +1066,7 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     if world.options.randomize_phone_call_items and world.options.randomize_pokemon_requests:
         request_pokemon = world.generated_request_pokemon[6]
         set_rule(get_location("Route 39 - Nugget from Derek"),
-                 lambda state: can_phone_call(state) and state.has(request_pokemon, world.player))
+                 lambda state, request=request_pokemon: can_phone_call(state) and state.has(request, world.player))
 
     # Olivine City
     set_rule(get_location("EVENT_JASMINE_RETURNED_TO_GYM"), lambda state: state.has("Secretpotion", world.player))
@@ -1291,7 +1291,7 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     if world.options.randomize_phone_call_items and world.options.randomize_pokemon_requests:
         request_pokemon = world.generated_request_pokemon[7]
         set_rule(get_location("Route 43 - Pink Bow from Tiffany"),
-                 lambda state: can_phone_call(state) and state.has(request_pokemon, world.player))
+                 lambda state, request=request_pokemon: can_phone_call(state) and state.has(request, world.player))
 
     # Lake of Rage
     if world.options.red_gyarados_access == RedGyaradosAccess.option_whirlpool:
