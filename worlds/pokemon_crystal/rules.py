@@ -1007,7 +1007,7 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
                                        lambda state: state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
     if world.options.randomize_phone_call_items:
         set_rule(get_location("Route 36 - Fire Stone from Alan"), can_phone_call)
-        
+
     set_rule(get_location("Route 36 - TM08 from Rock Smash Guy"), has_squirtbottle)
 
     # Ecruteak City
@@ -1623,19 +1623,17 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
                      can_flash_kanto)
 
         if not world.options.randomize_fly_unlocks and world.options.fly_cheese == FlyCheese.option_in_logic:
-            set_rule(get_entrance("REGION_VERMILION_CITY:DIGLETTS_CAVE_ENTRANCE -> REGION_VERMILION_CITY"),
-                     lambda state: has_expn(state) or can_fly(state))
-            set_rule(get_entrance("REGION_ROUTE_11 -> REGION_VERMILION_CITY"),
-                     lambda state: has_expn(state) or can_fly(state))
+            digletts_cave_rule = lambda state: has_expn(state) or can_fly(state)
         elif (not world.options.randomize_fly_unlocks
               and world.options.fly_cheese == FlyCheese.option_out_of_logic and world.is_universal_tracker):
-            set_rule(get_entrance("REGION_VERMILION_CITY:DIGLETTS_CAVE_ENTRANCE -> REGION_VERMILION_CITY"),
-                     lambda state: has_expn(state) or state.has(PokemonCrystalGlitchedToken.TOKEN_NAME, world.player))
-            set_rule(get_entrance("REGION_ROUTE_11 -> REGION_VERMILION_CITY"),
-                     lambda state: has_expn(state) or state.has(PokemonCrystalGlitchedToken.TOKEN_NAME, world.player))
+            digletts_cave_rule = lambda state: has_expn(state) or state.has(PokemonCrystalGlitchedToken.TOKEN_NAME,
+                                                                            world.player)
         else:
-            set_rule(get_entrance("REGION_VERMILION_CITY:DIGLETTS_CAVE_ENTRANCE -> REGION_VERMILION_CITY"), has_expn)
-            set_rule(get_entrance("REGION_ROUTE_11 -> REGION_VERMILION_CITY"), has_expn)
+            digletts_cave_rule = has_expn
+
+        set_rule(get_entrance("REGION_VERMILION_CITY:DIGLETTS_CAVE_ENTRANCE -> REGION_VERMILION_CITY"),
+                 digletts_cave_rule)
+        set_rule(get_entrance("REGION_ROUTE_11 -> REGION_VERMILION_CITY"), digletts_cave_rule)
 
         if world.options.ss_aqua_access:
             ship_rule = lambda state: state.has("S.S. Ticket", world.player) and state.has(
