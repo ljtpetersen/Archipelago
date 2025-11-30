@@ -3150,8 +3150,19 @@
   "REGION_OLIVINE_GYM": {
     "johto": true,
     "exits": [
-      "REGION_OLIVINE_CITY"
+      "REGION_OLIVINE_CITY",
+      "REGION_OLIVINE_GYM:JASMINE"
     ],
+    "locations": [],
+    "events": [],
+    "signs": [
+      "OlivineGymStatueLeft",
+      "OlivineGymStatueRight"
+    ]
+  },
+  "REGION_OLIVINE_GYM:JASMINE": {
+    "johto": true,
+    "exits": [],
     "trainers": [
       "LEADER_JASMINE"
     ],
@@ -3163,10 +3174,6 @@
     "events": [
       "EVENT_MINERAL_BADGE_FROM_JASMINE",
       "EVENT_BEAT_JASMINE"
-    ],
-    "signs": [
-      "OlivineGymStatueLeft",
-      "OlivineGymStatueRight"
     ]
   },
   "REGION_OLIVINE_HOUSE_BETA": {

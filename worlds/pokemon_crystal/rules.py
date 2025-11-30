@@ -1096,7 +1096,7 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
             set_rule(get_location("Olivine Port - Hidden Item in Buoy"),
                      lambda state: ship_rule(state) and can_surf(state))
 
-    set_rule(get_entrance("REGION_OLIVINE_CITY -> REGION_OLIVINE_GYM"),
+    set_rule(get_entrance("REGION_OLIVINE_GYM -> REGION_OLIVINE_GYM:JASMINE"),
              lambda state: state.has("EVENT_JASMINE_RETURNED_TO_GYM", world.player))
 
     if rematchsanity():
