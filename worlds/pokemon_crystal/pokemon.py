@@ -72,6 +72,19 @@ def randomize_pokemon_data(world: "PokemonCrystalWorld"):
             bst=sum(new_base_stats)
         )
 
+    if MiscOption.DontFuckleWithShuckle.value in world.generated_misc.selected:
+        new_base_stats = list(world.generated_pokemon["SHUCKLE"].base_stats)
+        attack = new_base_stats[1]
+        new_base_stats[1] = new_base_stats[2]
+        new_base_stats[2] = attack
+        sp_atk = new_base_stats[4]
+        new_base_stats[4] = new_base_stats[5]
+        new_base_stats[5] = sp_atk
+        world.generated_pokemon["SHUCKLE"] = replace(
+            world.generated_pokemon["SHUCKLE"],
+            base_stats=new_base_stats,
+        )
+
 
 def randomize_starters(world: "PokemonCrystalWorld"):
     if not world.options.randomize_starters: return
