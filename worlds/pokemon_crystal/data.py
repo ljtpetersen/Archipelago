@@ -1064,8 +1064,8 @@ def _init() -> None:
         new_region = RegionData(
             name=region_name,
             johto=region_json["johto"],
-            elite_4=region_json["elite_4"] if "elite_4" in region_json else False,
-            silver_cave=region_json["silver_cave"] if "silver_cave" in region_json else False,
+            elite_4=region_json.get("elite_4", False),
+            silver_cave=region_json.get("silver_cave", False),
             exits=[region_exit for region_exit in region_json["exits"]],
             statics=[EncounterKey(EncounterType.Static, static) for static in region_json.get("statics", [])],
             trainers=[trainers[trainer] for trainer in region_json.get("trainers", [])],
@@ -1118,7 +1118,7 @@ def _init() -> None:
 
     items = {}
     for item_constant_name, attributes in items_json.items():
-        item_classification = None
+
         if attributes["classification"] == "PROGRESSION":
             item_classification = ItemClassification.progression
         elif attributes["classification"] == "USEFUL":
@@ -1128,8 +1128,13 @@ def _init() -> None:
         elif attributes["classification"] == "TRAP":
             item_classification = ItemClassification.trap
         else:
-            item_classification = ItemClassification.filler
-            # raise ValueError(f"Unknown classification {attributes['classification']} for item {item_constant_name}")
+            raise ValueError(f"Unknown classification {attributes['classification']} for item {item_constant_name}")
+
+        if attributes.get("deprioritized", False):
+            item_classification |= ItemClassification.deprioritized
+
+        if attributes.get("skip_balancing", False):
+            item_classification |= ItemClassification.skip_balancing
 
         if "Fly" in attributes["tags"]:
             fly_id = attributes["fly_id"]

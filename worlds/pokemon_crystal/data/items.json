@@ -494,6 +494,7 @@
   "OMANYTE_TILE": {
     "name": "Omanyte Tile",
     "classification": "PROGRESSION",
+    "deprioritized": true,
     "price": 0,
     "tags": [
       "Alph Puzzle Tile",
@@ -641,6 +642,7 @@
   "AERO_TILE": {
     "name": "Aerodactyl Tile",
     "classification": "PROGRESSION",
+    "deprioritized": true,
     "price": 0,
     "tags": [
       "Alph Puzzle Tile",
@@ -1226,6 +1228,7 @@
   "KABUTO_TILE": {
     "name": "Kabuto Tile",
     "classification": "PROGRESSION",
+    "deprioritized": true,
     "price": 0,
     "tags": [
       "Alph Puzzle Tile",
@@ -1308,6 +1311,7 @@
   "HO_OH_TILE": {
     "name": "Ho-Oh Tile",
     "classification": "PROGRESSION",
+    "deprioritized": true,
     "price": 0,
     "tags": [
       "Alph Puzzle Tile",
