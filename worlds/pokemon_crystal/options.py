@@ -1609,6 +1609,8 @@ class ExpModifier(NamedRange):
     """
     Scale the amount of Experience Points given in battle
     Default is 20, for double set to 40, for half set to 10, etc
+
+    You can modify this value in-game, the CUSTOM option will use the value provided here.
     """
     display_name = "Experience Modifier"
     default = 20
