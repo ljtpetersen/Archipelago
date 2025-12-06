@@ -14,7 +14,7 @@ class EnhancedOptionSet(OptionSet):
 
             if "_All" in value:
                 value = [k for k in self.valid_keys if not k.startswith("_")]
-                
+
         super().__init__(value)
 
     def __init_subclass__(cls, **kwargs):
@@ -637,6 +637,7 @@ class TradesRequired(Toggle):
     """
     Specifies if in-game trades may be logically required
     """
+    display_name = "Trades Required"
 
 
 class BreedingMethodsRequired(Choice):
@@ -1121,8 +1122,9 @@ class LearnsetTypeBias(NamedRange):
     range_start = -1
     range_end = 100
     special_range_names = {
-        "vanilla": -1
+        "none": -1
     }
+    alias_vanilla = -1
 
 
 class RandomizeMoveValues(Choice):
@@ -1344,9 +1346,6 @@ class RandomizeEvolution(Choice):
     - Match a Type: Pokemon evolve into a random Pokemon with a higher base stat total, that shares at least one type with it.
     - Increase BST: Pokemon evolve into a random Pokemon with a higher base stat total.
 
-    Note: This also affects breeding. When generating an egg the game will follow the evolution path backwards to
-    the base form.
-
     Note: If random BST, random types, or the evolution blocklist cause a Pokemon to have no valid evolution within
     your chosen setting here, it will evolve into the closest available thing to a valid evolution.
 
@@ -1363,7 +1362,7 @@ class ConvergentEvolution(Choice):
     """
     Random evolution can cause multiple Pokemon to evolve into the same Pokemon.
     - Avoid: Each Pokemon can only evolve from one Pokemon.
-    - Allow: Multiple Pokemon can evolve into the same Pokemon. Makes breeding weird.
+    - Allow: Multiple Pokemon can evolve into the same Pokemon.
     """
     display_name = "Convergent Evolution"
     default = 0

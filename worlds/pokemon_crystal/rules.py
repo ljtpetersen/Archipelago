@@ -1726,7 +1726,8 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
             set_rule(get_location("CeladonGameCornerPrizeRoom2"), lambda state: state.has("Coin Case", world.player))
             set_rule(get_location("CeladonGameCornerPrizeRoom3"), lambda state: state.has("Coin Case", world.player))
 
-        diploma_count = len(world.logic.available_pokemon)
+        diploma_count = len(world.logic.available_pokemon) if not world.is_universal_tracker else world.ut_slot_data[
+            "logically_available_pokemon_count"]
         set_rule(get_location("EVENT_OBTAINED_DIPLOMA"),
                  lambda state: world.logic.has_n_pokemon(state, diploma_count))
 
@@ -1819,7 +1820,8 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         set_rule(get_location(f"Pokedex - {pokemon_data.friendly_name}"),
                  lambda state, species_id=pokemon_id: state.has(species_id, world.player))
 
-    logically_available_pokemon_count = len(world.logic.available_pokemon)
+    logically_available_pokemon_count = len(world.logic.available_pokemon) if not world.is_universal_tracker else \
+        world.ut_slot_data["logically_available_pokemon_count"]
 
     for dexcountsanity_count in world.generated_dexcountsanity[:-1]:
         logical_count = min(logically_available_pokemon_count,
@@ -1876,8 +1878,7 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
                         access: LogicalAccess) -> bool:
         if not state.has(evolved_from, world.player): return False
         logical_access_satisfied = access is LogicalAccess.InLogic or (
-                access is LogicalAccess.OutOfLogic and state.has(PokemonCrystalGlitchedToken.TOKEN_NAME,
-                                                                 world.player))
+                access is LogicalAccess.OutOfLogic and state.has(PokemonCrystalGlitchedToken.TOKEN_NAME, world.player))
         for evo in evolutions:
             if evo.evo_type is EvolutionType.Level or (
                     evo.evo_type is EvolutionType.Stats and state.has_any(evolution_item_unlocks, world.player)):
@@ -1894,7 +1895,7 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
     locations_to_evolutions = defaultdict[str, list[EvolutionData]](list)
     locations_to_pokemon = dict[str, str]()
-    locations_to_logic = dict[str, LogicalAccess]()
+    locations_to_logic = defaultdict[str, LogicalAccess](lambda: LogicalAccess.Inaccessible)
 
     for evolvee, evolutions in world.logic.evolution.items():
         for evo_access in evolutions:
@@ -1903,24 +1904,30 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
             location_name = evolution_location_name(world, evolvee, evolution.pokemon)
             locations_to_pokemon[location_name] = evolvee
             locations_to_evolutions[location_name].append(evolution)
-            locations_to_logic[location_name] = logical_access
+            if locations_to_logic[location_name] is not LogicalAccess.InLogic:
+                locations_to_logic[location_name] = logical_access
+
+    seen_locations = set()
 
     for location_name, evo_data in locations_to_evolutions.items():
         evolves_from = locations_to_pokemon[location_name]
         logical_access = locations_to_logic[location_name]
-        set_rule(
-            get_location(location_name),
-            lambda state, from_pokemon=evolves_from, evolutions=evo_data, access=logical_access:
-            evolution_logic(state, from_pokemon, evolutions, access)
-        )
+        if location_name not in seen_locations:
+            set_rule(
+                get_location(location_name),
+                lambda state, from_pokemon=evolves_from, evolutions=evo_data, access=logical_access:
+                evolution_logic(state, from_pokemon, evolutions, access)
+            )
+            seen_locations.add(location_name)
+        else:
+            add_rule(
+                get_location(location_name),
+                lambda state, from_pokemon=evolves_from, evolutions=evo_data, access=logical_access:
+                evolution_logic(state, from_pokemon, evolutions, access),
+                combine="or"
+            )
 
     def breeding_logic(state: CollectionState, breeders_access: set[tuple[str, LogicalAccess]]) -> bool:
-        if not state.has("EVENT_UNLOCKED_DAY_CARE", world.player): return False
-
-        if (world.options.breeding_methods_required.value
-                == BreedingMethodsRequired.option_with_ditto and not state.has("DITTO", world.player)):
-            return False
-
         for breeder_access in breeders_access:
             breeder, access = breeder_access
             if state.has(breeder, world.player):
@@ -1931,9 +1938,17 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
                     return True
         return False
 
+    if world.options.breeding_methods_required or world.is_universal_tracker:
+        set_rule(get_entrance("Menu -> Breeding"), lambda state: state.has("EVENT_UNLOCKED_DAY_CARE", world.player))
+
+        if world.options.breeding_methods_required == BreedingMethodsRequired.option_with_ditto:
+            add_rule(get_entrance("Menu -> Breeding"),
+                     lambda state: state.has("DITTO", world.player) or state.has(PokemonCrystalGlitchedToken.TOKEN_NAME,
+                                                                                 world.player))
+
     for base_form_id, breeders in world.logic.breeding.items():
         logical_access = [access for _, access in breeders]
-        if not world.is_universal_tracker and LogicalAccess.InLogic not in logical_access: continue
+        if not world.is_universal_tracker and (LogicalAccess.InLogic not in logical_access): continue
         set_rule(
             get_location(f"Hatch {world.generated_pokemon[base_form_id].friendly_name}"),
             lambda state, b=breeders: breeding_logic(state, b)

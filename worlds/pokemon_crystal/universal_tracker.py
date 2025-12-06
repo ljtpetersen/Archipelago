@@ -20,8 +20,7 @@ def load_ut_slot_data(world: "PokemonCrystalWorld"):
             pass
 
     world.generated_dexcountsanity = world.ut_slot_data["dexcountsanity_counts"]
-    dexsanity_slot_data = world.ut_slot_data["dexsanity_pokemon"]
-    world.generated_dexsanity = {get_pokemon_id_by_rom_id(id) for id in dexsanity_slot_data}
+    world.generated_dexsanity = {get_pokemon_id_by_rom_id(id) for id in world.ut_slot_data["dexsanity_pokemon"]}
 
     starting_town_id = world.ut_slot_data["starting_town"]
     if starting_town_id:

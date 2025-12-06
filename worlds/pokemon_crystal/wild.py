@@ -174,7 +174,8 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
     else:
         wild_pokemon = set()
         for region_key, wilds in world.generated_wild.items():
-            if world.options.goal.value == Goal.option_unown_hunt and any(wild.pokemon == "UNOWN" for wild in wilds):
+            if not world.is_universal_tracker and world.options.goal.value == Goal.option_unown_hunt and any(
+                    wild.pokemon == "UNOWN" for wild in wilds):
                 wilds = [replace(wild, pokemon="RATTATA") for wild in wilds]
                 world.generated_wild[region_key] = wilds
             access = world.logic.wild_regions[region_key]
@@ -185,25 +186,26 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
 
 
 def randomize_static_pokemon(world: "PokemonCrystalWorld"):
-    if world.options.randomize_static_pokemon:
-        priority_pokemon = get_priority_dexsanity(world) - world.logic.available_pokemon
-        blocklist = pokemon_convert_friendly_to_ids(world, world.options.static_blocklist)
-        for static_name, pkmn_data in world.generated_static.items():
-            pokemon = get_random_pokemon(world,
-                                         exclude_unown=True,
-                                         base_only=pkmn_data.level_type == "giveegg",
-                                         priority_pokemon=priority_pokemon,
-                                         blocklist=blocklist)
-            world.generated_static[static_name] = replace(
-                world.generated_static[static_name],
-                pokemon=pokemon,
-            )
-            priority_pokemon.discard(pokemon)
+    if not world.is_universal_tracker:
+        if world.options.randomize_static_pokemon:
+            priority_pokemon = get_priority_dexsanity(world) - world.logic.available_pokemon
+            blocklist = pokemon_convert_friendly_to_ids(world, world.options.static_blocklist)
+            for static_name, pkmn_data in world.generated_static.items():
+                pokemon = get_random_pokemon(world,
+                                             exclude_unown=True,
+                                             base_only=pkmn_data.level_type == "giveegg",
+                                             priority_pokemon=priority_pokemon,
+                                             blocklist=blocklist)
+                world.generated_static[static_name] = replace(
+                    world.generated_static[static_name],
+                    pokemon=pokemon,
+                )
+                priority_pokemon.discard(pokemon)
 
-    else:  # Still randomize the Odd Egg
-        pokemon = world.random.choice(["PICHU", "CLEFFA", "IGGLYBUFF", "SMOOCHUM", "MAGBY", "ELEKID", "TYROGUE"])
-        encounter_key = EncounterKey.static("OddEgg")
-        world.generated_static[encounter_key] = replace(world.generated_static[encounter_key], pokemon=pokemon)
+        else:  # Still randomize the Odd Egg
+            pokemon = world.random.choice(["PICHU", "CLEFFA", "IGGLYBUFF", "SMOOCHUM", "MAGBY", "ELEKID", "TYROGUE"])
+            encounter_key = EncounterKey.static("OddEgg")
+            world.generated_static[encounter_key] = replace(world.generated_static[encounter_key], pokemon=pokemon)
 
     world.logic.available_pokemon.update(
         static.pokemon for region_key, static in world.generated_static.items() if world.logic.wild_regions[
@@ -211,11 +213,11 @@ def randomize_static_pokemon(world: "PokemonCrystalWorld"):
 
 
 def randomize_contest_pokemon(world: "PokemonCrystalWorld"):
-    all_pokemon = sorted(world.generated_pokemon.keys())
-    selected_pokemon = set()
-    if world.options.randomize_wilds:
+    if not world.is_universal_tracker:
+        all_pokemon = sorted(world.generated_pokemon.keys())
+        selected_pokemon = set()
         for i, slot in enumerate(world.generated_contest):
-            pokemon = world.random.choice(all_pokemon)
+            pokemon = world.random.choice(all_pokemon) if world.options.randomize_wilds else slot.pokemon
             selected_pokemon.add(pokemon)
             world.generated_contest[i] = replace(
                 slot,
@@ -223,5 +225,5 @@ def randomize_contest_pokemon(world: "PokemonCrystalWorld"):
                 percentage=10 if world.options.encounter_slot_distribution == EncounterSlotDistribution.option_equal
                 else slot.percentage)
 
-    if "Bug Catching Contest" in world.options.wild_encounter_methods_required or world.is_universal_tracker:
-        world.logic.available_pokemon.update(selected_pokemon)
+    if "Bug Catching Contest" in world.options.wild_encounter_methods_required:
+        world.logic.available_pokemon.update(slot.pokemon for slot in world.generated_contest)

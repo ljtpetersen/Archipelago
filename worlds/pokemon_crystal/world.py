@@ -235,8 +235,9 @@ class PokemonCrystalWorld(World):
             generate_evolution_data(self)
             generate_breeding_data(self)
 
+        randomize_traded_pokemon(self)
+        
         if not self.is_universal_tracker:
-            randomize_traded_pokemon(self)
             randomize_requested_pokemon(self)
 
         create_locations(self, regions)
@@ -581,6 +582,7 @@ class PokemonCrystalWorld(World):
         slot_data["tea_west"] = 1 if "West" in self.options.saffron_gatehouse_tea.value else 0
         slot_data["dexsanity_count"] = len(self.generated_dexsanity)
         slot_data["dexsanity_pokemon"] = [self.generated_pokemon[poke].id for poke in self.generated_dexsanity]
+        slot_data["logically_available_pokemon_count"] = len(self.logic.available_pokemon)
 
         region_encounters = dict[str, set[int]]()
         for encounter_key, encounters in self.generated_wild.items():
@@ -664,7 +666,7 @@ class PokemonCrystalWorld(World):
         slot_data["shopsanity_johtomarts"] = 1 if Shopsanity.johto_marts in self.options.shopsanity.value else 0
         slot_data["shopsanity_kantomarts"] = 1 if Shopsanity.kanto_marts in self.options.shopsanity.value else 0
 
-        evolution_data = dict()
+        evolution_data = dict[int, list[dict]]()
         for pokemon_id, pokemon_data in self.generated_pokemon.items():
             evo_data = list()
             for evo in pokemon_data.evolutions:
