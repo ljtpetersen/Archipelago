@@ -3,12 +3,13 @@ from dataclasses import replace
 from typing import TYPE_CHECKING
 
 from BaseClasses import ItemClassification
-from .data import data as crystal_data, LogicalAccess, EncounterType, ALL_UNOWN, MiscOption
+from .data import data as crystal_data, LogicalAccess, EncounterType, MiscOption
 from .evolution import get_random_pokemon_evolution
 from .items import get_random_filler_item
 from .moves import get_tmhm_compatibility, randomize_learnset, moves_convert_friendly_to_ids
 from .options import RandomizeTypes, RandomizePalettes, RandomizeBaseStats, RandomizeStarters, RandomizeTrades, \
     DexsanityStarters, EncounterGrouping, RandomizePokemonRequests, Goal
+from .pokemon_data import ALL_UNOWN
 from .utils import pokemon_convert_friendly_to_ids, should_include_region
 
 if TYPE_CHECKING:

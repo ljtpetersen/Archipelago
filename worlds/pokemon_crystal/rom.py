@@ -7,14 +7,16 @@ import bsdiff4
 
 from settings import get_settings
 from worlds.Files import APProcedurePatch, APTokenMixin, APPatchExtension
-from .data import data, MiscOption, POKEDEX_COUNT_OFFSET, POKEDEX_OFFSET, EncounterType, \
-    FishingRodType, TreeRarity, FLY_UNLOCK_OFFSET, BETTER_MART_MARTS, MapPalette, GRASS_OFFSET, PaletteData, ALL_UNOWN
+from .data import data, MiscOption, EncounterType, FishingRodType, TreeRarity, MapPalette, PaletteData
+from .item_data import POKEDEX_COUNT_OFFSET, POKEDEX_OFFSET, FLY_UNLOCK_OFFSET, GRASS_OFFSET
 from .items import item_const_name_to_id
 from .maps import FLASH_MAP_GROUPS
+from .mart_data import BETTER_MART_MARTS
 from .options import UndergroundsRequirePower, RequireItemfinder, Goal, Route2Access, Route42Access, \
     BlackthornDarkCaveAccess, NationalParkAccess, Route3Access, EncounterSlotDistribution, KantoAccessRequirement, \
     FreeFlyLocation, HMBadgeRequirements, ShopsanityPrices, WildEncounterMethodsRequired, FlyCheese, Shopsanity, \
     RequireFlash, FieldMoveMenuOrder, RedGyaradosAccess
+from .pokemon_data import ALL_UNOWN
 from .utils import convert_to_ingame_text, write_bytes, replace_map_tiles
 
 if TYPE_CHECKING:

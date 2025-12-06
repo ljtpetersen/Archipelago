@@ -3,7 +3,8 @@ from collections.abc import Iterable, Sequence
 from typing import TYPE_CHECKING
 
 from Options import Toggle
-from .data import data, StartingTown, FlyRegion, CUSTOM_MART_SLOT_NAMES, RegionData
+from .data import data, StartingTown, FlyRegion, RegionData
+from .mart_data import CUSTOM_MART_SLOT_NAMES
 from .options import FreeFlyLocation, Route32Condition, JohtoOnly, RandomizeBadges, UndergroundsRequirePower, \
     Route3Access, EliteFourRequirement, Goal, Route44AccessRequirement, BlackthornDarkCaveAccess, RedRequirement, \
     MtSilverRequirement, HMBadgeRequirements, RedGyaradosAccess, EarlyFly, RadioTowerRequirement, \
@@ -317,14 +318,15 @@ def __adjust_options_traps(world: "PokemonCrystalWorld"):
         )
         world.options.filler_trap_percentage.value = maximum_trap_weight
 
+
 def __adjust_options_mischief_bounds(world: "PokemonCrystalWorld"):
     if world.options.enable_mischief and \
-       world.options.mischief_lower_bound.value > world.options.mischief_upper_bound.value:
+            world.options.mischief_lower_bound.value > world.options.mischief_upper_bound.value:
         world.options.mischief_upper_bound.value = world.options.mischief_lower_bound.value
         logging.warning("Pokemon Crystal: Adjusted mischief bounds for player %s (%s) :3",
-            world.player,
-            world.player_name
-        )
+                        world.player,
+                        world.player_name
+                        )
 
 
 def should_include_region(region: RegionData, world: "PokemonCrystalWorld"):

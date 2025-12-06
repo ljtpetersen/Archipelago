@@ -2,8 +2,9 @@ from collections.abc import Sequence
 from typing import TYPE_CHECKING
 
 from BaseClasses import Location, Region, LocationProgressType
-from .data import data, POKEDEX_OFFSET, POKEDEX_COUNT_OFFSET, FLY_UNLOCK_OFFSET, LogicalAccess, GRASS_OFFSET, GrassTile
+from .data import data, LogicalAccess, GrassTile
 from .evolution import evolution_location_name
+from .item_data import POKEDEX_OFFSET, POKEDEX_COUNT_OFFSET, FLY_UNLOCK_OFFSET, GRASS_OFFSET
 from .items import item_const_name_to_id
 from .options import Goal, DexsanityStarters, Grasssanity, RandomizeBugCatchingContest
 from .pokemon import get_priority_dexsanity, get_excluded_dexsanity

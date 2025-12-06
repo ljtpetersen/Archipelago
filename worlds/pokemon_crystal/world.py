@@ -11,9 +11,10 @@ from Fill import fill_restrictive, FillError
 from worlds.AutoWorld import World, WebWorld
 from .breeding import randomize_breeding, generate_breeding_data, can_breed, breeding_is_randomized
 from .data import PokemonData, TrainerData, MiscData, TMHMData, data as crystal_data, StaticPokemon, \
-    MusicData, MoveData, FlyRegion, TradeData, MiscOption, POKEDEX_OFFSET, StartingTown, \
-    LogicalAccess, EncounterType, EncounterKey, EncounterMon, EvolutionType, TypeData, BugContestEncounter
+    MusicData, MoveData, FlyRegion, TradeData, MiscOption, StartingTown, LogicalAccess, EncounterType, EncounterKey, \
+    EncounterMon, EvolutionType, TypeData, BugContestEncounter
 from .evolution import randomize_evolution, generate_evolution_data, evolution_in_logic
+from .item_data import POKEDEX_OFFSET
 from .items import PokemonCrystalItem, create_item_label_to_code_map, get_item_classification, ITEM_GROUPS, \
     item_const_name_to_id, item_const_name_to_label, adjust_item_classifications, get_random_filler_item, \
     get_random_ball, place_x_items, PokemonCrystalGlitchedToken
@@ -34,6 +35,7 @@ from .pokemon import randomize_pokemon_data, randomize_starters, randomize_trade
 from .regions import create_regions, setup_free_fly_regions
 from .rom import generate_output, PokemonCrystalProcedurePatch
 from .rules import set_rules, PokemonCrystalLogic, verify_hm_accessibility
+from .sign_data import FRIENDLY_SIGN_NAMES
 from .trainers import randomize_trainers
 from .universal_tracker import load_ut_slot_data
 from .utils import get_free_fly_locations, randomize_starting_town, \
@@ -236,7 +238,7 @@ class PokemonCrystalWorld(World):
             generate_breeding_data(self)
 
         randomize_traded_pokemon(self)
-        
+
         if not self.is_universal_tracker:
             randomize_requested_pokemon(self)
 
@@ -730,7 +732,8 @@ class PokemonCrystalWorld(World):
         if self.options.goal == Goal.option_unown_hunt:
             spoiler_handle.write("Unown locations:\n")
             for sign, unown in self.generated_unown_signs.items():
-                spoiler_handle.write(f"{sign}: {unown.replace('_', ' ')}\n")
+                sign_friendly_name = FRIENDLY_SIGN_NAMES[sign]
+                spoiler_handle.write(f"{sign_friendly_name}: {unown.replace('_', ' ')}\n")
             spoiler_handle.write("\n")
 
         if self.options.randomize_starters:

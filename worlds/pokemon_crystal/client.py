@@ -6,9 +6,11 @@ import worlds._bizhawk as bizhawk
 from BaseClasses import ItemClassification
 from NetUtils import ClientStatus
 from worlds._bizhawk.client import BizHawkClient
-from .data import data, POKEDEX_OFFSET, POKEDEX_COUNT_OFFSET, FLY_UNLOCK_OFFSET, GRASS_OFFSET, ALL_UNOWN
+from .data import data
+from .item_data import FLY_UNLOCK_OFFSET, GRASS_OFFSET, POKEDEX_OFFSET, POKEDEX_COUNT_OFFSET
 from .items import item_const_name_to_id, EXTENDED_TRAPLINK_MAPPING
 from .options import Goal, ProvideShopHints, JohtoOnly
+from .pokemon_data import ALL_UNOWN
 
 if TYPE_CHECKING:
     from worlds._bizhawk.context import BizHawkClientContext
