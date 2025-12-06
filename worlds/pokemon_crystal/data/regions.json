@@ -2267,6 +2267,9 @@
     "events": [
       "EVENT_HERDED_FARFETCHD"
     ],
+    "signs": [
+      "IlexForest"
+    ],
     "wild_encounters": {
       "grass": "ILEX_FOREST",
       "surfing": "ILEX_FOREST",
