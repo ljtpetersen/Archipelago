@@ -5564,7 +5564,7 @@
     "wild_encounters": {
       "grass": "ROUTE_42"
       "surfing": "ROUTE_42",
-      "fishing": "Lake",
+      "fishing": "Lake"
     }
   },
   "REGION_ROUTE_42_ECRUTEAK_GATE": {
