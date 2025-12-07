@@ -1,10 +1,10 @@
 {
-  "game": "Pokemon Crystal Beta",
+  "game": "Pokemon Crystal Prerelease",
   "authors": [
     "gerbiljames"
   ],
   "minimum_ap_version": "0.6.3",
-  "world_version": "0.0.1",
+  "world_version": "0.0.2",
   "compatible_version": 7,
   "version": 7
 }
