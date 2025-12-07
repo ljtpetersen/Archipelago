@@ -5501,7 +5501,8 @@
     ],
     "wild_encounters": {
       "surfing": "ROUTE_42",
-      "fishing": "Lake"
+      "fishing": "Lake",
+      "headbutt": "Town"
     }
   },
   "REGION_ROUTE_42:CENTER": {
@@ -5516,8 +5517,7 @@
     "events": [],
     "wild_encounters": {
       "surfing": "ROUTE_42",
-      "fishing": "Lake",
-      "headbutt": "Town"
+      "fishing": "Lake"
     }
   },
   "REGION_ROUTE_42:CENTERFRUIT": {
@@ -5563,6 +5563,8 @@
     ],
     "wild_encounters": {
       "grass": "ROUTE_42"
+      "surfing": "ROUTE_42",
+      "fishing": "Lake",
     }
   },
   "REGION_ROUTE_42_ECRUTEAK_GATE": {
