@@ -1253,8 +1253,8 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     elif (not world.options.randomize_fly_unlocks
           and world.options.fly_cheese == FlyCheese.option_out_of_logic and world.is_universal_tracker):
         set_rule(get_entrance("REGION_ROUTE_44 -> REGION_MAHOGANY_TOWN"),
-                 lambda state: has_route_44_access(state) or state.has(PokemonCrystalGlitchedToken.TOKEN_NAME,
-                                                                       world.player))
+                 lambda state: has_route_44_access(state) or (
+                         state.has(PokemonCrystalGlitchedToken.TOKEN_NAME, world.player) and can_fly(state)))
     else:
         set_rule(get_entrance("REGION_ROUTE_44 -> REGION_MAHOGANY_TOWN"), has_route_44_access)
 
@@ -1626,8 +1626,8 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
             digletts_cave_rule = lambda state: has_expn(state) or can_fly(state)
         elif (not world.options.randomize_fly_unlocks
               and world.options.fly_cheese == FlyCheese.option_out_of_logic and world.is_universal_tracker):
-            digletts_cave_rule = lambda state: has_expn(state) or state.has(PokemonCrystalGlitchedToken.TOKEN_NAME,
-                                                                            world.player)
+            digletts_cave_rule = lambda state: has_expn(state) or (
+                    state.has(PokemonCrystalGlitchedToken.TOKEN_NAME, world.player) and can_fly(state))
         else:
             digletts_cave_rule = has_expn
 
