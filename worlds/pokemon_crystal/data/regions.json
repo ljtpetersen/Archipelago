@@ -5562,7 +5562,7 @@
       "Route42Sign2"
     ],
     "wild_encounters": {
-      "grass": "ROUTE_42"
+      "grass": "ROUTE_42",
       "surfing": "ROUTE_42",
       "fishing": "Lake"
     }
