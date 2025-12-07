@@ -1084,6 +1084,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_FieldMovesAlwaysUsable_SetUp"] + 1)
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_FieldMovesAlwaysUsable_CallMove"] + 1)
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_FieldMovesAlwaysUsable_CheckTMHM"] + 1)
+        write_bytes(patch, [1], data.rom_addresses["AP_Setting_FieldMovesAlwaysUsable_MustKnowFieldMove"] + 1)
 
     if world.options.field_move_menu_order.value != FieldMoveMenuOrder.default:
         write_bytes(patch,
