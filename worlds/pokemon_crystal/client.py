@@ -535,7 +535,7 @@ class PokemonCrystalClient(BizHawkClient):
                     "key": f"pokemon_crystal_trades_{ctx.team}_{ctx.slot}",
                     "default": [],
                     "want_reply": False,
-                    "operations": [{"operation": "or", "value": list(local_trades_completed)}, ]
+                    "operations": [{"operation": "update", "value": list(local_trades_completed)}, ]
                 })
 
             if packages:
