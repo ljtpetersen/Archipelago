@@ -599,7 +599,7 @@ class PokemonCrystalWorld(World):
 
         slot_data["contest_encounters"] = [self.generated_pokemon[slot.pokemon].id for slot in self.generated_contest]
 
-        for hm in self.options.remove_badge_requirement.valid_keys:
+        for hm in [key for key in self.options.remove_badge_requirement.valid_keys if key not in ("_All", "_Random")]:
             slot_data["free_" + hm.lower()] = 1 if hm in self.options.remove_badge_requirement.value else 0
 
         slot_data["free_fly_location_option"] = self.options.free_fly_location.value
