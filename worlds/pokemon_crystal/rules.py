@@ -1233,6 +1233,12 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         add_rule(get_entrance("REGION_MOUNT_MORTAR_2F_OUTSIDE -> REGION_MOUNT_MORTAR_2F_INSIDE"), can_flash)
         add_rule(get_entrance("REGION_MOUNT_MORTAR_1F_OUTSIDE:CENTER -> REGION_MOUNT_MORTAR_B1F"), can_flash)
 
+        if world.options.route_42_access.value in (Route42Access.option_blocked,
+                                                   Route42Access.option_whirlpool_open_mortar):
+            set_rule(
+                get_entrance("REGION_MOUNT_MORTAR_1F_OUTSIDE:BELOW_WATERFALL -> REGION_MOUNT_MORTAR_1F_INSIDE:FRONT"),
+                can_flash)
+
     # Mahogany Town
     if Shopsanity.johto_marts in world.options.shopsanity.value:
         set_rule(get_entrance("REGION_MAHOGANY_MART_1F -> REGION_MART_MAHOGANY_2"),
