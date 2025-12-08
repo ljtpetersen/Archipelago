@@ -717,7 +717,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_RegionalHMBadges_1"] + 1)
         write_bytes(patch, [1], data.rom_addresses["AP_Setting_RegionalHMBadges_2"] + 1)
 
-    exp_modifier_address = data.rom_addresses["AP_Setting_ExpModifier"] + 1
+    exp_modifier_address = data.rom_addresses["AP_Setting_ExpModifier"]
     write_bytes(patch, [world.options.experience_modifier], exp_modifier_address)
 
     elite_four_text = convert_to_ingame_text("{:02d}".format(world.options.elite_four_count.value))
