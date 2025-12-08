@@ -321,19 +321,6 @@ class PokemonCrystalWorld(World):
             if self.options.johto_only != JohtoOnly.option_off:
                 add_items.extend(["TM_3", "TM_6", "TM_7", "TM_17", "TM_19", "TM_29", "TM_42", "TM_47"])
 
-        trap_names, trap_weights = zip(
-            ("Phone Trap", self.options.phone_trap_weight.value),
-            ("Sleep Trap", self.options.sleep_trap_weight.value),
-            ("Poison Trap", self.options.poison_trap_weight.value),
-            ("Burn Trap", self.options.burn_trap_weight.value),
-            ("Freeze Trap", self.options.freeze_trap_weight.value),
-            ("Paralysis Trap", self.options.paralysis_trap_weight.value),
-        )
-        total_trap_weight = self.options.filler_trap_percentage.value if any(trap_weights) else 0
-
-        def get_random_trap():
-            return self.create_item(self.random.choices(trap_names, trap_weights)[0])
-
         for location in item_locations:
             item_code = location.default_item_code
             if item_code > 0:
@@ -343,20 +330,17 @@ class PokemonCrystalWorld(World):
 
         if self.options.dexsanity:
             self.itempool.extend(
-                self.create_item_by_const_name(get_random_ball(self.random)) if
-                self.random.randint(0, 100) >= total_trap_weight else get_random_trap()
+                self.create_item_by_const_name(get_random_ball(self.random))
                 for _ in self.generated_dexsanity)
 
         if self.generated_dexcountsanity:
             self.itempool.extend(
-                self.create_item_by_const_name(get_random_ball(self.random)) if
-                self.random.randint(0, 100) >= total_trap_weight else get_random_trap()
+                self.create_item_by_const_name(get_random_ball(self.random))
                 for _ in self.generated_dexcountsanity)
 
         if self.options.grasssanity:
             self.itempool.extend(
-                self.create_item_by_const_name("GRASS_ITEM") if
-                self.random.randint(0, 100) >= total_trap_weight else get_random_trap()
+                self.create_item_by_const_name("GRASS_ITEM")
                 for _ in [loc for loc in self.multiworld.get_locations(self.player) if "grass" in loc.tags])
 
         if self.options.johto_only.value != JohtoOnly.option_off:
@@ -381,12 +365,22 @@ class PokemonCrystalWorld(World):
 
         adjust_item_classifications(self)
 
+        trap_names, trap_weights = zip(
+            ("Phone Trap", self.options.phone_trap_weight.value),
+            ("Sleep Trap", self.options.sleep_trap_weight.value),
+            ("Poison Trap", self.options.poison_trap_weight.value),
+            ("Burn Trap", self.options.burn_trap_weight.value),
+            ("Freeze Trap", self.options.freeze_trap_weight.value),
+            ("Paralysis Trap", self.options.paralysis_trap_weight.value),
+        )
+        total_trap_weight = self.options.filler_trap_percentage.value if any(trap_weights) else 0
+
         for i in range(len(self.itempool)):
             if self.itempool[i].classification == ItemClassification.filler:
                 if add_items:
                     self.itempool[i] = self.create_item_by_const_name(add_items.pop())
                 elif total_trap_weight and self.random.randint(0, 100) <= total_trap_weight:
-                    self.itempool[i] = get_random_trap()
+                    self.itempool[i] = self.create_item(self.random.choices(trap_names, trap_weights)[0])
 
         adjust_item_classifications(self)
 
