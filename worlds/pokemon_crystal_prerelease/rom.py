@@ -1198,7 +1198,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         write_bytes(patch, [left], data.rom_addresses["AP_Setting_Route30Battle_MikeyTurn"] + 2)
 
     # Set slot auth
-    ap_version_text = convert_to_ingame_text(data.manifest.world_version)[:19]
+    ap_version_text = convert_to_ingame_text(data.manifest.pokemon_crystal_version)[:19]
     ap_version_text.append(0x50)
     # truncated to 19 to preserve the "v" at the beginning
     write_bytes(patch, world.auth, data.rom_addresses["AP_Seed_Auth"])

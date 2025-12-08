@@ -684,6 +684,7 @@ class GrassTile:
 class ManifestData:
     game: str
     world_version: str
+    pokemon_crystal_version: str | None
 
 
 @dataclass(frozen=True)
@@ -1218,6 +1219,7 @@ def _init() -> None:
     manifest = ManifestData(
         game=manifest_json["game"],
         world_version=manifest_json["world_version"],
+        pokemon_crystal_version=manifest_json.get("pokemon_crystal_version", manifest_json["world_version"]),
     )
 
     palettes = [
