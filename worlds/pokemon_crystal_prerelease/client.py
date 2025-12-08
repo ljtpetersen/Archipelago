@@ -745,7 +745,7 @@ class PokemonCrystalClient(BizHawkClient):
                 }])
                 self.local_seen_signs = local_seen_signs
 
-            local_unown_dex = self.remote_unown_dex
+            local_unown_dex = list(self.remote_unown_dex)
             for unown in unown_dex_bytes:
                 if unown and unown not in local_unown_dex:
                     local_unown_dex.append(unown)
