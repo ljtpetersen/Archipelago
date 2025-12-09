@@ -1,9 +1,5 @@
 # Pokémon Crystal
 
-## Where is the options page?
-
-You can read through all the options and generate a YAML [here](../player-options).
-
 ## What does randomization do to this game?
 
 Some changes have been made to the base game for this randomizer:
@@ -72,7 +68,8 @@ Many additional quality of life changes have been implemented:
 - When battle scenes are turned off, HP reduction and XP gain animations are skipped
 - The Battle Scene option is more granular, with the fastest choice, Speedy, cutting nearly every animation
 - You can hold B to run. An Auto-run option also exists, and if enabled, B prevents you from running
-- Many other options were added to drastically speed up gameplay, including: Rods can always work, Uncaught Pokémon can be
+- Many other options were added to drastically speed up gameplay, including: Rods can always work, Uncaught Pokémon can
+  be
   more likely to appear, Trainers can be blind, etc.
 - Lag in menus has been removed
 - The Bicycle can be used indoors

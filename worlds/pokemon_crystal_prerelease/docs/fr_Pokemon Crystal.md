@@ -1,9 +1,5 @@
 # Pokémon Cristal
 
-## Où est la page d'options ?
-
-Vous pouvez voir toutes les options et générer un YAML [ici](../player-options).
-
 ## Que fait la randomization dans ce jeu ?
 
 Quelques changements ont été faits au jeu de base pour ce randomizer :
