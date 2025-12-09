@@ -1,7 +1,7 @@
 import logging
 from typing import TYPE_CHECKING
 
-from BaseClasses import Region, ItemClassification, Entrance
+from BaseClasses import Region, ItemClassification
 from .data import data, RegionData, EncounterMon, StaticPokemon, LogicalAccess, EncounterKey, FishingRodType, \
     TreeRarity, EncounterType
 from .items import PokemonCrystalItem
@@ -372,22 +372,10 @@ def setup_free_fly_regions(world: "PokemonCrystalWorld"):
                                                  FreeFlyLocation.option_free_fly_and_map_card):
         free_fly_location = world.free_fly_location
         fly_region = world.get_region(free_fly_location.exit_region)
-        connection = Entrance(
-            world.player,
-            f"Free Fly {free_fly_location.exit_region}",
-            fly
-        )
-        fly.exits.append(connection)
-        connection.connect(fly_region)
+        fly.connect(fly_region, f"Free Fly {free_fly_location.exit_region}")
 
     if world.options.free_fly_location.value in (FreeFlyLocation.option_free_fly_and_map_card,
                                                  FreeFlyLocation.option_map_card):
         map_card_fly_location = world.map_card_fly_location
         map_card_region = world.get_region(map_card_fly_location.exit_region)
-        connection = Entrance(
-            world.player,
-            f"Free Fly {map_card_fly_location.exit_region}",
-            fly
-        )
-        fly.exits.append(connection)
-        connection.connect(map_card_region)
+        fly.connect(map_card_region, f"Free Fly {map_card_fly_location.exit_region}")
