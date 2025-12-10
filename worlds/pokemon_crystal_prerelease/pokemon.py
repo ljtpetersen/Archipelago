@@ -441,8 +441,6 @@ def randomize_unown_signs(world: "PokemonCrystalWorld"):
     for unown in all_unown:
         world.generated_unown_signs[available_signs.pop()] = unown
 
-    world.logic.available_pokemon.add("UNOWN")
-
 
 def get_priority_dexsanity(world: "PokemonCrystalWorld") -> set[str]:
     return _locations_to_pokemon(world, world.options.priority_locations.value)

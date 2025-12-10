@@ -157,8 +157,6 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
                     encounter_blocklist.add(pokemon)
                     new_encounters.append(replace(encounter, pokemon=pokemon))
 
-            if region_type is LogicalAccess.InLogic:
-                world.logic.available_pokemon.update(encounter.pokemon for encounter in new_encounters)
             return new_encounters
 
         region_keys = list(world.generated_wild)
@@ -192,7 +190,8 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
 def randomize_static_pokemon(world: "PokemonCrystalWorld"):
     if not world.is_universal_tracker:
         if world.options.randomize_static_pokemon:
-            priority_pokemon = get_priority_dexsanity(world) - world.logic.available_pokemon
+            logically_available_wilds = get_logically_available_wilds(world)
+            priority_pokemon = get_priority_dexsanity(world) - logically_available_wilds
             blocklist = pokemon_convert_friendly_to_ids(world, world.options.static_blocklist)
             for static_name, pkmn_data in world.generated_static.items():
                 pokemon = get_random_pokemon(world,
@@ -222,6 +221,9 @@ def get_logically_available_wilds(world: "PokemonCrystalWorld") -> set[str]:
 
     if "Bug Catching Contest" in world.options.wild_encounter_methods_required:
         logical_pokemon.update(slot.pokemon for slot in world.generated_contest)
+
+    if world.options.goal == Goal.option_unown_hunt:
+        logical_pokemon.add("UNOWN")
 
     return logical_pokemon
 
