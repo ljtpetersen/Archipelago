@@ -221,7 +221,7 @@ def get_logically_available_wilds(world: "PokemonCrystalWorld") -> set[str]:
             logical_pokemon.update(wild.pokemon for wild in wilds)
 
     if "Bug Catching Contest" in world.options.wild_encounter_methods_required:
-        world.logic.available_pokemon.update(slot.pokemon for slot in world.generated_contest)
+        logical_pokemon.update(slot.pokemon for slot in world.generated_contest)
 
     return logical_pokemon
 
