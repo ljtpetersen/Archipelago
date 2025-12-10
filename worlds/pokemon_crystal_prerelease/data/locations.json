@@ -2496,6 +2496,21 @@
       "AP_NPC_WillsRoom_Will_NO_ITEM"
     ]
   },
+  "LAKE_OF_RAGE_MAGIKARP_PRIZE": {
+    "label": "Lake of Rage - Magikarp Prize",
+    "flag": "EVENT_LAKE_OF_RAGE_GOT_MAGIKARP_PRIZE",
+    "type": "giveitem",
+    "tags": [
+      "NPCGift",
+      "NPC Gifts",
+      "Lake of Rage",
+      "PokemonRequest"
+    ],
+    "default_item": "ELIXER",
+    "scripts": [
+      "AP_NPC_LakeOfRageMagikarpHouse_Elixer"
+    ]
+  },
   "BLACKBELT_FROM_WESLEY": {
     "label": "Lake of Rage - Blackbelt from Wesley",
     "flag": "EVENT_GOT_BLACKBELT_FROM_WESLEY",
