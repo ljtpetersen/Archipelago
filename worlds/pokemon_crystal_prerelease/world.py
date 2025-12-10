@@ -9,11 +9,11 @@ import settings
 from BaseClasses import Tutorial, ItemClassification, MultiWorld, CollectionState, Item
 from Fill import fill_restrictive, FillError
 from worlds.AutoWorld import World, WebWorld
-from .breeding import randomize_breeding, generate_breeding_data, can_breed, breeding_is_randomized
+from .breeding import randomize_breeding, can_breed, breeding_is_randomized, get_logically_available_breeding
 from .data import PokemonData, TrainerData, MiscData, TMHMData, data as crystal_data, StaticPokemon, \
     MusicData, MoveData, FlyRegion, TradeData, MiscOption, StartingTown, LogicalAccess, EncounterType, EncounterKey, \
     EncounterMon, EvolutionType, TypeData, BugContestEncounter
-from .evolution import randomize_evolution, generate_evolution_data, evolution_in_logic
+from .evolution import randomize_evolution, evolution_in_logic, get_logically_available_evolutions
 from .item_data import POKEDEX_OFFSET
 from .items import PokemonCrystalItem, create_item_label_to_code_map, get_item_classification, ITEM_GROUPS, \
     item_const_name_to_id, item_const_name_to_label, adjust_item_classifications, get_random_filler_item, \
@@ -30,17 +30,18 @@ from .options import PokemonCrystalOptions, JohtoOnly, RandomizeBadges, HMBadgeR
     OPTION_GROUPS, RandomizeFlyUnlocks, Shopsanity, Grasssanity, Goal
 from .phone import generate_phone_traps
 from .phone_data import PhoneScript
-from .pokemon import randomize_pokemon_data, randomize_starters, randomize_traded_pokemon, \
-    fill_wild_encounter_locations, randomize_requested_pokemon, fill_trade_locations, randomize_unown_signs
+from .pokemon import randomize_pokemon_data, randomize_starters, fill_wild_encounter_locations, fill_trade_locations, \
+    randomize_unown_signs, randomize_trade_received_pokemon, randomize_trade_requested_pokemon, \
+    get_logically_available_trade_pokemon, randomize_request_pokemon
 from .regions import create_regions, setup_free_fly_regions
 from .rom import generate_output, PokemonCrystalProcedurePatch
 from .rules import set_rules, PokemonCrystalLogic, verify_hm_accessibility
 from .sign_data import FRIENDLY_SIGN_NAMES
 from .trainers import randomize_trainers
 from .universal_tracker import load_ut_slot_data
-from .utils import get_free_fly_locations, randomize_starting_town, \
-    adjust_options
-from .wild import randomize_wild_pokemon, randomize_static_pokemon, randomize_contest_pokemon
+from .utils import get_free_fly_locations, randomize_starting_town, adjust_options
+from .wild import randomize_wild_pokemon, randomize_static_pokemon, get_logically_available_wilds, \
+    get_logically_available_statics
 
 
 class PokemonCrystalSettings(settings.Group):
@@ -217,30 +218,32 @@ class PokemonCrystalWorld(World):
         self.logic.set_hm_compatible_pokemon(self)
 
     def create_regions(self) -> None:
-        if not self.is_universal_tracker:
-            randomize_starting_town(self)
 
+        randomize_starting_town(self)
         regions = create_regions(self)
 
-        if not self.is_universal_tracker:
-            preevolutions = randomize_evolution(self)
-            randomize_breeding(self, preevolutions)
-            randomize_starters(self)
+        preevolutions = randomize_evolution(self)
+        randomize_breeding(self, preevolutions)
 
+        randomize_starters(self)
         randomize_wild_pokemon(self)
         randomize_static_pokemon(self)
-        randomize_contest_pokemon(self)
+
+        self.logic.available_pokemon.update(get_logically_available_wilds(self))
+        self.logic.available_pokemon.update(get_logically_available_statics(self))
 
         previous_logically_available_pokemon_count = 0
         while previous_logically_available_pokemon_count != len(self.logic.available_pokemon):
             previous_logically_available_pokemon_count = len(self.logic.available_pokemon)
-            generate_evolution_data(self)
-            generate_breeding_data(self)
+            self.logic.available_pokemon.update(get_logically_available_evolutions(self))
+            self.logic.available_pokemon.update(get_logically_available_breeding(self))
 
-        randomize_traded_pokemon(self)
+        randomize_trade_requested_pokemon(self)
+        randomize_trade_received_pokemon(self)
 
-        if not self.is_universal_tracker:
-            randomize_requested_pokemon(self)
+        self.logic.available_pokemon.update(get_logically_available_trade_pokemon(self))
+
+        randomize_request_pokemon(self)
 
         create_locations(self, regions)
         self.multiworld.regions.extend(regions.values())

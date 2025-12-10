@@ -354,7 +354,7 @@ def pokemon_convert_friendly_to_ids(world: "PokemonCrystalWorld", pokemon: Itera
 
 
 def randomize_starting_town(world: "PokemonCrystalWorld"):
-    if not world.options.randomize_starting_town: return
+    if world.is_universal_tracker or not world.options.randomize_starting_town: return
 
     location_pool = data.starting_towns[:]
     location_pool = [loc for loc in location_pool if _starting_town_valid(world, loc)]

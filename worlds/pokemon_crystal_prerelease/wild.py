@@ -173,18 +173,20 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
             "Accessible Pokemon pool is not empty, something went horribly wrong.")
         if inaccessible_pokemon_pool: raise AssertionError(
             "Inaccessible Pokemon pool is not empty, something went horribly wrong.")
+
+        for i, slot in enumerate(world.generated_contest):
+            pokemon = get_random_pokemon(world, exclude_unown=True) if world.options.randomize_wilds else slot.pokemon
+            world.generated_contest[i] = replace(
+                slot,
+                pokemon=pokemon,
+                percentage=10 if world.options.encounter_slot_distribution == EncounterSlotDistribution.option_equal
+                else slot.percentage)
     else:
-        wild_pokemon = set()
         for region_key, wilds in world.generated_wild.items():
             if not world.is_universal_tracker and world.options.goal.value == Goal.option_unown_hunt and any(
                     wild.pokemon == "UNOWN" for wild in wilds):
                 wilds = [replace(wild, pokemon="RATTATA") for wild in wilds]
                 world.generated_wild[region_key] = wilds
-            access = world.logic.wild_regions[region_key]
-            if access is LogicalAccess.InLogic:
-                wild_pokemon.update(wild.pokemon for wild in wilds)
-
-        world.logic.available_pokemon.update(wild_pokemon)
 
 
 def randomize_static_pokemon(world: "PokemonCrystalWorld"):
@@ -209,23 +211,21 @@ def randomize_static_pokemon(world: "PokemonCrystalWorld"):
             encounter_key = EncounterKey.static("OddEgg")
             world.generated_static[encounter_key] = replace(world.generated_static[encounter_key], pokemon=pokemon)
 
-    world.logic.available_pokemon.update(
-        static.pokemon for region_key, static in world.generated_static.items() if world.logic.wild_regions[
-            region_key] is LogicalAccess.InLogic)
 
+def get_logically_available_wilds(world: "PokemonCrystalWorld") -> set[str]:
+    logical_pokemon = set[str]()
 
-def randomize_contest_pokemon(world: "PokemonCrystalWorld"):
-    if not world.is_universal_tracker:
-        all_pokemon = sorted(world.generated_pokemon.keys())
-        selected_pokemon = set()
-        for i, slot in enumerate(world.generated_contest):
-            pokemon = world.random.choice(all_pokemon) if world.options.randomize_wilds else slot.pokemon
-            selected_pokemon.add(pokemon)
-            world.generated_contest[i] = replace(
-                slot,
-                pokemon=pokemon,
-                percentage=10 if world.options.encounter_slot_distribution == EncounterSlotDistribution.option_equal
-                else slot.percentage)
+    for region_key, wilds in world.generated_wild.items():
+        access = world.logic.wild_regions[region_key]
+        if access is LogicalAccess.InLogic:
+            logical_pokemon.update(wild.pokemon for wild in wilds)
 
     if "Bug Catching Contest" in world.options.wild_encounter_methods_required:
         world.logic.available_pokemon.update(slot.pokemon for slot in world.generated_contest)
+
+    return logical_pokemon
+
+
+def get_logically_available_statics(world: "PokemonCrystalWorld") -> set[str]:
+    return {static.pokemon for region_key, static in world.generated_static.items() if world.logic.wild_regions[
+        region_key] is LogicalAccess.InLogic}

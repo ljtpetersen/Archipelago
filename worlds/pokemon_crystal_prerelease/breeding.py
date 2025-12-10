@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 def randomize_breeding(world: "PokemonCrystalWorld", preevolutions: dict[str, list[str]]) -> None:
-    if not world.options.randomize_breeding: return
+    if world.is_universal_tracker or not world.options.randomize_breeding: return
 
     blocklist = pokemon_convert_friendly_to_ids(world, world.options.breeding_blocklist)
     global_breeding_pool = [poke for poke in world.generated_pokemon.keys() if poke not in blocklist]
@@ -59,7 +59,7 @@ def _recursive_get_bases(pokemon: str, preevolutions: dict[str, list[str]]) -> l
     return sum([_recursive_get_bases(poke, preevolutions) for poke in preevolutions[pokemon]], [])
 
 
-def generate_breeding_data(world: "PokemonCrystalWorld"):
+def get_logically_available_breeding(world: "PokemonCrystalWorld") -> set[str]:
     breeding_pokemon = set()
 
     for pokemon_id, data in world.generated_pokemon.items():
@@ -79,7 +79,7 @@ def generate_breeding_data(world: "PokemonCrystalWorld"):
             if logical_access is LogicalAccess.InLogic:
                 breeding_pokemon.add("NIDORAN_M")
 
-    world.logic.available_pokemon.update(breeding_pokemon)
+    return breeding_pokemon
 
 
 def can_breed(world: "PokemonCrystalWorld", parent: str) -> bool:
