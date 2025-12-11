@@ -7,8 +7,8 @@ from typing import TYPE_CHECKING
 
 import bsdiff4
 
-from settings import get_settings
 from Generate import roll_settings
+from settings import get_settings
 from worlds.Files import APProcedurePatch, APTokenMixin, APPatchExtension
 from .data import data, MiscOption, EncounterType, FishingRodType, TreeRarity, MapPalette, PaletteData
 from .item_data import POKEDEX_COUNT_OFFSET, POKEDEX_OFFSET, FLY_UNLOCK_OFFSET, GRASS_OFFSET
@@ -72,7 +72,7 @@ class PokemonCrystalAPPatchExtension(APPatchExtension):
             game_option_overrides = rolled_options.game_options
             game_options_address = data.rom_addresses["AP_Setting_DefaultOptions"]
             num_option_bytes = max([item.option_byte_index for item in data.game_settings.values()]) + 1
-            option_bytes = overridden_rom[game_options_address:game_options_address+num_option_bytes]
+            option_bytes = overridden_rom[game_options_address:game_options_address + num_option_bytes]
 
             for setting_name, setting in data.game_settings.items():
                 option_selection = game_option_overrides.get(setting_name, None)
@@ -118,7 +118,7 @@ def write_customizable_options(options: PokemonCrystalOptions,
                                ) -> None:
     if must_write_option("field_move_menu_order"):
         write_bytes([FieldMoveMenuOrder.default.index(val) for val in options.field_move_menu_order.value],
-                data.rom_addresses["AP_Setting_Field_Move_Order"])
+                    data.rom_addresses["AP_Setting_Field_Move_Order"])
 
     if must_write_option("trainer_name"):
         name_bytes = convert_to_ingame_text(options.trainer_name.value[:7])
@@ -129,10 +129,13 @@ def write_customizable_options(options: PokemonCrystalOptions,
 
     if must_write_option("trainer_palette"):
         if options.trainer_palette.value == TrainerPalette.option_vanilla:
-            chris_palette_data = next(palette for palette in data.palettes if palette.index == TrainerPalette.option_red - 1)
-            kris_palette_data = next(palette for palette in data.palettes if palette.index == TrainerPalette.option_blue - 1)
+            chris_palette_data = next(
+                palette for palette in data.palettes if palette.index == TrainerPalette.option_red - 1)
+            kris_palette_data = next(
+                palette for palette in data.palettes if palette.index == TrainerPalette.option_blue - 1)
         else:
-            chris_palette_data = next(palette for palette in data.palettes if palette.index == options.trainer_palette - 1)
+            chris_palette_data = next(
+                palette for palette in data.palettes if palette.index == options.trainer_palette - 1)
             kris_palette_data = chris_palette_data
 
         chris_addresses = ("AP_Setting_ChrisWalkSpriteData", "AP_Setting_ChrisBikeSpriteData",
@@ -200,10 +203,10 @@ def write_customizable_options(options: PokemonCrystalOptions,
         address = data.rom_addresses["AP_Setting_ShopsanityRestrictRareCandies"] + 1
         write_bytes([patched_value], address)
 
-    if must_write_option("all_pokemon_seen"):
-        patched_value = 1 if options.all_pokemon_seen.value else 0
-        write_bytes([patched_value], data.rom_addresses["AP_Setting_AllPokemonSeen_1"] + 1)
-        write_bytes([patched_value], data.rom_addresses["AP_Setting_AllPokemonSeen_2"] + 1)
+    # if must_write_option("all_pokemon_seen"):
+    #     patched_value = 1 if options.all_pokemon_seen.value else 0
+    #     write_bytes([patched_value], data.rom_addresses["AP_Setting_AllPokemonSeen_1"] + 1)
+    #     write_bytes([patched_value], data.rom_addresses["AP_Setting_AllPokemonSeen_2"] + 1)
 
     if must_write_option("starting_money"):
         start_money = options.starting_money.value.to_bytes(3, "big")
