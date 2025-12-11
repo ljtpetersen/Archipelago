@@ -1885,6 +1885,7 @@ class GameOptions(OptionDict):
     spinners: normal/rotators/hell - Sets the overworld behaviour of trainers
         normal: Trainers will behave as they do in vanilla
         rotators: Trainers that spin randomly will rotate consistently
+        heck: All trainers with vision rotate consistently, they have their original vision range but can spot you through obstacles
         hell: All trainers with vision will spin randomly, have max vision and can spot you through obstacles
     surf_music: on/off - Sets whether the surf music will play
     text_frame: 1-8 - Sets the textbox frame, "random" will pick a random frame
@@ -2019,7 +2020,7 @@ class ProgressiveRods(Toggle):
 
 
 class PokemonCrystalDeathLink(DeathLink):
-    __doc__ = DeathLink.__doc__ + "\n\n    In Pokemon Crystal, whiting out sends a death and receiving a death causes you to white out.\n\n    Being seen by a trainer when spinner hell is enabled will send a deathlink."
+    __doc__ = DeathLink.__doc__ + "\n\n    In Pokemon Crystal, whiting out sends a death and receiving a death causes you to white out.\n\n    Being seen by a trainer when spinner heck or hell is enabled will send a deathlink."
 
 
 @dataclass
