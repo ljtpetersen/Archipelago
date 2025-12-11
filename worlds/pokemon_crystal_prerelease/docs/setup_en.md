@@ -66,7 +66,7 @@ In it, add an `option_overrides` setting like so:
 pokemon_crystal_settings:
   rom_file: "Pokemon - Crystal Version (UE) [C][!].gbc"
   option_overrides:
-  # Enter your overrides here
+    # Enter your overrides here
 ```
 
 You can then type in the options you would like to override as you would in a player YAML. Option weights and triggers
