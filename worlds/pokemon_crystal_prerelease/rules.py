@@ -841,8 +841,8 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
     if not johto_only():
         if world.options.magnet_train_access:
-            rule = lambda state: (state.has("Pass", world.player)
-                                  and state.has("EVENT_RESTORED_POWER_TO_KANTO", world.player))
+            rule = lambda state: state.has("Pass", world.player) and state.has("EVENT_RESTORED_POWER_TO_KANTO",
+                                                                               world.player)
         else:
             rule = lambda state: state.has("Pass", world.player)
         set_rule(get_entrance("REGION_GOLDENROD_MAGNET_TRAIN_STATION -> REGION_SAFFRON_MAGNET_TRAIN_STATION"),
@@ -1660,8 +1660,12 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         set_rule(get_location("Copycat's House - Pass from Copycat"),
                  lambda state: state.has("Lost Item", world.player))
 
-        set_rule(get_entrance("REGION_SAFFRON_MAGNET_TRAIN_STATION -> REGION_GOLDENROD_MAGNET_TRAIN_STATION"),
-                 lambda state: state.has("Pass", world.player))
+        if world.options.magnet_train_access:
+            rule = lambda state: state.has("Pass", world.player) and state.has("EVENT_RESTORED_POWER_TO_KANTO",
+                                                                               world.player)
+        else:
+            rule = lambda state: state.has("Pass", world.player)
+        set_rule(get_entrance("REGION_SAFFRON_MAGNET_TRAIN_STATION -> REGION_GOLDENROD_MAGNET_TRAIN_STATION"), rule)
 
         if world.options.lock_kanto_gyms:
             set_rule(get_entrance("REGION_SAFFRON_CITY -> REGION_SAFFRON_GYM"), kanto_gyms_access)
