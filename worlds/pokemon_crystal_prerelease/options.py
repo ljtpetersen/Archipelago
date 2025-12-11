@@ -780,8 +780,10 @@ class RandomizeBerryTrees(Toggle):
 
 class RandomizePokemonRequests(Choice):
     """
-    Shuffles the items given by Bill's Grandpa after showing him specific Pokemon into the pool
-    Optionally also randomizes the requested Pokemon
+    Shuffles the items given by Bill's Grandpa after showing him specific Pokemon into the pool, as well as the reward
+    for showing a Magikarp to the fisher in the house at Lake of Rage
+
+    Optionally also randomizes the requested Pokemon, except the Magikarp
 
     Trainers which need you to show them a Pokemon to get their phone number require both this option and Randomize Phone Call Items to be enabled.
     """

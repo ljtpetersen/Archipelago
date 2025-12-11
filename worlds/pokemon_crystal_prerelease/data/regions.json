@@ -2468,7 +2468,9 @@
     "exits": [
       "REGION_LAKE_OF_RAGE"
     ],
-    "locations": [],
+    "locations": [
+      "LAKE_OF_RAGE_MAGIKARP_PRIZE"
+    ],
     "events": []
   },
   "REGION_LANCES_ROOM": {

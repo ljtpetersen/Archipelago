@@ -67,6 +67,9 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
         if world.options.randomize_pokemon_requests == RandomizePokemonRequests.option_items:
             logical_pokemon_pool.extend(world.generated_request_pokemon)
 
+        if world.options.randomize_pokemon_requests:
+            logical_pokemon_pool.append("MAGIKARP")
+
         if world.options.randomize_trades.value in (RandomizeTrades.option_received,
                                                     RandomizeTrades.option_vanilla) and world.options.trades_required:
             logical_pokemon_pool.extend(trade.requested_pokemon for trade in world.generated_trades.values())
@@ -185,6 +188,33 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
                     wild.pokemon == "UNOWN" for wild in wilds):
                 wilds = [replace(wild, pokemon="RATTATA") for wild in wilds]
                 world.generated_wild[region_key] = wilds
+
+    if world.options.randomize_pokemon_requests:
+        logical_wilds = get_logically_available_wilds(world)
+
+        if "MAGIKARP" not in logical_wilds:
+            wilds = [(key, wilds) for key, wilds in world.generated_wild.items() if
+                     world.logic.wild_regions[key] is LogicalAccess.InLogic and key.region_id is not None]
+
+            wilds.sort(key=lambda x: x[0].region_id)
+            world.random.shuffle(wilds)
+
+            to_replace = None
+            encounter_key = None
+            encounters = None
+            attempts = 0
+            while not to_replace or to_replace in world.generated_request_pokemon:
+                encounter_key, encounters = world.random.choice(wilds)
+                to_replace = world.random.choice(encounters).pokemon
+                if attempts >= 4:
+                    raise RuntimeError("Magikarp was not placed in 5 attempts, which is probably bad.")
+                attempts += 1
+
+            encounters = [
+                replace(encounter, pokemon="MAGIKARP" if encounter.pokemon == to_replace else encounter.pokemon) for
+                encounter in encounters]
+
+            world.generated_wild[encounter_key] = encounters
 
 
 def randomize_static_pokemon(world: "PokemonCrystalWorld"):

@@ -1306,6 +1306,11 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
 
     set_rule(get_entrance("REGION_LAKE_OF_RAGE -> REGION_LAKE_OF_RAGE:CUT"), can_cut)
 
+    if world.options.randomize_pokemon_requests:
+        set_rule(get_location("Lake of Rage - Magikarp Prize"),
+                 lambda state: state.has("MAGIKARP", world.player) and state.has("EVENT_CLEARED_ROCKET_HIDEOUT",
+                                                                                 world.player))
+
     # Route 44
     set_rule(get_entrance("REGION_ROUTE_44 -> REGION_ROUTE_44:WATER"), can_surf)
 
