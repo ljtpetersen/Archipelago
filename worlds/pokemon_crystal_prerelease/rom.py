@@ -2,7 +2,7 @@ import logging
 import os
 import random
 from collections import defaultdict
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from typing import TYPE_CHECKING
 
 import bsdiff4
