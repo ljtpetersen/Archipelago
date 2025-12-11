@@ -113,7 +113,7 @@ class PokemonCrystalProcedurePatch(APProcedurePatch, APTokenMixin):
 
 
 def write_customizable_options(options: PokemonCrystalOptions,
-                               write_bytes: Callable[[bytes, int], None],
+                               write_bytes: Callable[[bytes | Sequence[int], int], None],
                                must_write_option: Callable[[str], bool]
                                ) -> None:
     if must_write_option("field_move_menu_order"):
