@@ -202,13 +202,11 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
             to_replace = None
             encounter_key = None
             encounters = None
-            attempts = 0
             while not to_replace or to_replace in world.generated_request_pokemon:
-                encounter_key, encounters = world.random.choice(wilds)
+                if not wilds:
+                    raise RuntimeError("Magikarp could not be placed anywhere. Aborting.")
+                encounter_key, encounters = wilds.pop()
                 to_replace = world.random.choice(encounters).pokemon
-                if attempts >= 4:
-                    raise RuntimeError("Magikarp was not placed in 5 attempts, which is probably bad.")
-                attempts += 1
 
             encounters = [
                 replace(encounter, pokemon="MAGIKARP" if encounter.pokemon == to_replace else encounter.pokemon) for
