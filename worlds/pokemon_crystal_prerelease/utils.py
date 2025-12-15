@@ -9,7 +9,7 @@ from .options import FreeFlyLocation, Route32Condition, JohtoOnly, RandomizeBadg
     Route3Access, EliteFourRequirement, Goal, Route44AccessRequirement, BlackthornDarkCaveAccess, RedRequirement, \
     MtSilverRequirement, HMBadgeRequirements, RedGyaradosAccess, EarlyFly, RadioTowerRequirement, \
     BreedingMethodsRequired, Shopsanity, KantoTrainersanity, JohtoTrainersanity, RandomizePokemonRequests, \
-    EnhancedOptionSet, RandomizeTypes, RandomizeEvolution, RandomizeTrades, TradesRequired
+    EnhancedOptionSet, RandomizeTypes, RandomizeEvolution, RandomizeTrades, TradesRequired, MagnetTrainAccess
 from ..Files import APTokenTypes
 
 if TYPE_CHECKING:
@@ -36,6 +36,7 @@ def __adjust_option_problems(world: "PokemonCrystalWorld"):
     __adjust_options_radio_tower_and_route_44(world)
     __adjust_options_victory_road_badges(world)
     __adjust_options_johto_only(world)
+    __adjust_options_restrictive_region_travel(world)
     __adjust_options_gyarados(world)
     __adjust_options_early_fly(world)
     __adjust_options_encounters_and_breeding(world)
@@ -205,6 +206,15 @@ def __adjust_options_johto_only(world: "PokemonCrystalWorld"):
                     "Pokemon Crystal: Route 44 Access Badges >8 incompatible with Johto Only "
                     "if badges are not completely random. Changing Route 44 Access Badges to 8 for player %s.",
                     world.player_name)
+
+
+def __adjust_options_restrictive_region_travel(world: "PokemonCrystalWorld") -> None:
+    if world.options.randomize_badges != RandomizeBadges.option_completely_random:
+        if world.options.magnet_train_access == MagnetTrainAccess.option_pass_and_power:
+            world.options.magnet_train_access.value = MagnetTrainAccess.option_pass
+            logging.warning("Pokemon Crystal: Magnet Train requires power not compatible with badges in gyms. "
+                            "Changing Magnet Train Access to Pass for player %s.",
+                            world.player_name)
 
 
 def __adjust_options_gyarados(world: "PokemonCrystalWorld"):
