@@ -4714,7 +4714,6 @@
   "REGION_ROUTE_30": {
     "johto": true,
     "exits": [
-      "REGION_ROUTE_31",
       "REGION_CHERRYGROVE_CITY",
       "REGION_ROUTE_30_BERRY_HOUSE",
       "REGION_MR_POKEMONS_HOUSE",
