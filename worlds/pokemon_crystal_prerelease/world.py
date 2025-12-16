@@ -730,7 +730,7 @@ class PokemonCrystalWorld(World):
         if not self.options.remote_items and self.options.filler_trap_percentage:
             slot_data["trap_locations"] = {str(location.address): location.item.code for location in
                                            self.get_locations() if
-                                           location.item.player == self.player and "Trap" in location.item.tags}
+                                           location.item.player == self.player and ("Trap" in location.item.tags)}
 
         slot_data["unown_signs"] = self.generated_unown_signs
 

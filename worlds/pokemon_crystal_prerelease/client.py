@@ -377,7 +377,7 @@ class PokemonCrystalClient(BizHawkClient):
             overworld_guard = (data.ram_addresses["wArchipelagoSafeWrite"], [1], "WRAM")
 
             read_result = await bizhawk.guarded_read(
-                ctx.bizhawk_ctx, [(data.ram_addresses["wArchipelagoItemReceived"], 6, "WRAM")], [overworld_guard])
+                ctx.bizhawk_ctx, [(data.ram_addresses["wArchipelagoItemReceived"], 7, "WRAM")], [overworld_guard])
 
             if read_result is None:  # Not in overworld
                 return
@@ -402,9 +402,9 @@ class PokemonCrystalClient(BizHawkClient):
                      next_item.to_bytes(1, "little"), "WRAM")
                 ])
                 await self.send_trap_link(ctx, next_item)
-            elif self.trap_link_queue and not read_result[0][5]:
+            elif self.trap_link_queue and not read_result[0][6]:
                 await bizhawk.write(ctx.bizhawk_ctx, [(data.ram_addresses["wArchipelagoTrapReceived"],
-                                                       self.trap_link_queue.pop().to_bytes(1, "little"),
+                                                       self.trap_link_queue.pop(0).to_bytes(1, "little"),
                                                        "WRAM")])
 
             read_result = await bizhawk.guarded_read(
@@ -863,7 +863,8 @@ class PokemonCrystalClient(BizHawkClient):
         if trap_id not in TRAP_ID_TO_NAME: return
 
         await ctx.send_msgs([{
-            "cmd": "Bounce", "tags": ["TrapLink"],
+            "cmd": "Bounce",
+            "tags": ["TrapLink"],
             "data": {
                 "time": time.time(),
                 "source": ctx.player_names[ctx.slot],
@@ -877,7 +878,8 @@ class PokemonCrystalClient(BizHawkClient):
         if cmd == "Bounced":
             if "tags" not in args: return
             source_name = args["data"]["source"]
-            if "TrapLink" in ctx.tags and "TrapLink" in args["tags"] and source_name != ctx.slot_info[ctx.slot].name:
+            if ("TrapLink" in ctx.tags) and ("TrapLink" in args["tags"]) and source_name != ctx.slot_info[
+                ctx.slot].name:
                 trap_name: str = args["data"]["trap_name"]
                 if trap_name not in TRAP_NAME_TO_ID:
                     return
