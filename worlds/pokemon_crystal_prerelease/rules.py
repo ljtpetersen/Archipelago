@@ -1760,9 +1760,8 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         set_rule(get_location("Route 15 - Item"), can_cut_kanto)
 
         # Fuchsia City
-        if world.options.randomize_berry_trees:
-            set_rule(get_entrance("REGION_FUCHSIA_CITY -> REGION_FUCHSIA_CITY:CUT"), can_cut_kanto)
-            set_rule(get_entrance("REGION_FUCHSIA_CITY:CUT -> REGION_FUCHSIA_CITY"), can_cut_kanto)
+        set_rule(get_entrance("REGION_FUCHSIA_CITY -> REGION_FUCHSIA_CITY:CUT"), can_cut_kanto)
+        set_rule(get_entrance("REGION_FUCHSIA_CITY:CUT -> REGION_FUCHSIA_CITY"), can_cut_kanto)
 
         if world.options.lock_kanto_gyms:
             set_rule(get_entrance("REGION_FUCHSIA_CITY -> REGION_FUCHSIA_GYM"), kanto_gyms_access)
