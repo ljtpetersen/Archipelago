@@ -218,6 +218,7 @@ class PokemonCrystalWorld(World):
     def generate_early(self) -> None:
         adjust_options(self)
         load_ut_slot_data(self)
+        randomize_mischief(self)
         self.logic = PokemonCrystalLogic(self)
 
         if not self.is_universal_tracker:
@@ -420,7 +421,6 @@ class PokemonCrystalWorld(World):
         randomize_move_values(self)
         cap_hm_move_power(self)
         randomize_music(self)
-        randomize_mischief(self)
         randomize_tms(self)
         randomize_type_chart(self)
 
