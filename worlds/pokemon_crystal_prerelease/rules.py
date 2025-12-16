@@ -670,6 +670,15 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         set_rule(get_location("ENGINE_UNLOCKED_UNOWNS_X_TO_Z"),
                  lambda state: state.has("Ho-Oh Tile", world.player, 16))
 
+        set_rule(get_entrance("REGION_RUINS_OF_ALPH_KABUTO_CHAMBER -> REGION_RUINS_OF_ALPH_INNER_CHAMBER"),
+                 lambda state: state.has("Kabuto Tile", world.player, 16))
+        set_rule(get_entrance("REGION_RUINS_OF_ALPH_AERODACTYL_CHAMBER -> REGION_RUINS_OF_ALPH_INNER_CHAMBER"),
+                 lambda state: state.has("Aerodactyl Tile", world.player, 16))
+        set_rule(get_entrance("REGION_RUINS_OF_ALPH_OMANYTE_CHAMBER -> REGION_RUINS_OF_ALPH_INNER_CHAMBER"),
+                 lambda state: state.has("Omanyte Tile", world.player, 16))
+        set_rule(get_entrance("REGION_RUINS_OF_ALPH_HO_OH_CHAMBER -> REGION_RUINS_OF_ALPH_INNER_CHAMBER"),
+                 lambda state: state.has("Ho-Oh Tile", world.player, 16))
+
     # Route 32
     route_32_access_rule = world.logic.has_route_32_condition()
     if route_32_access_rule:
