@@ -601,7 +601,7 @@ class WildEncounterMethodsRequired(EnhancedOptionSet):
     """
     display_name = "Wild Encounter Methods Required"
     valid_keys = ["Land", "Surfing", "Fishing", "Headbutt", "Rock Smash", "Bug Catching Contest"]
-    default = ["Land", "Surfing", "Fishing", "Headbutt", "Rock Smash"]
+    default = ["Land", "Surfing", "Fishing", "Headbutt", "Rock Smash", "Bug Catching Contest"]
 
 
 class EnforceWildEncounterMethodsLogic(Toggle):
@@ -653,9 +653,9 @@ class BreedingMethodsRequired(Choice):
 
 class EvolutionGymLevels(Range):
     """
-    Sets how many levels each beaten gym puts into logic for level (and Tyrogue) evolutions
+    Sets how many levels each accessible gym puts into logic for level (and Tyrogue) evolutions
 
-    For example, if you set this to 4 and have beaten 5 gyms, evolutions up to level 20 would be in logic.
+    For example, if you set this to 4 and have access to 5 gyms, evolutions up to level 20 would be in logic.
 
     If Johto only is enabled the minimum for this setting is 8.
     """
@@ -1091,9 +1091,9 @@ class TrainerLevelBoostValue(Range):
 
 class RandomizeLearnsets(Choice):
     """
-    Vanilla: Vanilla learnsets
-    Randomize: Random learnsets
-    Start With Four Moves: Random learnsets with 4 starting moves
+    - Vanilla: Vanilla learnsets
+    - Randomize: Random learnsets
+    - Start With Four Moves: Random learnsets with 4 starting moves
     """
     display_name = "Randomize Learnsets"
     default = 0
