@@ -505,7 +505,7 @@ class PokemonCrystalClient(BizHawkClient):
             for byte_i, byte in enumerate(trade_bytes):
                 for i in range(8):
                     if byte & (1 << i):
-                        local_trades_completed.add(byte_i)
+                        local_trades_completed.add(byte_i * 8 + i)
 
             packages = []
 
