@@ -3521,7 +3521,9 @@
       "REGION_MOBILE_BATTLE_ROOM"
     ],
     "locations": [],
-    "events": []
+    "events": [
+      "EVENT_MART_ESCAPE_ROPE"
+    ]
   },
   "REGION_POKECOM_CENTER_ADMIN_OFFICE_MOBILE": {
     "johto": true,
@@ -7336,9 +7338,7 @@
       "REGION_VIOLET_CITY"
     ],
     "locations": [],
-    "events": [
-      "EVENT_MART_ESCAPE_ROPE"
-    ],
+    "events": [],
     "marts": [
       "MART_VIOLET"
     ]
