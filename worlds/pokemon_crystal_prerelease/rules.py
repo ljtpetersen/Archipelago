@@ -743,8 +743,13 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
     if "Slowpoke Well" in world.options.dark_areas:
         set_rule(get_entrance("REGION_AZALEA_TOWN -> REGION_SLOWPOKE_WELL_B1F"), can_flash)
 
-    set_rule(get_entrance("REGION_SLOWPOKE_WELL_B1F -> REGION_SLOWPOKE_WELL_B2F"),
-             lambda state: can_strength(state) and can_surf(state))
+    slowpoke_well_rule = lambda state: can_strength(state) and can_surf(state) and state.has(
+        "EVENT_CLEARED_SLOWPOKE_WELL", world.player)
+
+    set_rule(get_entrance("REGION_SLOWPOKE_WELL_B1F -> REGION_SLOWPOKE_WELL_B1F:WEST"),
+             slowpoke_well_rule)
+
+    set_rule(get_entrance("REGION_SLOWPOKE_WELL_B1F:WEST -> REGION_SLOWPOKE_WELL_B1F"), slowpoke_well_rule)
 
     set_rule(get_entrance("REGION_AZALEA_TOWN -> REGION_AZALEA_GYM"),
              lambda state: state.has("EVENT_CLEARED_SLOWPOKE_WELL", world.player))

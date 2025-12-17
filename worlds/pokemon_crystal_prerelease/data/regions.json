@@ -6498,7 +6498,7 @@
     "johto": true,
     "exits": [
       "REGION_AZALEA_TOWN",
-      "REGION_SLOWPOKE_WELL_B2F"
+      "REGION_SLOWPOKE_WELL_B1F:WEST"
     ],
     "trainers": [
       "GRUNTM_29",
@@ -6522,10 +6522,24 @@
       "fishing": "Lake"
     }
   },
+  "REGION_SLOWPOKE_WELL_B1F:WEST": {
+    "johto": true,
+    "exits": [
+      "REGION_SLOWPOKE_WELL_B1F",
+      "REGION_SLOWPOKE_WELL_B2F"
+    ],
+    "locations": [],
+    "events": [],
+    "wild_encounters": {
+      "grass": "SLOWPOKE_WELL_B1F",
+      "surfing": "SLOWPOKE_WELL_B1F",
+      "fishing": "Lake"
+    }
+  },
   "REGION_SLOWPOKE_WELL_B2F": {
     "johto": true,
     "exits": [
-      "REGION_SLOWPOKE_WELL_B1F"
+      "REGION_SLOWPOKE_WELL_B1F:WEST"
     ],
     "locations": [
       "SLOWPOKE_WELL_B2F_TM_RAIN_DANCE",
