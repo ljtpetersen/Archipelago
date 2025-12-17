@@ -795,10 +795,12 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         set_rule(get_entrance("REGION_ILEX_FOREST:NORTH -> REGION_ILEX_FOREST:SOUTH"), can_cut)
         set_rule(get_entrance("REGION_ILEX_FOREST:SOUTH -> REGION_ILEX_FOREST:NORTH"), can_cut)
 
+    celebi_rule = lambda state: state.has("GS Ball", world.player) and state.has("EVENT_CLEARED_SLOWPOKE_WELL",
+                                                                                 world.player)
     if world.options.level_scaling:
-        set_rule(get_location("Celebi"), lambda state: state.has("GS Ball", world.player))
+        set_rule(get_location("Celebi"), celebi_rule)
     if world.options.static_pokemon_required:
-        set_rule(get_location("Static_Celebi_1"), lambda state: state.has("GS Ball", world.player))
+        set_rule(get_location("Static_Celebi_1"), celebi_rule)
 
     set_rule(get_location("EVENT_HERDED_FARFETCHD"),
              lambda state: state.has("EVENT_CLEARED_SLOWPOKE_WELL", world.player))
