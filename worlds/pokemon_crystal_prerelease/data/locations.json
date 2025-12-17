@@ -4093,7 +4093,7 @@
     ]
   },
   "ROCK_TUNNEL_1F_ELIXER": {
-    "label": "Rock Tunnel 1F - East Item",
+    "label": "Rock Tunnel 1F - West Item",
     "flag": "EVENT_ROCK_TUNNEL_1F_ELIXER",
     "type": "itemball",
     "tags": [
