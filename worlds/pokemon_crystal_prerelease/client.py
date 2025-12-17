@@ -878,8 +878,7 @@ class PokemonCrystalClient(BizHawkClient):
         if cmd == "Bounced":
             if "tags" not in args: return
             source_name = args["data"]["source"]
-            if ("TrapLink" in ctx.tags) and ("TrapLink" in args["tags"]) and source_name != ctx.slot_info[
-                ctx.slot].name:
+            if ("TrapLink" in ctx.tags) and ("TrapLink" in args["tags"]) and source_name != ctx.player_names[ctx.slot]:
                 trap_name: str = args["data"]["trap_name"]
                 if trap_name not in TRAP_NAME_TO_ID:
                     return
