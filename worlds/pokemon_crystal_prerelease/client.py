@@ -539,8 +539,7 @@ class PokemonCrystalClient(BizHawkClient):
                 })
 
             if packages:
-                for package in packages:
-                    await ctx.send_msgs([package])
+                await ctx.send_msgs(packages)
 
                 self.local_seen_pokemon = local_seen_pokemon
                 self.local_caught_pokemon = local_caught_pokemon
