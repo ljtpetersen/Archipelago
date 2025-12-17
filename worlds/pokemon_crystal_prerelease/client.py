@@ -539,17 +539,8 @@ class PokemonCrystalClient(BizHawkClient):
                 })
 
             if packages:
-                packages.append({
-                    "cmd": "Set",
-                    "key": f"pokemon_crystal_pokemon_{ctx.team}_{ctx.slot}",
-                    "default": {},
-                    "want_reply": False,
-                    "operations": [
-                        {"operation": "replace",
-                         "value": {"caught": list(local_caught_pokemon), "seen": list(local_seen_pokemon)}, }
-                    ]
-                })
-                await ctx.send_msgs(packages)
+                for package in packages:
+                    await ctx.send_msgs([package])
 
                 self.local_seen_pokemon = local_seen_pokemon
                 self.local_caught_pokemon = local_caught_pokemon
