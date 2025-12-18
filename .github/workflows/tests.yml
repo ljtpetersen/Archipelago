@@ -1,9 +1,9 @@
 name: Test APWorld
 on:
   push:
-    branches: [ pokecrystal, future/*, ci ]
+    branches: [ pokecrystal*, future/*, ci ]
   pull_request:
-    branches: [ pokecrystal, future/* ]
+    branches: [ pokecrystal*, future/* ]
 
 
 jobs:
