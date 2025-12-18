@@ -26,12 +26,14 @@ class EnhancedOptionSet(OptionSet):
 class Goal(Choice):
     """
     Elite Four: Defeat the Champion and enter the Hall of Fame
-    Red: Defeat Red at Mt. Silver
+    Red: Defeat Red in Mt. Silver
     Diploma: Catch all logically available Pokemon and receive the diploma in Celadon City
     Rival: Win all possible rival battles
     Defeat Team Rocket: Vanquish Team Rocket in Slowpoke Well, Mahogany Town, Radio Tower and defeat the grunt
-    on route 24 (if Kanto is accessible)
-    Unown Hunt: The 26 Unown forms are scattered across the region(s), read things to find them all
+    on Route 24 (if Kanto is accessible)
+    Unown Hunt: Catch all 26 Unown forms that are attached to signs across the region(s) and show the completed Unown dex
+     to the scientist in Ruins of Alph. In order to encounter the Unown you'll need to solve their corresponding tile puzzle.
+     Each puzzle requires 16 pieces which must be found first.
     """
     display_name = "Goal"
     default = 0
