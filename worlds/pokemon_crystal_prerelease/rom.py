@@ -98,7 +98,7 @@ class PokemonCrystalAPPatchExtension(APPatchExtension):
 class PokemonCrystalProcedurePatch(APProcedurePatch, APTokenMixin):
     game = data.manifest.game
     hash = [CRYSTAL_1_0_HASH, CRYSTAL_1_1_HASH]
-    patch_file_ending = ".apcrystal"
+    patch_file_ending = ".apcrystalpre"
     result_file_ending = ".gbc"
 
     procedure = [
@@ -121,7 +121,7 @@ def write_customizable_options(options: PokemonCrystalOptions,
                     data.rom_addresses["AP_Setting_Field_Move_Order"])
 
     if must_write_option("trainer_name"):
-        name_bytes = convert_to_ingame_text(options.trainer_name.value[:7], string_terminator = True)
+        name_bytes = convert_to_ingame_text(options.trainer_name.value[:7], string_terminator=True)
         write_bytes(name_bytes, data.rom_addresses["AP_Setting_DefaultTrainerName"])
 
     if must_write_option("default_pokedex_mode"):
@@ -753,7 +753,7 @@ def generate_output(world: "PokemonCrystalWorld", output_directory: str, patch: 
         for tm in ("FLAMETHROWER", "THUNDERBOLT", "ICE_BEAM"):
             move_data = world.generated_moves[world.generated_tms[tm].id]
             move_name = convert_to_ingame_text(move_data.name + " " * (12 - len(move_data.name)),
-                    string_terminator = True)
+                                               string_terminator=True)
             write_bytes(move_name, address)
             address += 13
 

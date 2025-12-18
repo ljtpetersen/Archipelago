@@ -196,7 +196,7 @@ NUM_UNOWN = len(ALL_UNOWN)
 class PokemonCrystalClient(BizHawkClient):
     game = data.manifest.game
     system = ("GB", "GBC")
-    patch_suffix = ".apcrystal"
+    patch_suffix = ".apcrystalpre"
 
     local_checked_locations: set[int]
     goal_flags: list[int]
