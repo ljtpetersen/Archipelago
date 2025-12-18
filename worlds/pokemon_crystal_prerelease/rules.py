@@ -665,9 +665,9 @@ def set_rules(world: "PokemonCrystalWorld") -> None:
         set_rule(get_location("ENGINE_UNLOCKED_UNOWNS_A_TO_K"),
                  lambda state: state.has("Kabuto Tile", world.player, 16))
         set_rule(get_location("ENGINE_UNLOCKED_UNOWNS_L_TO_R"),
-                 lambda state: state.has("Aerodactyl Tile", world.player, 16))
-        set_rule(get_location("ENGINE_UNLOCKED_UNOWNS_S_TO_W"),
                  lambda state: state.has("Omanyte Tile", world.player, 16))
+        set_rule(get_location("ENGINE_UNLOCKED_UNOWNS_S_TO_W"),
+                 lambda state: state.has("Aerodactyl Tile", world.player, 16))
         set_rule(get_location("ENGINE_UNLOCKED_UNOWNS_X_TO_Z"),
                  lambda state: state.has("Ho-Oh Tile", world.player, 16))
 
