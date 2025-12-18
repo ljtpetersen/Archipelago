@@ -1882,7 +1882,7 @@ class GameOptions(OptionDict):
     skip_dex_registration: off/on - Sets whether the Pokedex registration screen is skipped
     skip_nicknames: off/on - Sets whether you are asked to nickname a Pokemon upon receiving it
     sound: mono/stereo - Sets the sound mode
-    spinners: normal/rotators/hell - Sets the overworld behaviour of trainers
+    spinners: normal/rotators/heck/hell - Sets the overworld behaviour of trainers
         normal: Trainers will behave as they do in vanilla
         rotators: Trainers that spin randomly will rotate consistently
         heck: All trainers with vision rotate consistently, they have their original vision range but can spot you through obstacles
