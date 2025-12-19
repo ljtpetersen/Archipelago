@@ -183,7 +183,7 @@ def randomize_trade_requested_pokemon(world: "PokemonCrystalWorld"):
     randomize_requested = world.options.randomize_trades.value not in (RandomizeTrades.option_requested,
                                                                        RandomizeTrades.option_both)
 
-    logically_available_pokemon = sorted(list(world.logic.available_pokemon))
+    logically_available_pokemon = sorted(world.logic.available_pokemon)
 
     assert logically_available_pokemon
     while len(logically_available_pokemon) < len(world.generated_trades):
@@ -211,8 +211,7 @@ def randomize_request_pokemon(world: "PokemonCrystalWorld"):
     if world.options.randomize_pokemon_requests in (RandomizePokemonRequests.option_items_and_pokemon,
                                                     RandomizePokemonRequests.option_pokemon):
 
-        logically_available_pokemon = sorted(
-            [pokemon for pokemon in world.logic.available_pokemon if pokemon != "UNOWN"])
+        logically_available_pokemon = sorted(pokemon for pokemon in world.logic.available_pokemon if pokemon != "UNOWN")
 
         assert logically_available_pokemon
         while len(logically_available_pokemon) < len(world.generated_request_pokemon):
