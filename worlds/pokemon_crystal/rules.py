@@ -22,8 +22,8 @@ if TYPE_CHECKING:
 class PokemonCrystalLogic:
     available_pokemon: set[str]
     all_pokemon: set[str]
-    evolution: dict[str, set[tuple[EvolutionData, LogicalAccess]]]
-    breeding: dict[str, set[tuple[str, LogicalAccess]]]
+    evolution: dict[str, list[tuple[EvolutionData, LogicalAccess]]]
+    breeding: dict[str, list[tuple[str, LogicalAccess]]]
     wild_regions: dict[EncounterKey, LogicalAccess]
     guaranteed_hm_access: bool
 
@@ -47,8 +47,8 @@ class PokemonCrystalLogic:
     def __init__(self, world: "PokemonCrystalWorld"):
         self.available_pokemon = set()
         self.all_pokemon = set(world.generated_pokemon.keys())
-        self.evolution = defaultdict(set)
-        self.breeding = defaultdict(set)
+        self.evolution = defaultdict(list)
+        self.breeding = defaultdict(list)
         self.wild_regions = defaultdict(lambda: LogicalAccess.Inaccessible)
         self.compatible_hm_pokemon = defaultdict(list)
         self.guaranteed_hm_access = False
