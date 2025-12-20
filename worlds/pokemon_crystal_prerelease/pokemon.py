@@ -221,7 +221,7 @@ def randomize_request_pokemon(world: "PokemonCrystalWorld"):
         world.generated_request_pokemon = [logically_available_pokemon.pop() for _ in world.generated_request_pokemon]
     elif world.options.randomize_pokemon_requests == RandomizePokemonRequests.option_items:
         # ideally we should never need this, but best to be safe
-        logically_available_pokemon = [pokemon for pokemon in world.logic.available_pokemon if pokemon != "UNOWN"]
+        logically_available_pokemon = [pokemon for pokemon in sorted(world.logic.available_pokemon) if pokemon != "UNOWN"]
 
         world.generated_request_pokemon = [
             world.random.choice(logically_available_pokemon) if mon not in world.logic.available_pokemon else mon for
