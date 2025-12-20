@@ -2028,7 +2028,9 @@ def verify_hm_accessibility(world: "PokemonCrystalWorld") -> None:
                     continue
 
                 last_hm = hm_to_verify
-                valid_pokemon = [mon for mon in logic.available_pokemon if state.has(mon, world.player)
+                logical_pokemon = sorted(logic.available_pokemon)
+                world.random.shuffle(logical_pokemon)
+                valid_pokemon = [mon for mon in logical_pokemon if state.has(mon, world.player)
                                  and mon not in logic.compatible_hm_pokemon[hm_to_verify]]
                 if valid_pokemon:
                     pokemon = world.random.choice(valid_pokemon)

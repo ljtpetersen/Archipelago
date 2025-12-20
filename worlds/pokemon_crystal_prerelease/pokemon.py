@@ -20,7 +20,7 @@ def randomize_pokemon_data(world: "PokemonCrystalWorld"):
     # follow_evolutions can change types after the pokemon has already been randomized,
     # so we randomize types before all else
     if world.options.randomize_types.value:
-        for pkmn_name, pkmn_data in world.generated_pokemon.items():
+        for pkmn_name, pkmn_data in sorted(world.generated_pokemon.items(), key=lambda x: x[0]):
             evolution_line_list = [pkmn_name]
             if world.options.randomize_types.value == RandomizeTypes.option_follow_evolutions:
                 # skip evolved pokemon if follow_evolutions
@@ -42,7 +42,7 @@ def randomize_pokemon_data(world: "PokemonCrystalWorld"):
 
     move_blocklist = moves_convert_friendly_to_ids(world, world.options.move_blocklist)
 
-    for pkmn_name, pkmn_data in world.generated_pokemon.items():
+    for pkmn_name, pkmn_data in sorted(world.generated_pokemon.items(), key=lambda x: x[0]):
         new_base_stats = pkmn_data.base_stats
         new_learnset = pkmn_data.learnset
         new_tm_hms = pkmn_data.tm_hm
