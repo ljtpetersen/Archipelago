@@ -200,6 +200,10 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
     if world.options.breeding_methods_required == BreedingMethodsRequired.option_with_ditto:
         ensure_placed.append("DITTO")
 
+    if world.options.trades_required and world.options.randomize_trades.value in (RandomizeTrades.option_received,
+                                                                                  RandomizeTrades.option_vanilla):
+        ensure_placed.extend(trade.requested_pokemon for trade in world.generated_trades.values())
+
     for ensure_placed_pokemon in ensure_placed:
 
         if ensure_placed_pokemon in get_logically_available_wilds(world): continue
@@ -225,7 +229,8 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
             to_replace = world.random.choice(encounters).pokemon
 
         encounters = [
-            replace(encounter, pokemon=ensure_placed_pokemon if encounter.pokemon == to_replace else encounter.pokemon) for
+            replace(encounter, pokemon=ensure_placed_pokemon if encounter.pokemon == to_replace else encounter.pokemon)
+            for
             encounter in encounters]
 
         world.generated_wild[encounter_key] = encounters
