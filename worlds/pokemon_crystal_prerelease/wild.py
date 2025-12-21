@@ -193,6 +193,8 @@ def randomize_wild_pokemon(world: "PokemonCrystalWorld"):
 
     if world.options.randomize_pokemon_requests:
         ensure_placed.append("MAGIKARP")
+
+    if world.options.randomize_pokemon_requests == RandomizePokemonRequests.option_items:
         ensure_placed.extend(world.generated_request_pokemon)
 
     if world.options.breeding_methods_required == BreedingMethodsRequired.option_with_ditto:
