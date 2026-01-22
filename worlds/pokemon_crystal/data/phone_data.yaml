@@ -1432,43 +1432,46 @@ champ:
   caller: withheld
   script:
     - |
-      Hello?
+      <player>: Hello?
     - |
-      Hi can I speak
-      to champ?
+      ???: Hi can I
+      speak to champ?
     - |
-      Who?
+      <player>: Who?
     - |
-      Champ? Is champ
-      there?
+      ???: Champ? Is
+      champ there?
     - |
-      Who is champ?
+      <player>: Who is
+      champ?
     - |
-      THAT QUESTION WILL
-      BE ANSWERED THIS
-      SUNDAY NIGHT WHEN
+      ???: THAT QUESTION
+      WILL BE ANSWERED
+      THIS SUNDAY NIGHT
     - |
-      JOHN CENA
+      WHEN JOHN CENA
       DEFENDS THE BELT-
     - |
-      Listen! Hey!
+      <player>: Listen!
+      Hey!
     - |
-      IN WWE SUPERRRR
-      SLAMMM
+      ???: IN WWE
+      SUPERRRR SLAMMM
     - |
-      Oh my gosh… Hey!
-      Sir?… Could you
-      quit calling my
+      <player>: Oh my
+      gosh… Hey! Sir?…
     - |
-      house?
+      Could you quit
+      calling my house?
     - |
-      TAKING ON
+      ???: TAKING ON
       SEAMUS, THE
       UNDERTAKER
     - |
-      Quit calling me!
+      <player>: Quit
+      calling me!
     - |
-      CM PUNK AND
+      ???: CM PUNK AND
       EVEN TRIPLE H
       TO THE BIG SHOW
     - |
@@ -1476,22 +1479,24 @@ champ:
       SPIT-SWAPPING
       MAKEOUT MATCH
     - |
-      Holy hell.
+      <player>: Holy
+      hell.
     - |
-      IN WWE SUPERSLAM
+      ???: IN WWE
+      SUPERSLAM
     - |
-      LISTEN! Hello??!
-      Hello?? Can you
-      stop screaming in
+      <player>: LISTEN!
+      Hello??! Hello??
+      Can you stop
     - |
-      your little sirens
-      or whatever that
-      is? can you knock
+      screaming in your
+      little sirens or
+      whatever that is?
     - |
-      it off for five
+      can you knock it
+      off for five
       seconds?!! NOT
-      INTERESTED.
     - |
-      STOP CALLING
-      MY FUCKING
+      INTERESTED. STOP
+      CALLING MY FUCKING
       HOUSE.
