@@ -26,7 +26,7 @@ from .pokemon_data import ALL_UNOWN
 from .rematch_trainer_data import REMATCH_TRAINER_LOCATION_BASE, NUM_REMATCH_TRAINER_LOCATIONS
 
 if TYPE_CHECKING:
-    from worlds._bizhawk.context import BizHawkClientContext
+    from worlds._bizhawk.context import BizHawkClientContext, BizHawkClientCommandProcessor
 
 EVENT_BYTES = math.ceil(max(data.event_flags.values()) / 8)
 ENGINE_BYTES = math.ceil(max(data.engine_flags.values()) / 8)
@@ -86,6 +86,7 @@ class PokemonCrystalClient(WonderTradeMixin, BizHawkClient):
     current_map: list[int]
     last_warp: int
     last_death_link: float
+    death_link_group: str | None
     grass_location_mapping: dict[str, int]
     trap_link_queue: list[int]
     notify_setup_complete: bool
@@ -124,6 +125,7 @@ class PokemonCrystalClient(WonderTradeMixin, BizHawkClient):
         self.current_map = [0, 0]
         self.last_warp = 0
         self.last_death_link = 0
+        self.death_link_group = None
         self.grass_location_mapping = dict()
         self.trap_link_queue = list()
         self.notify_setup_complete = False
@@ -148,6 +150,8 @@ class PokemonCrystalClient(WonderTradeMixin, BizHawkClient):
 
     async def validate_rom(self, ctx: "BizHawkClientContext") -> bool:
         from CommonClient import logger
+        def remove_commands():
+            del ctx.command_processor.commands["death_link_group"]
 
         try:
 
@@ -170,8 +174,10 @@ class PokemonCrystalClient(WonderTradeMixin, BizHawkClient):
             if rom_name == "PM_CRYSTAL":
                 logger.info("ERROR: You appear to be running an unpatched version of Pokemon Crystal. "
                             "You need to generate a patch file and use it to create a patched ROM.")
+                remove_commands()
                 return False
             if rom_name != "AP_CRYSTAL":
+                remove_commands()
                 return False
 
             required_rom_version = data.rom_version if rom_revision == 0 else data.rom_version_11
@@ -192,10 +198,13 @@ class PokemonCrystalClient(WonderTradeMixin, BizHawkClient):
                             f"Patcher APWorld version: {patcher_apworld_version}")
                 logger.info(f"ROM Revision: V1.{rom_revision}, Client checksum: {client_version}, "
                             f"Patcher checksum: {patcher_version}")
+                remove_commands()
                 return False
         except UnicodeDecodeError:
+            remove_commands()
             return False
         except bizhawk.RequestFailedError:
+            remove_commands()
             return False  # Should verify on the next pass
 
         ctx.game = self.game
@@ -972,7 +981,39 @@ class PokemonCrystalClient(WonderTradeMixin, BizHawkClient):
             # Exit handler and return to main loop to reconnect
             pass
 
+    @staticmethod
+    async def update_death_link_with_group(ctx: "BizHawkClientContext", death_link: bool, group: str):
+        old_tags = ctx.tags.copy()
+        ctx.tags = {tag for tag in ctx.tags if not tag.startswith("DeathLink")}
+        if death_link:
+            ctx.tags.add("DeathLink" + group)
+        if old_tags != ctx.tags and ctx.server and not ctx.server.socket.closed:
+            await ctx.send_msgs([{"cmd": "ConnectUpdate", "tags": ctx.tags}])
+
+    @staticmethod
+    async def send_death_with_group(ctx: "BizHawkClientContext", death_text: str, group: str):
+        from CommonClient import logger
+        if ctx.server and ctx.server.socket:
+            logger.info("DeathLink: Sending death to your friends...")
+            ctx.last_death_link = time.time()
+            await ctx.send_msgs([{
+                "cmd": "Bounce", "tags": ["DeathLink" + group],
+                "data": {
+                    "time": ctx.last_death_link,
+                    "source": ctx.player_names[ctx.slot], # type: ignore
+                    "cause": death_text
+                }
+            }])
+
     async def handle_death_link(self, ctx: "BizHawkClientContext", guard) -> None:
+
+        if self.death_link_group is None:
+            assert ctx.slot_data is not None
+            group = self.death_link_group = ctx.slot_data.get("death_link_group", "")
+            ctx.command_processor.commands["death_link_group"] = cmd_death_link_group
+        else:
+            group = self.death_link_group
+
 
         death_link_setting_status = await bizhawk.guarded_read(
             ctx.bizhawk_ctx,
@@ -982,8 +1023,8 @@ class PokemonCrystalClient(WonderTradeMixin, BizHawkClient):
 
         if death_link_setting_status and death_link_setting_status[0][0] & DEATH_LINK_MASK:
 
-            if "DeathLink" not in ctx.tags:
-                await ctx.update_death_link(True)
+            if "DeathLink" + group not in ctx.tags:
+                await PokemonCrystalClient.update_death_link_with_group(ctx, True, group)
                 self.last_death_link = ctx.last_death_link
                 await bizhawk.write(ctx.bizhawk_ctx,
                                     [(data.ram_addresses["wArchipelagoDeathLink"], [0], "WRAM")])
@@ -994,15 +1035,17 @@ class PokemonCrystalClient(WonderTradeMixin, BizHawkClient):
 
             if not death_link_status: return
 
+            assert ctx.slot is not None
             if death_link_status[0][0] == 1:
-                await ctx.send_death(ctx.player_names[ctx.slot] + " is out of usable Pokémon! "
-                                     + ctx.player_names[ctx.slot] + " whited out!")
+                await PokemonCrystalClient.send_death_with_group(ctx,
+                    ctx.player_names[ctx.slot] + " is out of usable Pokémon! "
+                    + ctx.player_names[ctx.slot] + " whited out!", group)
                 await bizhawk.write(ctx.bizhawk_ctx, [(data.ram_addresses["wArchipelagoDeathLink"], [0], "WRAM")])
-                self.last_death_link = time.time()
+                self.last_death_link = ctx.last_death_link
             elif death_link_status[0][0] == 3:
-                await ctx.send_death(ctx.player_names[ctx.slot] + " failed to dodge the spinner!")
+                await PokemonCrystalClient.send_death_with_group(ctx, ctx.player_names[ctx.slot] + " failed to dodge the spinner!", group)
                 await bizhawk.write(ctx.bizhawk_ctx, [(data.ram_addresses["wArchipelagoDeathLink"], [0], "WRAM")])
-                self.last_death_link = time.time()
+                self.last_death_link = ctx.last_death_link
             elif ctx.last_death_link > self.last_death_link and not death_link_status[0][0]:
                 await bizhawk.write(ctx.bizhawk_ctx, [(data.ram_addresses["wArchipelagoDeathLink"], [2], "WRAM")])
                 self.last_death_link = ctx.last_death_link
@@ -1010,8 +1053,8 @@ class PokemonCrystalClient(WonderTradeMixin, BizHawkClient):
                 # drop deathlinks if we have one queued
                 self.last_death_link = ctx.last_death_link
 
-        elif "DeathLink" in ctx.tags:
-            await ctx.update_death_link(False)
+        elif any(tag.startswith("DeathLink") for tag in ctx.tags):
+            await PokemonCrystalClient.update_death_link_with_group(ctx, False, group)
             self.last_death_link = 0
 
     def on_package(self, ctx: "BizHawkClientContext", cmd: str, args: dict) -> None:
@@ -1036,6 +1079,9 @@ class PokemonCrystalClient(WonderTradeMixin, BizHawkClient):
             trap_id = resolve_trap_link_id(ctx, args)
             if trap_id is not None:
                 self.trap_link_queue.append(trap_id)
+
+            if self.death_link_group and "DeathLink" + self.death_link_group in args.get("tags", []) and "time" in args["data"] and ctx.last_death_link != args["data"]["time"]:
+                ctx.on_deathlink(args["data"])
 
         elif cmd == "Retrieved":
             if ctx.items_handling & 0b010:
@@ -1076,3 +1122,15 @@ class PokemonCrystalClient(WonderTradeMixin, BizHawkClient):
                 self.remote_sync_goal_events = args.get("value", 0)
             elif args["key"] == f"pokemon_crystal_unlocked_unowns_{ctx.team}_{ctx.slot}":
                 self.remote_unlocked_unowns = args.get("value", 0)
+
+def cmd_death_link_group(self: "BizHawkClientCommandProcessor", group: str | None = None) -> None:
+    from CommonClient import logger
+
+    handler: PokemonCrystalClient = self.ctx.client_handler # type: ignore
+
+    assert isinstance(handler, PokemonCrystalClient)
+    if group is None:
+        logger.info(f"Current death link group: \"{handler.death_link_group or ''}\"")
+    else:
+        handler.death_link_group = group
+        logger.info(f"Set death link group to \"{group}\"")
