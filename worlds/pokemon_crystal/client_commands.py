@@ -7,7 +7,21 @@ from .options import JohtoOnly
 
 if TYPE_CHECKING:
     from worlds._bizhawk.context import BizHawkClientContext
+    from .client import PokemonCrystalClient
 
+
+def cmd_death_link_group(self: "BizHawkClientCommandProcessor", group: str | None = None) -> None:
+    """Change the death link group. Enter the command without any arguments to print the current group. Use "" as the argument for the default group."""
+    from CommonClient import logger
+
+    handler: PokemonCrystalClient = self.ctx.client_handler # type: ignore
+
+    assert isinstance(handler, PokemonCrystalClient)
+    if group is None:
+        logger.info(f"Current death link group: \"{handler.death_link_group or ''}\"")
+    else:
+        handler.death_link_group = group
+        logger.info(f"Set death link group to \"{group}\"")
 
 def gen_group_cmd(title: str, data: dict[str, tuple[list[str], list[int]]]) -> Callable[[], None]:
     from CommonClient import logger
@@ -77,3 +91,4 @@ def register_commands(ctx: "BizHawkClientContext") -> None:
 
     ctx.command_processor.commands["headbutt"] = gen_group_cmd("Headbutt", headbutt_data)
     ctx.command_processor.commands["fishing"] = gen_group_cmd("Fishing", fishing_data)
+    ctx.command_processor.commands["death_link_group"] = cmd_death_link_group

@@ -2953,6 +2953,14 @@ class ProgressiveRods(Toggle):
 class PokemonCrystalDeathLink(DeathLink):
     __doc__ = DeathLink.__doc__ + "\n\n    In Pokemon Crystal, whiting out sends a death and receiving a death causes you to white out.\n\n    Being seen by a trainer when spinner heck or hell is enabled will send a deathlink."
 
+class DeathLinkGroup(FreeText):
+    """
+    The death link group to use. Death links are only sent within groups.
+    To interface with games which do not support groups, use the empty group "".
+    """
+    default = ""
+    display_name = "Death Link Group"
+
 
 class RandomizeEntrances(EnhancedOptionSet):
     """
@@ -3219,6 +3227,7 @@ class PokemonCrystalOptions(PerGameCommonOptions):
     mischief_upper_bound: MischiefUpperBound
     start_inventory_from_pool: StartInventoryPool
     death_link: PokemonCrystalDeathLink
+    death_link_group: DeathLinkGroup
     always_unlock_fly_destinations: AlwaysUnlockFly
     exclude_post_goal_locations: ExcludePostGoalLocations
     grasssanity: Grasssanity

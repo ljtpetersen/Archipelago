@@ -837,6 +837,7 @@ class PokemonCrystalWorld(EntranceRandoMixin, World):
             "dexsanity_logic",
             "battle_tower_sanity",
             "battle_tower_progressive_tier_unlocks",
+            "death_link_group",
         )
 
         slot_data["battle_tower_trainer_permutation"] = self.battle_tower_trainer_permutation

@@ -150,8 +150,6 @@ class PokemonCrystalClient(WonderTradeMixin, BizHawkClient):
 
     async def validate_rom(self, ctx: "BizHawkClientContext") -> bool:
         from CommonClient import logger
-        def remove_commands():
-            del ctx.command_processor.commands["death_link_group"]
 
         try:
 
@@ -174,10 +172,8 @@ class PokemonCrystalClient(WonderTradeMixin, BizHawkClient):
             if rom_name == "PM_CRYSTAL":
                 logger.info("ERROR: You appear to be running an unpatched version of Pokemon Crystal. "
                             "You need to generate a patch file and use it to create a patched ROM.")
-                remove_commands()
                 return False
             if rom_name != "AP_CRYSTAL":
-                remove_commands()
                 return False
 
             required_rom_version = data.rom_version if rom_revision == 0 else data.rom_version_11
@@ -198,13 +194,10 @@ class PokemonCrystalClient(WonderTradeMixin, BizHawkClient):
                             f"Patcher APWorld version: {patcher_apworld_version}")
                 logger.info(f"ROM Revision: V1.{rom_revision}, Client checksum: {client_version}, "
                             f"Patcher checksum: {patcher_version}")
-                remove_commands()
                 return False
         except UnicodeDecodeError:
-            remove_commands()
             return False
         except bizhawk.RequestFailedError:
-            remove_commands()
             return False  # Should verify on the next pass
 
         ctx.game = self.game
@@ -1010,7 +1003,6 @@ class PokemonCrystalClient(WonderTradeMixin, BizHawkClient):
         if self.death_link_group is None:
             assert ctx.slot_data is not None
             group = self.death_link_group = ctx.slot_data.get("death_link_group", "")
-            ctx.command_processor.commands["death_link_group"] = cmd_death_link_group
         else:
             group = self.death_link_group
 
@@ -1122,15 +1114,3 @@ class PokemonCrystalClient(WonderTradeMixin, BizHawkClient):
                 self.remote_sync_goal_events = args.get("value", 0)
             elif args["key"] == f"pokemon_crystal_unlocked_unowns_{ctx.team}_{ctx.slot}":
                 self.remote_unlocked_unowns = args.get("value", 0)
-
-def cmd_death_link_group(self: "BizHawkClientCommandProcessor", group: str | None = None) -> None:
-    from CommonClient import logger
-
-    handler: PokemonCrystalClient = self.ctx.client_handler # type: ignore
-
-    assert isinstance(handler, PokemonCrystalClient)
-    if group is None:
-        logger.info(f"Current death link group: \"{handler.death_link_group or ''}\"")
-    else:
-        handler.death_link_group = group
-        logger.info(f"Set death link group to \"{group}\"")
